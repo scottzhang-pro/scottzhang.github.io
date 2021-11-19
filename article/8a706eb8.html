@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wittyfans.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="这两种设计模式非常相似，它们的 UML 图都是完全相同的。策略模式注重于对算法的选择，而状态模式注重对状态的切换，可以理解为状态的切换会改变处理的策略。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python设计模式-策略与状态模式">
+<meta property="og:url" content="http://wittyfans.com/article/8a706eb8.html">
+<meta property="og:site_name" content="Scott&#39;s Blog">
+<meta property="og:description" content="这两种设计模式非常相似，它们的 UML 图都是完全相同的。策略模式注重于对算法的选择，而状态模式注重对状态的切换，可以理解为状态的切换会改变处理的策略。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-11-16T13:32:21.000Z">
+<meta property="article:modified_time" content="2021-11-19T14:12:08.908Z">
+<meta property="article:author" content="Scott">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://wittyfans.com/article/8a706eb8.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Python设计模式-策略与状态模式 | Scott's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Scott's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Scott's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学则不固, 知则不惑</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://wittyfans.com/article/8a706eb8.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/instagram_profile_image.png">
+      <meta itemprop="name" content="Scott">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Scott's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Python设计模式-策略与状态模式
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-11-16 21:32:21" itemprop="dateCreated datePublished" datetime="2021-11-16T21:32:21+08:00">2021-11-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-11-19 22:12:08" itemprop="dateModified" datetime="2021-11-19T22:12:08+08:00">2021-11-19</time>
+              </span>
+
+          
+            <span id="/article/8a706eb8.html" class="post-meta-item leancloud_visitors" data-flag-title="Python设计模式-策略与状态模式" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/article/8a706eb8.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/article/8a706eb8.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>这两种设计模式非常相似，它们的 UML 图都是完全相同的。策略模式注重于对算法的选择，而状态模式注重对状态的切换，可以理解为状态的切换会改变处理的策略。</p>
+</blockquote>
+<span id="more"></span>
+<h1 id="策略模式">策略模式</h1>
+<p>策略模式是一种面向对象编程中的抽象模式。针对同样的问题，它实现了不同的解决方案，你的代码可以在运行的时候自由选择最恰当的方案。</p>
+<p>策略模式的一个应用是排序，比如你要实现一个排序算法，它可以自动选择排序方法来对输入的数组进行排序，排序的方法是自动选择的，而结果是不变的。</p>
+<p>还有一个例子是设置电脑的墙纸，当你设置墙纸的时候，你的电脑会自动帮你设置很多事情：</p>
+<ol type="1">
+<li>根据屏幕的分辨率，自动将图片缩放到合适的大小</li>
+<li>自动处理图片与系统组件之间的缩放、虚化关系</li>
+<li>图片与背景色的结合</li>
+</ol>
+<p>你可以定义不同的对象，它们接受的 input 是一样的（目标图片，屏幕分辨率），不管怎样，这些对象都都能达到设置屏幕壁纸的目的。</p>
+<p>有人说我通过 if 判断也可以达到同样的目的，但是这意味着你需要将你的代码放到一个巨大的方法中，随着新的策略的增加，你的函数将变得非常笨重。</p>
+<p>这里略过策略模式的实例。</p>
+<h1 id="状态模式">状态模式</h1>
+<p>状态模式的目的是实现“状态切换”，对象的状态可以被外面知道，并且可能会被一些活动改变。来一个例子，需求是要对一个 <a target="_blank" rel="noopener" href="https://www.w3.org/XML/">xml 文件</a>进行解析，一个简单的 xml 文件如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>welcome to scott&#x27;s blog<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>我们想把这样的文件解析出来，结果是我可以通过 node.attr 的方式访问 xml 文件的内容。比如 xml_file.body 作为一个节点。该节点有一个属性叫子节点，我可以通过 xml_file.body.children 的方式拿到，对于 title 中的内容，我已通过 xml_file.body.title.text 的方式拿到。</p>
+<p>首先需要一个节点类：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span>:</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;节点类，记录节点的名字，文本，节点之间有上下级关系，所以它</span></span><br><span class="line"><span class="string">       还需要一个指向父节点的指针。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, tagname, parent=<span class="literal">None</span></span>):</span></span><br><span class="line">        self.parent=parent</span><br><span class="line">        self.tagname = tagname</span><br><span class="line">        <span class="comment"># text 和 children 都由其他组件操作</span></span><br><span class="line">        self.children = []</span><br><span class="line">        self.text = <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">if</span> self.text:</span><br><span class="line">            <span class="keyword">return</span> self.tagname + <span class="string">&#x27;:&#x27;</span> + self.text</span><br><span class="line"></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> self.tagname</span><br></pre></td></tr></table></figure>
+<p>有了节点后，我们还需要一个解析器，解析器会一层一层的解析字符串，我们可以定义解析器有几种状态，即处于：</p>
+<ul>
+<li>开始节点</li>
+<li>子节点</li>
+<li>结束节点</li>
+</ul>
+<p>如何根据解析器的状态判断是否还可以深入一步呢？可以这么定义：</p>
+<ul>
+<li>开始节点</li>
+<li>子节点</li>
+<li>打开的节点</li>
+<li>结束节点</li>
+<li>文本节点（最底层无子节点的节点）</li>
+</ul>
+<p>来看代码实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Parser</span>:</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;Parser 是一个解析器。它会负责去切换状态，下图的状态之间会互相转换。</span></span><br><span class="line"><span class="string">       第一个状态是 First Tag，它永远将切换至子节点，再由子节点来决定切换到其他哪个状态。</span></span><br><span class="line"><span class="string">       每一个状态都会用自己的方法处理收到的剩余字符，然后将状态再设置为 Children Node，告诉解析器来处理剩下的部分。</span></span><br><span class="line"><span class="string">        +----------------------------------------------------------+</span></span><br><span class="line"><span class="string">        |                     .-------------.                      |</span></span><br><span class="line"><span class="string">        |                    (   First Tag   )                     |</span></span><br><span class="line"><span class="string">        |                     `-------------&#x27;                      |</span></span><br><span class="line"><span class="string">        |                            |                             |</span></span><br><span class="line"><span class="string">        |                            |                             |</span></span><br><span class="line"><span class="string">        |                     .------v------.                      |</span></span><br><span class="line"><span class="string">        |         +---------&gt;( Children Node )&lt;----------+         |</span></span><br><span class="line"><span class="string">        |         |           `-------------&#x27;            |         |</span></span><br><span class="line"><span class="string">        |         |                  ^                   |         |</span></span><br><span class="line"><span class="string">        |         v                  v                   v         |</span></span><br><span class="line"><span class="string">        |  .-------------.    .-------------.     .-------------.  |</span></span><br><span class="line"><span class="string">        | (   Open tag    )  (  Closed tag   )   (     Text      ) |</span></span><br><span class="line"><span class="string">        |  `-------------&#x27;    `-------------&#x27;     `-------------&#x27;  |</span></span><br><span class="line"><span class="string">        |                                                          |</span></span><br><span class="line"><span class="string">        +----------------------------------------------------------+</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, parse_str</span>):</span></span><br><span class="line">        self.parse_str = parse_str</span><br><span class="line">        self.root = <span class="literal">None</span></span><br><span class="line">        self.current_node = <span class="literal">None</span></span><br><span class="line">        self.state = FirstTag()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process</span>(<span class="params">self, remain_str</span>):</span></span><br><span class="line">        remainning = self.state.process(remain_str, self)</span><br><span class="line">        <span class="keyword">if</span> remainning:</span><br><span class="line">            self.process(remainning)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">start</span>(<span class="params">self</span>):</span></span><br><span class="line">        self.process(self.parse_str)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FirstTag</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process</span>(<span class="params">self, remain_str, parser</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;处理剩余的字符。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Args:</span></span><br><span class="line"><span class="string">            remain_str (string): 剩余需要解析的字符</span></span><br><span class="line"><span class="string">            parser (Parser): parser 即上面定义的的 Parser，它会被闯进来修改它的属性，如current_node, root, state</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Returns:</span></span><br><span class="line"><span class="string">            string: 剩余需要解析的字符</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        i_start_tag = remain_str.find(<span class="string">&#x27;&lt;&#x27;</span>)</span><br><span class="line">        i_end_tag = remain_str.find(<span class="string">&#x27;&gt;&#x27;</span>)</span><br><span class="line">        tag_name  = remain_str[i_start_tag+<span class="number">1</span>:i_end_tag]</span><br><span class="line"></span><br><span class="line">        root = Node(tag_name)</span><br><span class="line">        parser.root = parser.current_node = root</span><br><span class="line">        parser.state = ChildrenNode()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> remain_str[i_end_tag+<span class="number">1</span>:]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ChildrenNode</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process</span>(<span class="params">self, remain_str, parser</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;同样只需要一个 process 方法来处理字符串。</span></span><br><span class="line"><span class="string">           作为 ChildrenNode，它需要根据字符来判断需要使用什么样的类状态器，</span></span><br><span class="line"><span class="string">           类状态器的 process 方法将会完成对剩余字符的处理。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Args:</span></span><br><span class="line"><span class="string">            remain_str ([type]): [description]</span></span><br><span class="line"><span class="string">            parser ([type]): [description]</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        striped = remain_str.strip()</span><br><span class="line">        <span class="keyword">if</span> striped.startswith(<span class="string">&#x27;&lt;&#x27;</span>):</span><br><span class="line">            parser.state = OpenTag()</span><br><span class="line">        <span class="keyword">elif</span> striped.startswith(<span class="string">&#x27;&gt;&#x27;</span>):</span><br><span class="line">            parser.state = CloseTag()</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            parser.state = TextNode()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OpenTag</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process</span>(<span class="params">self, remain_str, parser</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        i_start_tag = remain_str.find(<span class="string">&#x27;&lt;&#x27;</span>)</span><br><span class="line">        i_end_tag = remain_str.find(<span class="string">&#x27;&gt;&#x27;</span>)</span><br><span class="line">        tag_name  = remain_str[i_start_tag+<span class="number">1</span>:i_end_tag]</span><br><span class="line">        <span class="comment"># parser.current_node 未被更改还是上一层节点，将其设为父节点</span></span><br><span class="line">        node = Node(tag_name, parser.current_node)</span><br><span class="line">        parser.current_node.children.append(node)</span><br><span class="line">        parser.current_node = node</span><br><span class="line">        parser.state = ChildrenNode()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> remain_str[i_end_tag+<span class="number">1</span>:]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CloseTag</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process</span>(<span class="params">self, remain_str, parser</span>):</span></span><br><span class="line">        i_start_tag = remain_str.find(<span class="string">&#x27;&lt;&#x27;</span>)</span><br><span class="line">        i_end_tag = remain_str.find(<span class="string">&#x27;&gt;&#x27;</span>)</span><br><span class="line">        <span class="comment"># assert 断言中</span></span><br><span class="line">        <span class="comment"># 第一个确保 &lt; 后是/，如 &lt;/h1&gt;</span></span><br><span class="line">        <span class="comment"># 第二个确保以同一个tag名开始结束，如 &lt;h1&gt;Hi&lt;/h1&gt;</span></span><br><span class="line">        <span class="comment"># 以及因当前是结束tag，重置parser当前节点为其父节点</span></span><br><span class="line">        <span class="keyword">assert</span> remain_str[i_start_tag+<span class="number">1</span>] == <span class="string">&#x27;/&#x27;</span></span><br><span class="line">        tagname = remain_str[i_end_tag+<span class="number">2</span>:i_end_tag]</span><br><span class="line">        <span class="keyword">assert</span> tagname == parser.current_node.tagname</span><br><span class="line">        parser.current_node = parser.current_node.parent</span><br><span class="line">        parser.state = ChildrenNode()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> remain_str[i_end_tag+<span class="number">1</span>:].strip()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TextNode</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process</span>(<span class="params">self, remain_str, parser</span>):</span></span><br><span class="line">         i_start_tag = remain_str.find(<span class="string">&#x27;&lt;&#x27;</span>)</span><br><span class="line">         text = remain_str[:i_start_tag]</span><br><span class="line">         parser.current_node.text = text</span><br><span class="line">         parser.state = ChildrenNode()</span><br><span class="line"></span><br><span class="line">         <span class="keyword">return</span> remain_str[i_start_tag:]</span><br></pre></td></tr></table></figure>
+<p>启动代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;data.xml&quot;</span>) <span class="keyword">as</span> file:</span><br><span class="line">        p = Parser(file.read())</span><br><span class="line">        p.start()</span><br><span class="line"></span><br><span class="line">        nodes = [p.root]</span><br><span class="line">        <span class="keyword">while</span> nodes:</span><br><span class="line">            node = nodes.pop(<span class="number">0</span>)</span><br><span class="line">            <span class="built_in">print</span>(node)</span><br><span class="line">            nodes = node.children + nodes</span><br></pre></td></tr></table></figure>
+<p>将会产生下面的输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">body</span><br><span class="line">title:welcome to scott&#x27;s blog</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/uploads/wechat-reward-image.png" alt="Scott 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/article/140cd416.html" rel="prev" title="Python设计模式-装饰器与观察者模式">
+      <i class="fa fa-chevron-left"></i> Python设计模式-装饰器与观察者模式
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/article/18dbdeeb.html" rel="next" title="Python设计模式-单例模式及其实现原理">
+      Python设计模式-单例模式及其实现原理 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">策略模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">状态模式</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Scott"
+      src="/uploads/instagram_profile_image.png">
+  <p class="site-author-name" itemprop="name">Scott</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wittyfans" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/wittyfans" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/wittyfans0" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;wittyfans0" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Scott</span>
+</div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz","app_key":"qKXpoqGbK1sdFYMiik7Evuan","server_url":"https://7sscl0n1.lc-cn-n1-shared.com","security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz',
+      appKey     : 'qKXpoqGbK1sdFYMiik7Evuan',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

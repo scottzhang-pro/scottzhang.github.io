@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wittyfans.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="系统的复习一下数据结构与算法的知识，包括 Python 实现的代码模板。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法参考">
+<meta property="og:url" content="http://wittyfans.com/article/1895500896.html">
+<meta property="og:site_name" content="Scott&#39;s Blog">
+<meta property="og:description" content="系统的复习一下数据结构与算法的知识，包括 Python 实现的代码模板。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/03/07/5ryvJGuCsPS4cpN.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/12/JUxhPSH6LqB74CO.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/12/6bKBh2UTQecgLqX.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/12/YyGFwVB43sMe9Tj.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/13/6bpLCrNwEKTWOvy.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/13/jGRmsLDIFeryCP9.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/13/7mQvWfEewTYuPjA.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/13/UJNRMharPXo53V8.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/14/zYdmwyHZCFXQovM.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/14/rE8CmX27OjkgKcl.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/14/aXNWL3ogTiyGZ7w.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/14/tUCHVGfwRDlAZIo.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/14/24WjlLP5qa7dDKS.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/14/4GL5jIuWhpclkzS.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/15/8JMDFWkV2CG9dxc.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/15/Us8dBF7LNfHVIbh.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/15/yvDgQ5d7JhCejr1.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/15/zMKNUgRTZF73ht4.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/15/Hw9t4BfN3cp2OWe.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/15/noydHrUWJNVbB3F.png">
+<meta property="article:published_time" content="2021-08-15T14:40:06.000Z">
+<meta property="article:modified_time" content="2021-11-19T14:12:08.912Z">
+<meta property="article:author" content="Scott">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="数据结构">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/03/07/5ryvJGuCsPS4cpN.png">
+
+<link rel="canonical" href="http://wittyfans.com/article/1895500896.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>数据结构与算法参考 | Scott's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Scott's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Scott's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学则不固, 知则不惑</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://wittyfans.com/article/1895500896.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/instagram_profile_image.png">
+      <meta itemprop="name" content="Scott">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Scott's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构与算法参考
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-08-15 22:40:06" itemprop="dateCreated datePublished" datetime="2021-08-15T22:40:06+08:00">2021-08-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-11-19 22:12:08" itemprop="dateModified" datetime="2021-11-19T22:12:08+08:00">2021-11-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Data-Structure/" itemprop="url" rel="index"><span itemprop="name">Data Structure</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/article/1895500896.html" class="post-meta-item leancloud_visitors" data-flag-title="数据结构与算法参考" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/article/1895500896.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/article/1895500896.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>系统的复习一下数据结构与算法的知识，包括 Python 实现的代码模板。</p>
+</blockquote>
+<span id="more"></span>
+<blockquote>
+<p>Update: 2021-8-22, 更新链表 python 实现</p>
+</blockquote>
+<h1 id="数组链表跳表">数组、链表、跳表</h1>
+<h2 id="数组">数组</h2>
+<p>申请数组，计算机在内存中给你开辟一段 <strong>连续</strong> 的地址。如果直接访问数组中的某个元素，不管是前后，时间复杂度是一样的 O(1).</p>
+<p>问题：</p>
+<ul>
+<li>在中间位置插入元素，后面的元素都要移动，导致插入操作的时间复杂度不再是常数级的了，而是 O(n)，在最坏的情况下</li>
+<li>删除的时候，也一样，时间复杂度和插入一样</li>
+</ul>
+<h3 id="java-数组实现">Java 数组实现</h3>
+<p>操作</p>
+<ol type="1">
+<li>判断数组的 Size 是否够</li>
+<li>如果够，插入元素</li>
+<li>如果不够，申请一个新的数组，size是当前的2倍，并将原来的数组拷贝到新的数组</li>
+<li>将后面的元素往后挪</li>
+</ol>
+<p>可见数组的操作中，存在大量的元素拷贝。</p>
+<h2 id="链表">链表</h2>
+<p>在修改，添加，删除等操作频繁的情况下，数组并不好用，这时候推荐使用链表。链表的每一个元素都有 <code>value</code> 和 <code>next</code>，其中 <code>next</code> 指向下一个元素。这个元素一般使用 <code>class</code> 来定义，叫 <code>node</code>。</p>
+<p>如果只有一个指针叫单链表，如果有两个双向的，叫双链表，头指针叫 <code>head</code>，尾指针叫 <code>tail</code>，如果 <code>head</code> 连接了 <code>tail</code>，叫<code>循环链表</code>。</p>
+<p>Python 实现单链表，来自<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/60057180">知乎</a>，该文章还有关于双链表，循环列表的实现。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span>(<span class="params"><span class="built_in">object</span></span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;单链表的结点&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, item</span>):</span></span><br><span class="line">        <span class="comment"># item存放数据元素</span></span><br><span class="line">        self.item = item</span><br><span class="line">        <span class="comment"># next是下一个节点的标识</span></span><br><span class="line">        self.<span class="built_in">next</span> = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SingleLinkList</span>(<span class="params"><span class="built_in">object</span></span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;单链表&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        self._head = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">is_empty</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;判断链表是否为空&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> self._head <span class="keyword">is</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">length</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;链表长度&quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># 初始指针指向head</span></span><br><span class="line">        cur = self._head</span><br><span class="line">        count = <span class="number">0</span></span><br><span class="line">        <span class="comment"># 指针指向None 表示到达尾部</span></span><br><span class="line">        <span class="keyword">while</span> cur <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            count += <span class="number">1</span></span><br><span class="line">            <span class="comment"># 指针下移</span></span><br><span class="line">            cur = cur.<span class="built_in">next</span></span><br><span class="line">        <span class="keyword">return</span> count</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">items</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;遍历链表&quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># 获取head指针</span></span><br><span class="line">        cur = self._head</span><br><span class="line">        <span class="comment"># 循环遍历</span></span><br><span class="line">        <span class="keyword">while</span> cur <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="comment"># 返回生成器</span></span><br><span class="line">            <span class="keyword">yield</span> cur.item</span><br><span class="line">            <span class="comment"># 指针下移</span></span><br><span class="line">            cur = cur.<span class="built_in">next</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add</span>(<span class="params">self, item</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;向链表头部添加元素&quot;&quot;&quot;</span></span><br><span class="line">        node = Node(item)</span><br><span class="line">        <span class="comment"># 新结点指针指向原头部结点</span></span><br><span class="line">        node.<span class="built_in">next</span> = self._head</span><br><span class="line">        <span class="comment"># 头部结点指针修改为新结点</span></span><br><span class="line">        self._head = node</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">append</span>(<span class="params">self, item</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;尾部添加元素&quot;&quot;&quot;</span></span><br><span class="line">        node = Node(item)</span><br><span class="line">        <span class="comment"># 先判断是否为空链表</span></span><br><span class="line">        <span class="keyword">if</span> self.is_empty():</span><br><span class="line">            <span class="comment"># 空链表，_head 指向新结点</span></span><br><span class="line">            self._head = node</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 不是空链表，则找到尾部，将尾部next结点指向新结点</span></span><br><span class="line">            cur = self._head</span><br><span class="line">            <span class="keyword">while</span> cur.<span class="built_in">next</span> <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                cur = cur.<span class="built_in">next</span></span><br><span class="line">            cur.<span class="built_in">next</span> = node</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">insert</span>(<span class="params">self, index, item</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;指定位置插入元素&quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># 指定位置在第一个元素之前，在头部插入</span></span><br><span class="line">        <span class="keyword">if</span> index &lt;= <span class="number">0</span>:</span><br><span class="line">            self.add(item)</span><br><span class="line">        <span class="comment"># 指定位置超过尾部，在尾部插入</span></span><br><span class="line">        <span class="keyword">elif</span> index &gt; (self.length() - <span class="number">1</span>):</span><br><span class="line">            self.append(item)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 创建元素结点</span></span><br><span class="line">            node = Node(item)</span><br><span class="line">            cur = self._head</span><br><span class="line">            <span class="comment"># 循环到需要插入的位置</span></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(index - <span class="number">1</span>):</span><br><span class="line">                cur = cur.<span class="built_in">next</span></span><br><span class="line">            node.<span class="built_in">next</span> = cur.<span class="built_in">next</span></span><br><span class="line">            cur.<span class="built_in">next</span> = node</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">remove</span>(<span class="params">self, item</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;删除节点&quot;&quot;&quot;</span></span><br><span class="line">        cur = self._head</span><br><span class="line">        pre = <span class="literal">None</span></span><br><span class="line">        <span class="keyword">while</span> cur <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="comment"># 找到指定元素</span></span><br><span class="line">            <span class="keyword">if</span> cur.item == item:</span><br><span class="line">                <span class="comment"># 如果第一个就是删除的节点</span></span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> pre:</span><br><span class="line">                    <span class="comment"># 将头指针指向头节点的后一个节点</span></span><br><span class="line">                    self._head = cur.<span class="built_in">next</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="comment"># 将删除位置前一个节点的next指向删除位置的后一个节点</span></span><br><span class="line">                    pre.<span class="built_in">next</span> = cur.<span class="built_in">next</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 继续按链表后移节点</span></span><br><span class="line">                pre = cur</span><br><span class="line">                cur = cur.<span class="built_in">next</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find</span>(<span class="params">self, item</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;查找元素是否存在&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> item <span class="keyword">in</span> self.items()</span><br></pre></td></tr></table></figure>
+<h3 id="链表复杂度">链表复杂度</h3>
+<p>操作</p>
+<ol type="1">
+<li>将插入位置前的元素的next指向新节点，新节点的指向后节点，操作两次，常数级别，O(1)</li>
+<li>与插入类似</li>
+</ol>
+<p>优点：</p>
+<ul>
+<li>不用群移，不需要复制元素</li>
+<li>移动，修改的效率很高</li>
+</ul>
+<p>缺点</p>
+<ul>
+<li>访问中间节点，必须一步一步往后挪，所以复杂度为O(n)</li>
+</ul>
+<h2 id="跳表">跳表</h2>
+<figure>
+<img src="https://i.loli.net/2021/03/07/5ryvJGuCsPS4cpN.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<ul>
+<li>弥补链表的设计缺陷而设计，为了加速链表访问的速度，在节点之间搭建快速路（索引）。</li>
+<li>索引越多，速度越快，但是也没有降到O(1)，而是 O(logn)</li>
+<li>现实中，因为索引经常操作，维护成本较高</li>
+<li>空间复杂度为 O(n)，但肯定还是比链表高</li>
+</ul>
+<h1 id="栈队列">栈、队列</h1>
+<ul>
+<li><p>栈相当于一个瓶子，先放进去的后面才能拿出来。</p></li>
+<li><p>队列相当于一个管子，先放进去的先出来。</p></li>
+</ul>
+<p>这两个，复杂度添加删除都是 O(1)，查询则是 O(n)，因为它们内部元素是无序的，查任何元素都需要遍历整个数据结构。</p>
+<p>实战中，其实纯粹的栈、队列用的很少，更多的用的是双端队列(Double-End queue)，一个栈和队列的结合体，它两边都可以 push，pop，复杂度和正常的栈、队列都一样。</p>
+<figure>
+<img src="https://i.loli.net/2021/08/12/JUxhPSH6LqB74CO.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<p>栈的一些操作，可以直接通过 python 中的列表实现</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">list</span> = []</span><br><span class="line"><span class="built_in">list</span>.append() == push</span><br><span class="line"><span class="built_in">list</span>.pop() == pop</span><br><span class="line"><span class="built_in">list</span>[-<span class="number">1</span>] == peek</span><br></pre></td></tr></table></figure>
+<h2 id="优先队列">优先队列</h2>
+<p>也就是元素是有优先级的，它的插入是 O(1), 取出操作 O(logN), 因为需要按照元素的优先级取出。底层的实现方式较为多样和负责，有 heap, bst, treap.</p>
+<h1 id="哈希表映射集合">哈希表、映射、集合</h1>
+<p>哈希表也叫散列表，现实中用的比较多，类似字典的key value对，但它是通过哈希函数建立一个映射关系，key 相当于关键码值，value 也就是存放数据的地方叫哈希表。</p>
+<p>现实中一般应用在电话号码，用户信息表，缓存，键值对存储（Redis）。</p>
+<p>哈希函数有很多种，选的好可以让生成的地址比较分散，不会重复，这里重复的意思就是，比如我字符 scott 生成的地址是 9，然后 zhang 生成的也是9，这就重复了，这叫哈希碰撞。</p>
+<p>但发生了碰撞怎么办呢？可以在相同得位置，拉出一个链表出来，把信息存在这个链表上，如果哈希函数选的不好，链表很长，复杂度会变成O(n)，而没有链表得情况下是 O(1)。</p>
+<figure>
+<img src="https://i.loli.net/2021/08/12/6bKBh2UTQecgLqX.png" alt="发生哈希碰撞后的哈希表" /><figcaption aria-hidden="true">发生哈希碰撞后的哈希表</figcaption>
+</figure>
+<figure>
+<img src="https://i.loli.net/2021/08/12/YyGFwVB43sMe9Tj.png" alt="哈希表的复杂度" /><figcaption aria-hidden="true">哈希表的复杂度</figcaption>
+</figure>
+<p>哈希表在 python 中有两种，Dictionary 和 Set，在 Java 中，可能只是一个接口，比如 Set 的实现有很多种，有基于红黑树的，基于二叉树的等等。</p>
+<h1 id="树二叉树二叉搜索树">树、二叉树、二叉搜索树</h1>
+<blockquote>
+<p>2 维数据结构。</p>
+</blockquote>
+<h2 id="树">树</h2>
+<p>树的示意图</p>
+<figure>
+<img src="https://i.loli.net/2021/08/13/6bpLCrNwEKTWOvy.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<p>为什么会出现树呢？工程实践就是二维的,树和链表没有本质上的区别，只是从1维到了二维。。树的遍历怎么办？对于一维数组，你可以直接循环遍历，而对于树，则有好几种方式：</p>
+<ol type="1">
+<li>前序 (Pre-order)：根，左边，右边</li>
+<li>中序 (In-order)：左边，根，右边</li>
+<li>后序 (Post-order)：左边，右边，根</li>
+</ol>
+<p>树的循环，效率是比较麻烦的，反倒是写递归比较简单，树的各种操作，不要害怕递归。</p>
+<h2 id="二叉树">二叉树</h2>
+<p>二叉树，也就是儿子节点只有两个</p>
+<figure>
+<img src="https://i.loli.net/2021/08/13/jGRmsLDIFeryCP9.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<h2 id="二叉搜索树">二叉搜索树</h2>
+<p>如果树要查找元素，就必须要遍历，如果树里的元素没有顺序，那和列表什么的没区别。于是为了方便搜索，我们对树进行了排序，定义了二叉搜索树，它的特点是<strong>一颗空树</strong>或者<strong>具有以下性质的二叉树</strong>：</p>
+<ol type="1">
+<li>左子树上所有节点的值均小于根节点的值；</li>
+<li>右子树上所有节点的值均大于它的根节点的值；</li>
+<li>以此类推：左右子树也分别为二叉查找树（重复性）</li>
+</ol>
+<p>中序遍历：升序排列</p>
+<p>排序后的树，查询和操作都是 logn 的复杂度，相当于是加速了，因为它在查询的时候，会将当前节点与查询的节点做比较，每次可以筛掉一般的值，所以变成logn，虽然不是 O(1)，但logn 还是比 n 是不知道快多少了。</p>
+<p>看树的查询动画，see also <a target="_blank" rel="noopener" href="https://visualgo.net/en">Visualgo</a>.</p>
+<p>二叉搜索树遍历：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">preorder</span>(<span class="params">self, root</span>):</span></span><br><span class="line">    <span class="keyword">if</span> root:</span><br><span class="line">        self.traverse_path.append(root.val)</span><br><span class="line">        self.preorder(root.left)</span><br><span class="line">        self.preorder(self.right)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">inorder</span>(<span class="params">self, root</span>):</span></span><br><span class="line">    <span class="keyword">if</span> root:</span><br><span class="line">        self.inorder(root.left)</span><br><span class="line">        self.traverse_path.append(root.val)</span><br><span class="line">        self.inorder(root.right)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">postorder</span>(<span class="params">self, root</span>):</span></span><br><span class="line">    <span class="keyword">if</span> root:</span><br><span class="line">        self.postorder(root.left)</span><br><span class="line">        self.postorder(root.right)</span><br><span class="line">        self.traverse_path.append(root.val)</span><br></pre></td></tr></table></figure>
+<h2 id="图">图</h2>
+<p>图又是什么呢？图就是上面的节点中，子节点又连接到兄弟节点甚至是父节点去了。</p>
+<blockquote>
+<p>Linked List 是特殊化的 Tree，Tree是特殊化的 Graph.</p>
+</blockquote>
+<h1 id="递归">递归</h1>
+<p>递归本质上类似与循环，即通过循环调用自己，以前使用的汇编语言，那时候没有循环嵌套这么一说，更多的时候就是你之前的指令写在上面地方，就不断的调用，从汇编的角度看，其实汇编的代码里，循环和递归差不多。</p>
+<p>递归的特点，类似于盗梦空间。</p>
+<ul>
+<li>向下进入梦境，向上回到原来那层，只能一层一层进入或者退出。</li>
+<li>每一层的环境和周围的人都是一份拷贝</li>
+<li>通过声音返回上一层（return）</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Factorial</span>(<span class="params">n</span>):</span></span><br><span class="line">    <span class="keyword">if</span> n&lt;=<span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> n*Factorial(n-<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<figure>
+<img src="https://i.loli.net/2021/08/13/7mQvWfEewTYuPjA.png" alt="执行逻辑" /><figcaption aria-hidden="true">执行逻辑</figcaption>
+</figure>
+<p>递归代码模板：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">recursion</span>(<span class="params">level, param1, param2, ...</span>):</span></span><br><span class="line">	<span class="comment"># recursion terminator 终结条件</span></span><br><span class="line">	<span class="keyword">if</span> level &gt; max_level:</span><br><span class="line">		process_result</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># process logic in current level 处理当前层的逻辑</span></span><br><span class="line">    process(level, data...)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># drill down 下探到下一层，带上参数</span></span><br><span class="line">    self.recursion(level+<span class="number">1</span>, p1, ...)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># reverse the current level states if needed 如果需要递归完了清理当前层</span></span><br></pre></td></tr></table></figure>
+<p>思维要点：</p>
+<ul>
+<li>不要人肉递归</li>
+<li>找到最近，最简的方法，拆解成可重复解决的问题（最近重复子问题）</li>
+<li>数学归纳法的思维</li>
+</ul>
+<h1 id="分治回溯">分治、回溯</h1>
+<blockquote>
+<p>递归里面的细分类</p>
+</blockquote>
+<p>碰到一个题目，我们要去找重复性，重复性有两种：</p>
+<ul>
+<li>最近重复性 -&gt; 分支、回溯，递归</li>
+<li>最优重复性 -&gt; 动态规划</li>
+</ul>
+<h2 id="分治">分治</h2>
+<p>大问题都是子问题、复杂问题构成的，解决问题本质上就是找重复性，分解问题，组合子问题的结果。</p>
+<figure>
+<img src="https://i.loli.net/2021/08/13/UJNRMharPXo53V8.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<p>分治的代码模板:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">divide_conquer</span>(<span class="params">problem, param1, param2, ...</span>):</span></span><br><span class="line">    <span class="comment"># recursion terminator</span></span><br><span class="line">    <span class="keyword">if</span> problem <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        print_result</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">   	<span class="comment"># prepare data</span></span><br><span class="line">    data = prepare_data(problem)</span><br><span class="line">    subproblems = split_problem(problem, data)</span><br><span class="line">    <span class="comment"># conquer subproblems</span></span><br><span class="line">    subresult1 = self.divide_conquer(subproblems[<span class="number">0</span>], p1, ...)</span><br><span class="line">    subresult2 = self.divide_conquer(subproblems[<span class="number">1</span>], p1, ...)</span><br><span class="line">    subresult3 = self.divide_conquer(subproblems[<span class="number">2</span>], p1, ...)</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment"># process and generate the final result</span></span><br><span class="line">    result = process_result(subresult1, subresult2, subresult3)</span><br><span class="line">    <span class="comment"># revert the current level states</span></span><br></pre></td></tr></table></figure>
+<h2 id="回溯">回溯</h2>
+<p>采用试错的思想，分步解决一个问题，如果分布方案不解决问题，会取消上一步或几步的计算，再通过其他可能的分步方案寻找答案。</p>
+<p>简单来说就是，每一层我都有不同的办法，一个一个试。</p>
+<h1 id="深度优先广度优先搜索">深度优先、广度优先搜索</h1>
+<h2 id="深度优先">深度优先</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 树的定义</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TreeNode</span></span></span><br><span class="line"><span class="class">	<span class="title">def</span> <span class="title">__init__</span>(<span class="params">self, val</span>):</span></span><br><span class="line">        self.val = val</span><br><span class="line">        self.left, self.right = <span class="literal">None</span>, <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+<p>深度优先就是先往最深处的节点走，发现没有子节点了，返回到有子节点的节点，继续往下面走。</p>
+<p>示例代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 非递归实现</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">DFS</span>(<span class="params">self, tree</span>):</span></span><br><span class="line">	<span class="keyword">if</span> tree.root <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">		<span class="keyword">return</span> []</span><br><span class="line">	visited, stack = [], [tree.root]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> stack:</span><br><span class="line">        node = stack.pop()</span><br><span class="line">        visited.add(node)</span><br><span class="line"></span><br><span class="line">        process(node)</span><br><span class="line">        nodes = generate_related_nodes(node)</span><br><span class="line">        stack.push(nodes)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 递归</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dfs</span>(<span class="params">node, visited</span>):</span></span><br><span class="line">	<span class="comment"># terminator</span></span><br><span class="line">	<span class="keyword">if</span> node <span class="keyword">in</span> visited:</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	<span class="comment"># already visited</span></span><br><span class="line">	visited.add(node)</span><br><span class="line">	<span class="comment"># process current node here</span></span><br><span class="line">	<span class="keyword">for</span> next_node <span class="keyword">in</span> node.children():</span><br><span class="line">		<span class="keyword">if</span> <span class="keyword">not</span> next_node <span class="keyword">in</span> visited:</span><br><span class="line">			dfs(next_node, visited)</span><br></pre></td></tr></table></figure>
+<h2 id="广度优先">广度优先</h2>
+<p>广度优先遍历，类似与一个水滴滴到根节点，然后像水波一样一层一层扩散下去，这种思想在算最短路径的时候，比深度优先效率高。遍历的方式使用队列实现</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">BFS</span>(<span class="params">graph, start, end</span>):</span></span><br><span class="line">    queue = []</span><br><span class="line">    queue.append([start])</span><br><span class="line">    visited.add(start)</span><br><span class="line">    <span class="keyword">while</span> queue:</span><br><span class="line">        node = queue.pop()</span><br><span class="line">        visited.add(node)</span><br><span class="line"></span><br><span class="line">        process(node)</span><br><span class="line">        nodes = generate_related_nodes(node)</span><br><span class="line">        queue.push(nodes)</span><br><span class="line">     <span class="comment"># othres processing work</span></span><br><span class="line">     ...</span><br></pre></td></tr></table></figure>
+<p>这里的算法为了方便理解，举个例子，就好像要访问公司的人员信息，首先先看老总的信息，老总看完了，放到 visited 数组，然后看他有没有其他下属，有的话全部取出来放到队列（先进先出）</p>
+<h1 id="贪心算法">贪心算法</h1>
+<p>贪心算法在每一步选择中，都采取当前状态下最好或最优的选择，从而导致结果是最好的或最优的算法。（有一定的局限性，因为当下最优不一定全局最优）</p>
+<p>动态规划会保存以前的运算结果，并根据以前的结果对当前进行选择，有回退功能。</p>
+<p>贪心法主要解决一些最优化问题，图中的最小生成树，求哈夫曼编码等。</p>
+<p>一旦一个问题可以通过贪心算法解决，那么贪心法一般是解决这个问题的最好办法。</p>
+<p>适用于贪心的情况，即<code>问题可以分解成子问题，子问题的最优解可以递推到最终问题的最优解</code></p>
+<h1 id="二分查找">二分查找</h1>
+<p>一定记住二分查找的前提（肌肉记忆）:</p>
+<ol type="1">
+<li>目标函数单调性（单调递增或递减），才可以通过特征排除掉前半部分或后半部分</li>
+<li>存在上下界（bounded），没有上下界，空间可能无限大</li>
+<li>能够通过索引访问（index acccessible)，如果是单链表，即使有序，也比较难</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 假设数组是有序的</span></span><br><span class="line">left, right = <span class="number">0</span>, <span class="built_in">len</span>(array)-<span class="number">1</span></span><br><span class="line"><span class="keyword">while</span> left &lt; right:</span><br><span class="line">    mid = (left + right) /<span class="number">2</span></span><br><span class="line">    <span class="keyword">if</span> array[mid] == target:</span><br><span class="line">        <span class="comment"># find the target!</span></span><br><span class="line">        <span class="keyword">break</span> <span class="keyword">or</span> <span class="keyword">return</span></span><br><span class="line">   	<span class="keyword">elif</span> array[mid] &lt; target:</span><br><span class="line">        left = mid + <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        right = mid -<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h1 id="动态规划">动态规划</h1>
+<ul>
+<li>Dynamic Programming（一种解决问题的办法）, 本质就是将复杂问题，分解成小问题，可以理解为动态的递推，每一步保存最优解，淘汰掉那些不怎么好的，然后最终求得总体的最优解。</li>
+<li>直接递归的复杂度是指数级的，如果淘汰掉一些解，可以变成 n 平方</li>
+</ul>
+<h1 id="字典树">字典树</h1>
+<h2 id="字典树的数据结构">字典树的数据结构</h2>
+<p>之前我们的树，内部就是值本身，而是把字符串拆成单个得字幕存储。</p>
+<figure>
+<img src="https://i.loli.net/2021/08/14/zYdmwyHZCFXQovM.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<ul>
+<li>节点本身不存完整单词</li>
+<li>根节点到某一结点，连起来即为单词</li>
+<li>每个不同的边都是不一样的字符</li>
+</ul>
+<p>这种结构中，节点还可以存储其他信息，比如这个节点所得到的单词出现的频次。这种结构的核心思想是空间换时间。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Trie</span>(<span class="params"><span class="built_in">object</span></span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        self.root = &#123;&#125;</span><br><span class="line">        self.end_of_word = <span class="string">&quot;#&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">insert</span>(<span class="params">self, word</span>):</span></span><br><span class="line">        node = self.root</span><br><span class="line">        <span class="keyword">for</span> char <span class="keyword">in</span> word:</span><br><span class="line">            node = node.setdefault(char, &#123;&#125;)</span><br><span class="line">        node[self.end_of_word] = self.end_of_word</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">search</span>(<span class="params">self, word</span>):</span></span><br><span class="line">        node = self.root</span><br><span class="line">        <span class="keyword">for</span> char <span class="keyword">in</span> word:</span><br><span class="line">            <span class="keyword">if</span> char <span class="keyword">not</span> <span class="keyword">in</span> node:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">           	node = node[char]</span><br><span class="line">        <span class="keyword">return</span> self.end_of_word <span class="keyword">in</span> node</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">startsWith</span>(<span class="params">self, prefix</span>):</span></span><br><span class="line">        node = self.root</span><br><span class="line">        <span class="keyword">for</span> char <span class="keyword">in</span> prefix:</span><br><span class="line">            <span class="keyword">if</span> char <span class="keyword">not</span> <span class="keyword">in</span> node:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            node = node[char]</span><br><span class="line">         <span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<h2 id="并查集">并查集</h2>
+<p>属于一种比较跳跃式的数据结构，如果你会就很简单，如果不会就很难，它使用情景主要是在组团、配对问题。</p>
+<p>这两个个体是不是在一个集合之中。</p>
+<h3 id="基本操作">基本操作</h3>
+<ul>
+<li><p>makeSets(s): 新建并查集，其中包括s个单元素集合。</p></li>
+<li><p>unionSet(x, y): 集合合并，要求不相交才合并</p></li>
+<li><p>find(x): 判断 x 所在集合的代表</p></li>
+</ul>
+<p>每个元素都有一个 parent 数组指向自己，表示自己是自己的集合。</p>
+<h3 id="合并">合并</h3>
+<figure>
+<img src="https://i.loli.net/2021/08/14/rE8CmX27OjkgKcl.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<h3 id="路径优化">路径优化</h3>
+<figure>
+<img src="https://i.loli.net/2021/08/14/aXNWL3ogTiyGZ7w.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<h3 id="实现">实现</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">init</span>(<span class="params">p</span>):</span></span><br><span class="line">    p = []i <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">union</span>(<span class="params">self, p, i, j</span>):</span></span><br><span class="line">    p1 = self.parent(p, i)</span><br><span class="line">    p2 = self.parent(p, j)</span><br><span class="line">    p[p1] = p2</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">parent</span>(<span class="params">self, p, i</span>):</span></span><br><span class="line">    root = i</span><br><span class="line">    <span class="keyword">while</span> p[root] != root:</span><br><span class="line">        root = p[root]</span><br><span class="line">    <span class="keyword">while</span> p[i] != i:</span><br><span class="line">        x = i</span><br><span class="line">        i = p[i]</span><br><span class="line">        p[x] = root</span><br><span class="line">    <span class="keyword">return</span> root</span><br></pre></td></tr></table></figure>
+<h1 id="高级搜索">高级搜索</h1>
+<h2 id="剪枝">剪枝</h2>
+<p>说高级搜索前，什么是初级搜索呢？</p>
+<ol type="1">
+<li><p>朴素搜索</p></li>
+<li><p>优化方式：不重复、剪枝，剪枝就是在搜索的时候去掉重复，或者剪去是一些没必要的访问</p></li>
+<li><p>搜索方向</p>
+<ol type="1">
+<li><p>DFS，深度优先，没有优先级，傻搜</p></li>
+<li><p>BFS，广度优先</p></li>
+</ol></li>
+</ol>
+<p>搜索的话可以通过双向搜索，启发式搜索来优化。</p>
+<figure>
+<img src="https://i.loli.net/2021/08/14/tUCHVGfwRDlAZIo.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<h2 id="双向bfs">双向BFS</h2>
+<p>问题：找出A到L的最短路径</p>
+<figure>
+<img src="https://i.loli.net/2021/08/14/24WjlLP5qa7dDKS.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<p>这种需求，我们一般使用广度优先算法，而双向 BFS 的意思是，从两边一起进行广度优先算法的遍历，两边一起逼近中间，这样就可以提高效率。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![image.png](https://i.loli.net/2021/08/14/J3fKMgXRkuynHOd.png)</span><br></pre></td></tr></table></figure>
+<h2 id="启发式搜索-heuristic-search-a">启发式搜索 Heuristic Search (A*)</h2>
+<p>只能搜索，根据某项条件，我们去优化条件，也可以理解为思考型搜索，本质上是用优先级。</p>
+<p>这里就要用到优先队列了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">AstarSearch</span>(<span class="params">graph, start, end</span>):</span></span><br><span class="line">    pq = collections.priority_queue() <span class="comment"># 优先级，估价函数</span></span><br><span class="line">    pq.append([start])</span><br><span class="line">    visited.add(start)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> pq:</span><br><span class="line">        node = pq.pop()  <span class="comment"># 能更智能一点吗？</span></span><br><span class="line">        visited.add(node)</span><br><span class="line"></span><br><span class="line">        process(node)</span><br><span class="line">        nodes = generate_related_nodes(node)  <span class="comment"># 正常的BFS代码</span></span><br><span class="line"></span><br><span class="line">        unvisited=[node <span class="keyword">for</span> node <span class="keyword">in</span> nodes <span class="keyword">if</span> node <span class="keyword">not</span> <span class="keyword">in</span> visited]</span><br><span class="line">        pq.push(unvisited)</span><br></pre></td></tr></table></figure>
+<p>这里怎么来定优先级呢？这就需要你按照对题目的理解把估价函数写出来。</p>
+<h1 id="avl和红黑树">AVL和红黑树</h1>
+<blockquote>
+<p>二三树，B树，B+树，B-树。</p>
+</blockquote>
+<p>如何保持一棵树的平衡？</p>
+<h2 id="avl">AVL</h2>
+<ol type="1">
+<li>Balance Factor，因为二叉树的查找只与高度有关，平衡因子是它的左子树的高度减去右子树的高度（有时候相反）,balance factor = {-1, 0, 1}</li>
+<li>通过旋转操作来进行平衡（四种）</li>
+</ol>
+<p>那么如何判断高度呢?</p>
+<figure>
+<img src="https://i.loli.net/2021/08/14/4GL5jIuWhpclkzS.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<p>通过高度的值不超过1，不小于-1来判断一棵树是否需要调整，即旋转，旋转的方式有：</p>
+<ol type="1">
+<li>左旋</li>
+<li>右选</li>
+<li>左右旋</li>
+<li>右左旋</li>
+</ol>
+<p>缺点：需要额外的信息存储，且调整次数频繁。</p>
+<h2 id="红黑树">红黑树</h2>
+<p>也是一种<code>近似平衡</code>的二叉搜索树，它能确保任何一个节点的左右子树高度差小于两倍，具体来说：</p>
+<ul>
+<li>每个节点要么是红色，要么是黑色</li>
+<li>根节点是黑色</li>
+<li>每个叶节点（NIL节点，空节点）是黑色的。</li>
+<li>不能有相邻接的两个红色节点</li>
+<li>从任何一个节点到每个叶子的所有路径都包含相同数目的黑色节点</li>
+</ul>
+<p>这些性质就让红黑树的时间复杂度可以保持在 logn 的水平，不会退化，需要调整的时间也是相对比较折中。</p>
+<p>下面是 AVL 与 红黑树的对比：</p>
+<figure>
+<img src="https://i.loli.net/2021/08/15/8JMDFWkV2CG9dxc.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<ul>
+<li>如果读操作非常多写操作少就用 AVL，它插入、删除需要的操作比较多。</li>
+<li>插入操作也很多，或者操作、查询需求差不多，就用红黑树</li>
+</ul>
+<h1 id="位运算">位运算</h1>
+<p>位运算简单说就是进制转换，比如十进制转二进制，在进制表示中，<code>4(d)</code> 中的 d 表示的是十进制，<code>0100</code> 中零开头表示2进制。</p>
+<p>具体转换的算法可以参考<a target="_blank" rel="noopener" href="https://zh.wikihow.com/%E4%BB%8E%E5%8D%81%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2%E4%B8%BA%E4%BA%8C%E8%BF%9B%E5%88%B6">这里</a>。</p>
+<h2 id="位运算符">位运算符</h2>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">含义</th>
+<th style="text-align: center;">运算符</th>
+<th style="text-align: center;">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">左移</td>
+<td style="text-align: center;">&lt;&lt;</td>
+<td style="text-align: center;">0011 =&gt; 0110</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">右移</td>
+<td style="text-align: center;">&gt;&gt;</td>
+<td style="text-align: center;">0110 =&gt; 0011</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">按位或，有1则1</td>
+<td style="text-align: center;">|</td>
+<td style="text-align: center;">0011 | 1011 =&gt; 1011</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">按位与，有0则0</td>
+<td style="text-align: center;">&amp;</td>
+<td style="text-align: center;">0011 &amp; 1011 =&gt; 0011</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">按位取反，0变1，1变0</td>
+<td style="text-align: center;">~</td>
+<td style="text-align: center;">0011 =&gt; 1100</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">按位异或，相同0不同1</td>
+<td style="text-align: center;">^</td>
+<td style="text-align: center;">0011 ^ 1011 =&gt; 1000</td>
+</tr>
+</tbody>
+</table>
+<h2 id="异或特点">异或特点</h2>
+<p>异或操作的一些特点：</p>
+<ul>
+<li><code>x^0 = x</code>, 只要 <code>x</code> 和 <code>0</code> 相同的就为 <code>0</code>，不同的为 <code>1</code>，所以这里 <code>x^0</code> 就等于 <code>x</code></li>
+<li><code>x^1s = ~x</code>, <code>1s</code> 指的是全1，也就是等于0取反 <code>~</code></li>
+<li><code>x^(~x)=1s</code>, 取反后，所有位置都不一样，所有都不同，都是1，1s</li>
+<li><code>x^x=0</code>, 异或相同为0，所有都是0</li>
+<li><code>c=a^b</code> ,<code>a^c=b</code> 则 <code>b^c=a</code>, 交换两数</li>
+<li><code>a^b^c = a^(b^c) = (a^b)^c</code>, associative</li>
+</ul>
+<h2 id="指定位置的位运算">指定位置的位运算</h2>
+<figure>
+<img src="https://i.loli.net/2021/08/15/Us8dBF7LNfHVIbh.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<h2 id="实战运算要点">实战运算要点</h2>
+<figure>
+<img src="https://i.loli.net/2021/08/15/yvDgQ5d7JhCejr1.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<h1 id="布隆过滤器lru-cache">布隆过滤器，LRU Cache</h1>
+<h2 id="布隆过滤器">布隆过滤器</h2>
+<p>在说布隆过滤器之前，回顾一下哈希表，前面说过哈希表在哈希操作的时候，有可能会得到一样的地址（整数），这时候会采用拉链的办法，也就是在同样的地址上叠罗汉。</p>
+<p>在哈希表的应用中，我们发现，有时候我们并不需要去存储元素的信息本身，而是只需要知道某个信息在我们的表中有没有。</p>
+<p>如果我们只是需要知道某个信息在表里有没有，这时候 Bloom filter 就设计出来了。</p>
+<h3 id="布隆过滤器具-vs-哈希表">布隆过滤器具 vs 哈希表</h3>
+<ul>
+<li>空间效率和查询时间都远远超过一般算法</li>
+<li>缺点是有一定的误识别率和删除困难</li>
+</ul>
+<h3 id="布隆过滤器具原理">布隆过滤器具原理</h3>
+<figure>
+<img src="https://i.loli.net/2021/08/15/zMKNUgRTZF73ht4.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<p>现在有 xyz 三个元素需要存储，布隆过滤器会对每一个元素执行哈希，得到一组值，然后再将这组值插入到下面的框框中，y 和 z 也是同理，这样下次查询的时候，只需要查看这些对应的位置是否为1就好了，而且查询的时候，我只需要判断任意一个元素是0，那么就可以判断这个元素是不在这个表中的。</p>
+<p>但是这种查法可能会有问题，比如下面的这个B：</p>
+<figure>
+<img src="https://i.loli.net/2021/08/15/Hw9t4BfN3cp2OWe.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<p>对于一个元素，布隆过滤器可以确定一个元素不存在，但只可以说某个元素有可能存在。</p>
+<p>布隆过滤器一般放在数据库的外层当作缓存使用。</p>
+<h3 id="布隆过滤器具案例">布隆过滤器具案例</h3>
+<ol type="1">
+<li>比特币网络</li>
+<li>分布式系统（Map-Reduce）- Hadooop，search engine</li>
+<li>Redis 缓存</li>
+<li>垃圾邮件、评论等的过滤</li>
+</ol>
+<h3 id="布隆过滤器具-python实现">布隆过滤器具 Python实现</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">bfrom bitarray <span class="keyword">import</span> bitarray</span><br><span class="line"><span class="keyword">import</span> mmh3</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BloomFilter</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, size, hash_num</span>):</span></span><br><span class="line">        self.size = size</span><br><span class="line">        self.hash_num = hash_num</span><br><span class="line">        self.bit_array = bitarray(size)</span><br><span class="line">        self.bit_array.setall(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add</span>(<span class="params">self, s</span>):</span></span><br><span class="line">        <span class="keyword">for</span> seed <span class="keyword">in</span> <span class="built_in">range</span>(self.hash_num):</span><br><span class="line">            result = mmh3.<span class="built_in">hash</span>(s, seed) % self.size</span><br><span class="line">            self.bit_array[result] = <span class="number">1</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">lookup</span>(<span class="params">self, s</span>):</span></span><br><span class="line">        <span class="keyword">for</span> seed <span class="keyword">in</span> <span class="built_in">range</span>(self.hash_num):</span><br><span class="line">            result = mmh3.<span class="built_in">hash</span>(s, seed) % self.size</span><br><span class="line">            <span class="keyword">if</span> self.bit_array[result] == <span class="number">0</span>:</span><br><span class="line">            	<span class="keyword">return</span> <span class="string">&quot;Nope&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Probably&quot;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">bf = BloomFilter(500000, 7)</span><br><span class="line">bf.add(&quot;scott&quot;)</span><br><span class="line">bf.lookup(&quot;scott&quot;)</span><br><span class="line">&#x27;Probably&#x27;</span><br><span class="line"></span><br><span class="line">bf.lookup(&quot;zhang&quot;)</span><br><span class="line">&#x27;Nope&#x27;</span><br></pre></td></tr></table></figure>
+<h2 id="lru-cache-缓存">LRU Cache 缓存</h2>
+<blockquote>
+<p>Least Rencent Used,</p>
+</blockquote>
+<ul>
+<li>两个要素：大小、替换策略</li>
+<li>使用 Hash Table + Double LinkedList 实现</li>
+<li>O(1) 查询，O(1) 更新、更新</li>
+</ul>
+<h3 id="工作示例">工作示例</h3>
+<figure>
+<img src="https://i.loli.net/2021/08/15/noydHrUWJNVbB3F.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<h1 id="排序算法">排序算法</h1>
+<blockquote>
+<p>To be continued.</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/uploads/wechat-reward-image.png" alt="Scott 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># 数据结构</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/article/3551438313.html" rel="prev" title="cx_Oracle 在 Linux 上的安装与配置">
+      <i class="fa fa-chevron-left"></i> cx_Oracle 在 Linux 上的安装与配置
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/article/4187072417.html" rel="next" title="统计基础概念">
+      统计基础概念 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E9%93%BE%E8%A1%A8%E8%B7%B3%E8%A1%A8"><span class="nav-number">1.</span> <span class="nav-text">数组、链表、跳表</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E7%BB%84"><span class="nav-number">1.1.</span> <span class="nav-text">数组</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#java-%E6%95%B0%E7%BB%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.1.1.</span> <span class="nav-text">Java 数组实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%93%BE%E8%A1%A8"><span class="nav-number">1.2.</span> <span class="nav-text">链表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E8%A1%A8%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">1.2.1.</span> <span class="nav-text">链表复杂度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%B3%E8%A1%A8"><span class="nav-number">1.3.</span> <span class="nav-text">跳表</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%88%E9%98%9F%E5%88%97"><span class="nav-number">2.</span> <span class="nav-text">栈、队列</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97"><span class="nav-number">2.1.</span> <span class="nav-text">优先队列</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%93%88%E5%B8%8C%E8%A1%A8%E6%98%A0%E5%B0%84%E9%9B%86%E5%90%88"><span class="nav-number">3.</span> <span class="nav-text">哈希表、映射、集合</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%91%E4%BA%8C%E5%8F%89%E6%A0%91%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91"><span class="nav-number">4.</span> <span class="nav-text">树、二叉树、二叉搜索树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%91"><span class="nav-number">4.1.</span> <span class="nav-text">树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-number">4.2.</span> <span class="nav-text">二叉树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91"><span class="nav-number">4.3.</span> <span class="nav-text">二叉搜索树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE"><span class="nav-number">4.4.</span> <span class="nav-text">图</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%92%E5%BD%92"><span class="nav-number">5.</span> <span class="nav-text">递归</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E6%B2%BB%E5%9B%9E%E6%BA%AF"><span class="nav-number">6.</span> <span class="nav-text">分治、回溯</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%B2%BB"><span class="nav-number">6.1.</span> <span class="nav-text">分治</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9E%E6%BA%AF"><span class="nav-number">6.2.</span> <span class="nav-text">回溯</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2"><span class="nav-number">7.</span> <span class="nav-text">深度优先、广度优先搜索</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88"><span class="nav-number">7.1.</span> <span class="nav-text">深度优先</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88"><span class="nav-number">7.2.</span> <span class="nav-text">广度优先</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95"><span class="nav-number">8.</span> <span class="nav-text">贪心算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE"><span class="nav-number">9.</span> <span class="nav-text">二分查找</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92"><span class="nav-number">10.</span> <span class="nav-text">动态规划</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%97%E5%85%B8%E6%A0%91"><span class="nav-number">11.</span> <span class="nav-text">字典树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E5%85%B8%E6%A0%91%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">11.1.</span> <span class="nav-text">字典树的数据结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E6%9F%A5%E9%9B%86"><span class="nav-number">11.2.</span> <span class="nav-text">并查集</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-number">11.2.1.</span> <span class="nav-text">基本操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%88%E5%B9%B6"><span class="nav-number">11.2.2.</span> <span class="nav-text">合并</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84%E4%BC%98%E5%8C%96"><span class="nav-number">11.2.3.</span> <span class="nav-text">路径优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">11.2.4.</span> <span class="nav-text">实现</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AB%98%E7%BA%A7%E6%90%9C%E7%B4%A2"><span class="nav-number">12.</span> <span class="nav-text">高级搜索</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%AA%E6%9E%9D"><span class="nav-number">12.1.</span> <span class="nav-text">剪枝</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%8C%E5%90%91bfs"><span class="nav-number">12.2.</span> <span class="nav-text">双向BFS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8F%91%E5%BC%8F%E6%90%9C%E7%B4%A2-heuristic-search-a"><span class="nav-number">12.3.</span> <span class="nav-text">启发式搜索 Heuristic Search (A*)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#avl%E5%92%8C%E7%BA%A2%E9%BB%91%E6%A0%91"><span class="nav-number">13.</span> <span class="nav-text">AVL和红黑树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#avl"><span class="nav-number">13.1.</span> <span class="nav-text">AVL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%A2%E9%BB%91%E6%A0%91"><span class="nav-number">13.2.</span> <span class="nav-text">红黑树</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%8D%E8%BF%90%E7%AE%97"><span class="nav-number">14.</span> <span class="nav-text">位运算</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%8D%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-number">14.1.</span> <span class="nav-text">位运算符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%82%E6%88%96%E7%89%B9%E7%82%B9"><span class="nav-number">14.2.</span> <span class="nav-text">异或特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E5%AE%9A%E4%BD%8D%E7%BD%AE%E7%9A%84%E4%BD%8D%E8%BF%90%E7%AE%97"><span class="nav-number">14.3.</span> <span class="nav-text">指定位置的位运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E8%BF%90%E7%AE%97%E8%A6%81%E7%82%B9"><span class="nav-number">14.4.</span> <span class="nav-text">实战运算要点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8lru-cache"><span class="nav-number">15.</span> <span class="nav-text">布隆过滤器，LRU Cache</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="nav-number">15.1.</span> <span class="nav-text">布隆过滤器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%E5%85%B7-vs-%E5%93%88%E5%B8%8C%E8%A1%A8"><span class="nav-number">15.1.1.</span> <span class="nav-text">布隆过滤器具 vs 哈希表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%E5%85%B7%E5%8E%9F%E7%90%86"><span class="nav-number">15.1.2.</span> <span class="nav-text">布隆过滤器具原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%E5%85%B7%E6%A1%88%E4%BE%8B"><span class="nav-number">15.1.3.</span> <span class="nav-text">布隆过滤器具案例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%E5%85%B7-python%E5%AE%9E%E7%8E%B0"><span class="nav-number">15.1.4.</span> <span class="nav-text">布隆过滤器具 Python实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lru-cache-%E7%BC%93%E5%AD%98"><span class="nav-number">15.2.</span> <span class="nav-text">LRU Cache 缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E7%A4%BA%E4%BE%8B"><span class="nav-number">15.2.1.</span> <span class="nav-text">工作示例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95"><span class="nav-number">16.</span> <span class="nav-text">排序算法</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Scott"
+      src="/uploads/instagram_profile_image.png">
+  <p class="site-author-name" itemprop="name">Scott</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wittyfans" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/wittyfans" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/wittyfans0" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;wittyfans0" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Scott</span>
+</div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz","app_key":"qKXpoqGbK1sdFYMiik7Evuan","server_url":"https://7sscl0n1.lc-cn-n1-shared.com","security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz',
+      appKey     : 'qKXpoqGbK1sdFYMiik7Evuan',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

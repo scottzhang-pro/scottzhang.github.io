@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wittyfans.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="这篇文章深入研究了 import 命令以及它的工作原理。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python-高级导入技巧">
+<meta property="og:url" content="http://wittyfans.com/article/935fa388.html">
+<meta property="og:site_name" content="Scott&#39;s Blog">
+<meta property="og:description" content="这篇文章深入研究了 import 命令以及它的工作原理。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/09/21/V4rsyDKYe312CT7.png">
+<meta property="article:published_time" content="2021-09-21T15:33:14.000Z">
+<meta property="article:modified_time" content="2021-11-19T14:12:08.907Z">
+<meta property="article:author" content="Scott">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/09/21/V4rsyDKYe312CT7.png">
+
+<link rel="canonical" href="http://wittyfans.com/article/935fa388.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Python-高级导入技巧 | Scott's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Scott's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Scott's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学则不固, 知则不惑</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://wittyfans.com/article/935fa388.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/instagram_profile_image.png">
+      <meta itemprop="name" content="Scott">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Scott's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Python-高级导入技巧
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-21 23:33:14" itemprop="dateCreated datePublished" datetime="2021-09-21T23:33:14+08:00">2021-09-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-11-19 22:12:08" itemprop="dateModified" datetime="2021-11-19T22:12:08+08:00">2021-11-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/coding/" itemprop="url" rel="index"><span itemprop="name">coding</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/article/935fa388.html" class="post-meta-item leancloud_visitors" data-flag-title="Python-高级导入技巧" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/article/935fa388.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/article/935fa388.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>这篇文章深入研究了 <code>import</code> 命令以及它的工作原理。</p>
+</blockquote>
+<span id="more"></span>
+<h1 id="基本导入命令">基本导入命令</h1>
+<p>在 <a href="https://wittyfans.com/article/c8bc6f6.html">Python-模块与包</a> 一文中，我们看到过 <code>import</code> 命令，它可以用来导入包和模块。</p>
+<p><code>import</code> 命令有几种形式:</p>
+<ul>
+<li><code>import math</code></li>
+<li><code>from math import pi</code></li>
+<li><code>import math as m</code></li>
+</ul>
+<p>对于 <code>import</code> 命令，它不关心 <code>import</code> 的是一个包还是一个模块，因为语法是一样的，只是包在构建的时候有些不同。</p>
+<blockquote>
+<p>一个没有 <code>__init__.py</code> 文件的目录，也会被当做一个包，只是不是普通的包，有时候称其为命名空间包 (namespace packages)。</p>
+</blockquote>
+<p>通常情况下，在一个普通的包中，子模块和子包默认不会导入，除非你在 <code>__init__.py</code> 中有 <code>import</code> 子包和子模块。</p>
+<p>举一例，有个叫 world 包的包，其目录结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">world/</span><br><span class="line">│</span><br><span class="line">├── africa/</span><br><span class="line">│   ├── __init__.py</span><br><span class="line">│   └── zimbabwe.py</span><br><span class="line">│</span><br><span class="line">├── europe/</span><br><span class="line">│   ├── __init__.py</span><br><span class="line">│   ├── greece.py</span><br><span class="line">│   ├── norway.py</span><br><span class="line">│   └── spain.py</span><br><span class="line">│</span><br><span class="line">└── __init__.py</span><br></pre></td></tr></table></figure>
+<p>如果你要使用 world 包，若其中没有 <code>__init__.py</code> 是不会包括子包的。</p>
+<p>导入一个包会加载包的内容，并创建命名空间，命名空间是一个字典，你可以通过 <code>__dict__</code> 属性访问到:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> math</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>math.__dict__[<span class="string">&quot;pi&quot;</span>]</span><br><span class="line"><span class="number">3.141592653589793</span></span><br></pre></td></tr></table></figure>
+<p>同样的，全局变量也是一个命名空间，可以通过 <code>globals()</code> 访问。</p>
+<h1 id="常见导入问题">常见导入问题</h1>
+<p>假设你现在有一个包，它的目录结构如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">structure/</span><br><span class="line">│</span><br><span class="line">├── files.py</span><br><span class="line">└── structure.py</span><br></pre></td></tr></table></figure>
+<p><code>structure.py</code> 中的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># structure.py</span></span><br><span class="line"><span class="keyword">import</span> files</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">	<span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+<p>运行 <code>python structure.py .</code> 后的输出: <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ python structure.py .</span><br><span class="line">Create file: /home/gahjelle/structure/001/structure.py</span><br><span class="line">Create file: /home/gahjelle/structure/001/files.py</span><br><span class="line">Create file: /home/gahjelle/structure/001/__pycache__/files.cpython-38.pyc</span><br></pre></td></tr></table></figure></p>
+<p>当你在 <code>structure.py</code> 需要用到 files 时，如果这两个文件在同一目录，这样是没有问题的。</p>
+<p>现在为了满足 Pyinstaller guide 而创建了一个程序入口，你的目录结构变成：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">structure/</span><br><span class="line">│</span><br><span class="line">├── structure/</span><br><span class="line">│   ├── files.py</span><br><span class="line">│   └── structure.py</span><br><span class="line">│</span><br><span class="line">└── cli.py</span><br></pre></td></tr></table></figure>
+<p>在 <code>cli.py</code> 中，你导入了 structure 中的 main 函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cli.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> structure.structure <span class="keyword">import</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+<p>此时，如果你在 <code>cli.py</code> 所在目录执行 <code>python cli.py structure</code>，则会报错：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;cli.py&quot;, line 1, in &lt;module&gt;</span><br><span class="line">    from structure.structure import main</span><br><span class="line">  File &quot;/home/gahjelle/structure/structure/structure.py&quot;, line 8, in &lt;module&gt;</span><br><span class="line">    import files</span><br><span class="line">ModuleNotFoundError: No module named &#x27;files&#x27;</span><br></pre></td></tr></table></figure>
+<p>因为 <code>import files</code> 基于当前目录去寻找 files，而当执行目录变化以后，肯定就找不到了。</p>
+<p>一种解决办法是，在引用文件中，找到引用文件的父目录，并将其加入到 <code>sys.path</code> 中（即 implicit relative imports，隐式相对导入）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Local imports</span></span><br><span class="line"> sys.path.insert(<span class="number">0</span>, <span class="built_in">str</span>(pathlib.Path(__file__).parent))</span><br><span class="line"> <span class="keyword">import</span> files</span><br></pre></td></tr></table></figure>
+<p>你可能会像在 <code>structure.py</code> 中，使用相对路径导入 <code>files</code>，如：<code>from . import files</code></p>
+<p>但这样也是不行的，因为<a target="_blank" rel="noopener" href="https://www.python.org/dev/peps/pep-0328/#relative-imports-and-name">相对导入在脚本中的解析方式与导入模块中的解析方式不同</a>。</p>
+<p>一个更好的方式是使用 <code>pip</code>, 你自己创建一个包，使用起来就好像其他的包一样。</p>
+<h1 id="何不创建自己的包">何不创建自己的包？</h1>
+<p>当你通过 pip 安装一个包的时候，它可以在任何地方使用，事实上你也可以做到，首先在你的包文件夹旁边新建两个文件：</p>
+<ul>
+<li><code>setup.cfg</code></li>
+<li><code>setup.py</code></li>
+</ul>
+<p>内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># setup.cfg</span><br><span class="line"></span><br><span class="line">[metadata]</span><br><span class="line">name = local_structure</span><br><span class="line">version = 0.1.0</span><br><span class="line"></span><br><span class="line">[options]</span><br><span class="line">packages = structure</span><br><span class="line"></span><br><span class="line"># setup.py</span><br><span class="line"></span><br><span class="line">import setuptools</span><br><span class="line"></span><br><span class="line">setuptools.setup()</span><br></pre></td></tr></table></figure>
+<p>name 和 version，随意。名字的话建议打上标识，比如 local 或者你的用户名，这样可以方便的找出你自己的包。</p>
+<p>准备好了之后，就可以创建你自己的包了：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m pip install -e .</span><br></pre></td></tr></table></figure>
+<p><code>-e</code> 的意思是 <code>editable</code>， 这个非常重要，因为这可以让你更改你的源代码，而不用重新安装你的包。</p>
+<p>这条命令会将你的包安装到系统，你可以在任何地方使用你的包，只需执行 <code>from structure import files</code>。不用担心相对路径，绝对路径等问题。</p>
+<blockquote>
+<p>简单的包可以这样直接建立，但如果比较复杂的包则最好附上更多详细的信息，可参考 [<a target="_blank" rel="noopener" href="https://realpython.com/pypi-publish-python-package/">How to Publish an Open-Source Python Package to PyPI</a>.</p>
+</blockquote>
+<h1 id="介绍命名空间包">介绍命名空间包</h1>
+<p>命名空间包可以允许不存在 <code>__init__.py</code> 文件，特别的，它还允许文件分布在不同的文件夹。当你的文件夹中有 py 文件，但是没有 <code>__init__.py</code> 文件，命名空间包会被自动创建。</p>
+<p>为了更理解命名空间包，我们直接实现它。</p>
+<p>考虑一个需求，要将歌曲的信息序列化:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>song = Song(song_id=<span class="string">&quot;1&quot;</span>, title=<span class="string">&quot;The Same River&quot;</span>, artist=<span class="string">&quot;Riverside&quot;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>song.serialize()</span><br><span class="line"><span class="string">&#x27;&#123;&quot;id&quot;: &quot;1&quot;, &quot;title&quot;: &quot;The Same River&quot;, &quot;artist&quot;: &quot;Riverside&quot;&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>现在已经有第三方社区为你实现了一部分工作。</p>
+<p>对于 <code>song.serialize()</code>，它接收一个序列化对象，这个序列化对象有基于 json 实现的，有基于 xml 实现的，可能内部实现代码不一样，但暴露的方法名一样，你可以在 <code>song.serialize()</code> 中自动处理。</p>
+<p>这两个序列化对象，分别放在不同文件实现，文件目录如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">third_party/</span><br><span class="line">│</span><br><span class="line">└── serializers/</span><br><span class="line">    ├── json.py</span><br><span class="line">    └── xml.py</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>目前看起来不错，这时候你可能想再加一个自己的 yaml 的序列化方法，同样的创建目录：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">local/</span><br><span class="line">│</span><br><span class="line">└── serializers/</span><br><span class="line">    └── yaml.py</span><br></pre></td></tr></table></figure>
+<p>这里虽然代码在不同的目录，但是对于 <code>serializers</code> 来说，在这2个目录里，都有着共同的命名空间。</p>
+<p>所以你可以直接这样导入全部的序列化对象：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">sys.path.extend([<span class="string">&quot;third_party&quot;</span>, <span class="string">&quot;local&quot;</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> serializers <span class="keyword">import</span> json, xml, yaml</span><br></pre></td></tr></table></figure>
+<p>再举一例：</p>
+<p>假设你有Python代码的两个不同的目录如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">foo-package/</span><br><span class="line">    spam/</span><br><span class="line">        blah.py</span><br><span class="line"></span><br><span class="line">bar-package/</span><br><span class="line">    spam/</span><br><span class="line">        grok.py</span><br></pre></td></tr></table></figure>
+<p>在这2个目录里，都有着共同的命名空间spam。在任何一个目录里都没有 <code>__init__.py</code> 文件。</p>
+<p>让我们看看，如果将 <code>foo-package</code> 和 <code>bar-package</code> 都加到python 模块路径并尝试导入会发生什么</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import sys</span><br><span class="line">&gt;&gt;&gt; sys.path.extend([&#x27;foo-package&#x27;, &#x27;bar-package&#x27;])</span><br><span class="line">&gt;&gt;&gt; import spam.blah</span><br><span class="line">&gt;&gt;&gt; import spam.grok</span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
+<p>两个不同的包目录被合并到一起，你可以导入 <code>spam.blah</code> 和<code>spam.grok</code>，并且它们能够工作。</p>
+<p>在这里工作的机制被称为“包命名空间”的一个特征。</p>
+<p>从本质上讲，包命名空间是一种特殊的封装设计，为合并不同的目录的代码到一个共同的命名空间。对于大的框架，这可能是有用的，因为它允许一个框架的部分被单独地安装下载。它也使人们能够轻松地为这样的框架编写第三方附加组件和其他扩展。</p>
+<h1 id="导入包的风格规范">导入包的风格规范</h1>
+<p>导入包不可以太随意，建议将标准包、第三方包、用户自定义包区分：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Standard library imports</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">Dict</span>, <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Third party imports</span></span><br><span class="line"><span class="keyword">import</span> feedparser</span><br><span class="line"><span class="keyword">import</span> html2text</span><br><span class="line"></span><br><span class="line"><span class="comment"># Reader imports</span></span><br><span class="line"><span class="keyword">from</span> reader <span class="keyword">import</span> URL</span><br></pre></td></tr></table></figure>
+<h1 id="如何导入数据资源">如何导入数据资源？</h1>
+<p>有时候你的包需要依赖一些数据，如果你想要将这些数据也一起打包分发给你的用户，可能会有一些问题：</p>
+<ul>
+<li>数据文件的路径不确定，这取决于用户的配置，包如何分发的，以及安装在哪里</li>
+<li>你的数据文件可能在压缩文件或者 <code>.egg</code> 文件中无法直接使用</li>
+</ul>
+<p>历史上有过一些对数据资源的解决方案，包括 <a target="_blank" rel="noopener" href="https://setuptools.readthedocs.io/en/latest/pkg_resources.html"><code>setuptools.pkg_resources</code></a>，不过现在在 python3.7 中，有了官方的标准库来解决这个问题，那就是 <code>importlib.resources</code>，对于之前的版本，则需要使用 <code>importlib_resources</code></p>
+<blockquote>
+<p>命名空间包不支持 importlib.resources</p>
+</blockquote>
+<p>假设你有一个数据文件是关于书籍的，你的目录结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">books/</span><br><span class="line">│</span><br><span class="line">├── __init__.py  # 空文件，构造包所用</span><br><span class="line">├── alice_in_wonderland.png</span><br><span class="line">└── alice_in_wonderland.txt</span><br></pre></td></tr></table></figure>
+<p>如果需要这两个文件，只需要按如下代码操作即可：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> importlib <span class="keyword">import</span> resources</span><br><span class="line"><span class="comment"># 文本文件, books 为目录名</span></span><br><span class="line"><span class="keyword">with</span> resources.open_text(<span class="string">&quot;books&quot;</span>, <span class="string">&quot;alice_in_wonderland.txt&quot;</span>) <span class="keyword">as</span> fid:</span><br><span class="line">    alice = fid.readlines()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 二进制文件，books 为目录名</span></span><br><span class="line"><span class="keyword">with</span> resources.open_binary(<span class="string">&quot;books&quot;</span>, <span class="string">&quot;alice_in_wonderland.png&quot;</span>) <span class="keyword">as</span> fid:</span><br><span class="line">    cover = fid.read()</span><br></pre></td></tr></table></figure>
+<p>如果是较老的版本，可以在 import 的时候换成支持的包：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">from</span> importlib <span class="keyword">import</span> resources</span><br><span class="line"><span class="keyword">except</span> ImportError:</span><br><span class="line">    <span class="keyword">import</span> importlib_resources <span class="keyword">as</span> resources</span><br></pre></td></tr></table></figure>
+<p>再来一个例子，你现在需要将你的程序添加一个 logo，你的包目录如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">hello_gui/</span><br><span class="line">│</span><br><span class="line">├── gui_resources/</span><br><span class="line">│   ├── __init__.py</span><br><span class="line">│   ├── hand.png</span><br><span class="line">│   └── logo.png</span><br><span class="line">│</span><br><span class="line">└── __main__.py</span><br></pre></td></tr></table></figure>
+<p>下面的代码显示了你应该如何引用你的 logo 文件:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> importlib <span class="keyword">import</span> resources</span><br><span class="line"><span class="keyword">with</span> resources.path(<span class="string">&quot;hello_gui.gui_resources&quot;</span>, <span class="string">&quot;logo.png&quot;</span>) <span class="keyword">as</span> path:</span><br><span class="line">    <span class="keyword">pass</span>  <span class="comment"># or do you work</span></span><br></pre></td></tr></table></figure>
+<h1 id="使用动态导入">使用动态导入</h1>
+<p>Python 是一门动态语言（尽管这有时候也算是缺点），这意味着你可以在 python 程序运行的时候，增加类的属性，修改函数的定义、模块的 docstring，甚至你可以修改 <code>print()</code> 函数让它什么都不输出。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(<span class="string">&quot;Hello dynamic world!&quot;</span>)</span><br><span class="line">Hello dynamic world!</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># Redefine the built-in print()</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span> = <span class="keyword">lambda</span> *args, **kwargs: <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(<span class="string">&quot;Hush, everybody!&quot;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># Nothing is printed</span></span><br></pre></td></tr></table></figure>
+<p>所以你也可以动态的导入一个包：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docreader.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> importlib</span><br><span class="line"></span><br><span class="line">module_name = <span class="built_in">input</span>(<span class="string">&quot;Name of module? &quot;</span>)</span><br><span class="line">module = importlib.import_module(module_name)</span><br><span class="line"><span class="built_in">print</span>(module.__doc__)</span><br></pre></td></tr></table></figure>
+<h1 id="深入python-的导入系统">深入Python 的导入系统</h1>
+<p>当你执行导入操作时候，背后主要发生了三件事：</p>
+<ol type="1">
+<li>搜索</li>
+<li>加载</li>
+<li>绑定到命名空间</li>
+</ol>
+<p><code>import</code> 命令执行的时候，这三步会自动完成，而<code>importlib</code> 只会完成前两步。</p>
+<p>有一点需要注意的是，即便你只导入了某个包中的一个属性，整个模块也会被导入，只是其余的部分没有绑定到当前命名空间。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> math <span class="keyword">import</span> pi</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>pi</span><br><span class="line"><span class="number">3.141592653589793</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> sys</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>sys.modules[<span class="string">&quot;math&quot;</span>].cos(pi)</span><br><span class="line">-<span class="number">1.0</span></span><br></pre></td></tr></table></figure>
+<p><code>sys.modules</code> 相当于系统对导入模块的缓存。当 python 在执行导入的时候，会先去缓存中查找，如果存在了，则不会执行导入。</p>
+<h2 id="只导入一次">只导入一次</h2>
+<p>你的包中有一些方法，它依赖一些数据，这些数据需要从磁盘或者网络读取，你的类在初始化的时候，可能会刷新这些数据，但如果每次初始化就刷新数据，会导致大量时间花在磁盘或网络IO上，可以设计一个单例模式来解决这个问题。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_Population</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;Prepare to read the population file&quot;&quot;&quot;</span></span><br><span class="line">        self._data = &#123;&#125;</span><br><span class="line">        self.variant = <span class="string">&quot;Medium&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">    @property  </span><span class="comment"># 创建只读属性的装饰器，名字不变，调用无需加括号</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">data</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;Read data from disk&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> self._data:  <span class="comment"># 已存在，直接返回</span></span><br><span class="line">            <span class="keyword">return</span> self._data</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 读取文件，保存到 self._data</span></span><br><span class="line">        <span class="keyword">with</span> resources.open_text(</span><br><span class="line">            <span class="string">&quot;data&quot;</span>, <span class="string">&quot;WPP2019_TotalPopulationBySex.csv&quot;</span></span><br><span class="line">        ) <span class="keyword">as</span> fid:</span><br><span class="line">            <span class="comment"># Read data, filter the correct variant</span></span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line">        <span class="keyword">return</span> self._data</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>关于 <code>property</code> 参考 <a target="_blank" rel="noopener" href="https://www.tianqiweiqi.com/python-property.html">Python内置属性函数@property详解</a></p>
+</blockquote>
+<h2 id="刷新要导入的包">刷新要导入的包</h2>
+<p>当模块属性或者方法有更新，可以使用 <code>importlib</code> 重载</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">importlib.reload(module_name)</span><br></pre></td></tr></table></figure>
+<h2 id="理解导入顺序">理解导入顺序</h2>
+<p>如果你的模块名字和标准库中的一样，系统会优先使用标准库的。</p>
+<p><code>import</code> 执行时有几步：</p>
+<ol type="1">
+<li>检查模块缓存，<code>sys.modules</code></li>
+<li>通过查找器查找模块</li>
+<li>通过加载器加载模块</li>
+</ol>
+<p>你可以继承 python 的查找器实现你自己的 finder，甚至是自己的 loader，当然可能目前没有必要。</p>
+<p>这里想说明的是，导入操作是有顺序的，在执行查找操作时， <code>sys.meta_path</code> 会控制哪个查找器会被调用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> sys</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>sys.meta_path</span><br><span class="line">[&lt;<span class="class"><span class="keyword">class</span> &#x27;<span class="title">_frozen_importlib</span>.<span class="title">BuiltinImporter</span>&#x27;&gt;,</span></span><br><span class="line"><span class="class"> &lt;<span class="title">class</span> &#x27;<span class="title">_frozen_importlib</span>.<span class="title">FrozenImporter</span>&#x27;&gt;,</span></span><br><span class="line"><span class="class"> &lt;<span class="title">class</span> &#x27;<span class="title">_frozen_importlib_external</span>.<span class="title">PathFinder</span>&#x27;&gt;]</span></span><br></pre></td></tr></table></figure>
+<p>这里可以看到，内置的模块先于自定义的被加载。</p>
+<p>如果你把当前环境下所有查找器移除，python 就无法查找任何包了，但 python 仍然可以导入一些包，因为有些包已经位于缓冲中了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> sys</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>sys.meta_path.clear()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>sys.meta_path</span><br><span class="line">[]</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> math</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">&quot;&lt;stdin&gt;&quot;</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">ModuleNotFoundError: No module named <span class="string">&#x27;math&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> importlib  <span class="comment"># Autoimported at start-up, still in the module cache</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>importlib</span><br><span class="line">&lt;module <span class="string">&#x27;importlib&#x27;</span> <span class="keyword">from</span> <span class="string">&#x27;.../python/lib/python3.8/importlib/__init__.py&#x27;</span>&gt;</span><br></pre></td></tr></table></figure>
+<p>咱们自定义一下系统的查找器，让它在查找的时候打印，这样我们就知道了当我导入一个包，有哪些包导入了。</p>
+<p>对于查找器，有一个要求就是它必须要实现 <code>.find_spec()</code> 这个类方法，这个方法会尝试去查找模块，如果它不知道怎么查，它应该返回 None，如果知道，则返回 <code>nodule spec</code>, 如果模块无法找到，则发起 <code>ModuleNotFoundError</code> 错误。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># debug_importer.py</span></span><br><span class="line"> </span><br><span class="line"> <span class="keyword">import</span> sys</span><br><span class="line"> </span><br><span class="line"> <span class="class"><span class="keyword">class</span> <span class="title">DebugFinder</span>:</span></span><br><span class="line"><span class="meta">     @classmethod  </span><span class="comment"># 类方法，无需示例即可使用</span></span><br><span class="line">     <span class="function"><span class="keyword">def</span> <span class="title">find_spec</span>(<span class="params">cls, name, path, target=<span class="literal">None</span></span>):</span></span><br><span class="line">         <span class="built_in">print</span>(<span class="string">f&quot;Importing <span class="subst">&#123;name!r&#125;</span>&quot;</span>)</span><br><span class="line">         <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">sys.meta_path.insert(<span class="number">0</span>, DebugFinder)</span><br></pre></td></tr></table></figure>
+<p>上面的查找器打印后，返回 None, 表示它不知道怎么查，随后会交给其他查找器查。</p>
+<p>你可以按需要自定义 <code>sys.meta_path</code> 的加载顺序。</p>
+<p>将这个自定义查找器，放在 <code>sys.meta_path</code> 第一位，每次执行 <code>import</code> 你就可以看到所有被导入的模块。</p>
+<p>通过这种自定义查找的方法，我们甚至可以写一个自动安装包的查找器，把它插到 <code>sys.meta_path</code> 末尾，因为如果在末尾的位置被执行，这意味着前面的查找器都没有找到你想要的包。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># pip_importer.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> importlib <span class="keyword">import</span> util</span><br><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PipFinder</span>:</span></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find_spec</span>(<span class="params">cls, name, path, target=<span class="literal">None</span></span>):</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Module <span class="subst">&#123;name!r&#125;</span> not installed.  Attempting to pip install&quot;</span>)</span><br><span class="line">        cmd = <span class="string">f&quot;<span class="subst">&#123;sys.executable&#125;</span> -m pip install <span class="subst">&#123;name&#125;</span>&quot;</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            subprocess.run(cmd.split(), check=<span class="literal">True</span>)</span><br><span class="line">        <span class="keyword">except</span> subprocess.CalledProcessError:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> util.find_spec(name)</span><br><span class="line"></span><br><span class="line">sys.meta_path.append(PipFinder)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>只是随便一说，不要放到自己项目中用！可能会带来灾难性后果</p>
+</blockquote>
+<h2 id="例子-数据文件导入">例子: 数据文件导入</h2>
+<p>这个例子灵感的来源是 Aleksey Bilogur, 他有一篇文章(<a target="_blank" rel="noopener" href="https://blog.quiltdata.com/import-almost-anything-in-python-an-intro-to-module-loaders-and-finders-f5e7b15cda47">Import Almost Anything in Python: An Intro to Module Loaders and Finders</a>)，介绍了模块的加载器和查找器。</p>
+<p>你可能实现过自定义的加载器加载数据文件，但能不能利用加载器和查找器直接 <code>import</code> csv 文件呢？就好像下面这个代码一样：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> csv_importer</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> employees</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>employees.name  <span class="comment"># 直接访问列名</span></span><br><span class="line">(<span class="string">&#x27;John Smith&#x27;</span>, <span class="string">&#x27;Erica Meyers&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> row <span class="keyword">in</span> employees.data:  <span class="comment"># 直接访问数据</span></span><br><span class="line"><span class="meta">... </span>    <span class="built_in">print</span>(row[<span class="string">&quot;department&quot;</span>])</span><br><span class="line">...</span><br><span class="line">Accounting</span><br><span class="line">IT</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>employees.__file__  <span class="comment"># 访问文件名</span></span><br><span class="line"><span class="string">&#x27;employees.csv&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>其实是可以的，我们可以将路径传给查找器处理路径的问题，然后通过加载器读取数据文件，最终实现的代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> csv</span><br><span class="line"><span class="keyword">import</span> pathlib</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> importlib.machinery <span class="keyword">import</span> ModuleSpec</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CsvImporter</span>():</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, csv_path</span>):</span></span><br><span class="line">		<span class="keyword">pass</span></span><br><span class="line">		</span><br><span class="line"><span class="meta">	@classmethod  </span><span class="comment"># 类方法</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">find_spec</span>(<span class="params">cls, name, path, target=<span class="literal">None</span></span>):</span></span><br><span class="line">	    <span class="comment"># 处理路径</span></span><br><span class="line">	    <span class="comment"># 其他操作</span></span><br><span class="line">		<span class="keyword">return</span> ModuleSpec(name, cls(csv_path))  <span class="comment"># 此处 cls() 构造一个类</span></span><br><span class="line">		</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">exec_module</span>(<span class="params">self, module</span>):</span></span><br><span class="line">		<span class="comment"># 加载文件</span></span><br><span class="line">		<span class="comment"># 处理数据</span></span><br><span class="line">		<span class="comment"># 绑定到模块中</span></span><br><span class="line">		module.__dict__.update(fields)</span><br><span class="line">        module.__dict__[<span class="string">&quot;data&quot;</span>] = data</span><br><span class="line">        module.__dict__[<span class="string">&quot;fieldnames&quot;</span>] = fieldnames</span><br><span class="line">        module.__file__ = <span class="built_in">str</span>(self.csv_path)</span><br></pre></td></tr></table></figure>
+<h1 id="其他导入技巧">其他导入技巧</h1>
+<h2 id="导入特定版本">导入特定版本</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">if</span> sys.version_info &gt;= (<span class="number">3</span>, <span class="number">7</span>):</span><br><span class="line">    <span class="keyword">from</span> importlib <span class="keyword">import</span> resources</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="keyword">import</span> importlib_resources <span class="keyword">as</span> resources</span><br></pre></td></tr></table></figure>
+<h2 id="有条件导入你喜欢的包">有条件导入你喜欢的包</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">import</span> ujson <span class="keyword">as</span> json</span><br><span class="line"><span class="keyword">except</span> ImportError:</span><br><span class="line">    <span class="keyword">import</span> json</span><br><span class="line">   </span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">from</span> quicktions <span class="keyword">import</span> Fraction</span><br><span class="line"><span class="keyword">except</span> ImportError:</span><br><span class="line">    <span class="keyword">from</span> fractions <span class="keyword">import</span> Fraction</span><br></pre></td></tr></table></figure>
+<h2 id="处理包的缺失">处理包的缺失</h2>
+<p>你可能有一些比较酷的想法，比如利用 <a target="_blank" rel="noopener" href="https://pypi.org/project/colorama/">Colorama</a> 这个包来给你的输出增加一些颜色，但是这个包并不是一个必要的，如果用户电脑上有这个包，那可以，要是没有你希望也可以正常使用你的程序。</p>
+<p>你可以参考 <a target="_blank" rel="noopener" href="https://realpython.com/python-testing/">testing</a> 中对于 <a target="_blank" rel="noopener" href="https://realpython.com/python-mock-library/">mocks</a> 的使用实现这个想法。</p>
+<h2 id="将脚本导入为模块">将脚本导入为模块</h2>
+<p>脚本和模块的区别在于，脚本主要是去 do_something, 而模块则提供函数以供使用。他们都存在于 python 文件中，就 Python 而言，其实它们并没有什么区别。</p>
+<blockquote>
+<p>有时候你的模块可能比较复杂，有脚本也有模块，这时候可以考虑<a target="_blank" rel="noopener" href="https://realpython.com/python-refactoring/">refactor</a>你的模块。</p>
+</blockquote>
+<p>但你也可以让你的模块提供两者的功能，既有函数，也可以直接执行，相信你看到过这种 python 代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+<h2 id="从-zip-文件启动脚本">从 ZIP 文件启动脚本</h2>
+<p>新建一个 <code>__main__.py</code> 文件，打包成压缩包，你便可以直接通过 <code>python zip_file_name.zip</code> 这种形式运行。</p>
+<p>你可以将你自己的包也按照这种方式处理，但 python 有提供了一个工具 <a target="_blank" rel="noopener" href="https://docs.python.org/library/zipapp.html"><code>zipapp</code></a>，它可以帮你处理这些事情。</p>
+<p>你只需要在你的包目录执行 ：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m zipapp population_quiz -m population_quiz:main</span><br></pre></td></tr></table></figure>
+<p>它会做两件事，一是为你的程序添加入口，二是打包你的程序。</p>
+<p>这里的 <code>__main__.py</code> 会自动生成，内容如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> population_quiz</span><br><span class="line">population_quiz.main()</span><br></pre></td></tr></table></figure>
+<p>上面的命令执行后，会产生 <code>.pyz</code> 的打包文件，在 windows 上应该可以直接执行，因为 <code>.pyz</code> 文件应该自动关联了运行程序，而在 Linux 或者 Mac 上，可以通过 -p 指定运行环境:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ python -m zipapp population_quiz -m population_quiz:main \</span><br><span class="line">&gt;   -p <span class="string">&quot;/usr/bin/env python&quot;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意在 zip 文件中，如果处理数据文件，open 方法会无法使用</p>
+</blockquote>
+<h2 id="处理循环导入">处理循环导入</h2>
+<p>循环导入就是你中有我我中有你，比如</p>
+<p><img src="https://i.loli.net/2021/09/21/V4rsyDKYe312CT7.png" /></p>
+<p>这种情况本会发生无限递归循环，但是因为我们的老朋友模块缓存所以避免了惨剧的发生。</p>
+<p>但是在下面这种情况，则会报错：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># yin.py</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Hello from yin&quot;</span>)</span><br><span class="line"><span class="keyword">import</span> yang</span><br><span class="line">number = <span class="number">42</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">combine</span>():</span></span><br><span class="line">    <span class="keyword">return</span> number + yang.number</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Goodbye from yin&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># yang.py</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Hello from yang&quot;</span>)</span><br><span class="line"><span class="keyword">import</span> yin</span><br><span class="line">number = <span class="number">24</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">combine</span>():</span></span><br><span class="line">    <span class="keyword">return</span> number + yin.number</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;yin and yang combined is <span class="subst">&#123;combine()&#125;</span>&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Goodbye from yang&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>执行 <code>import yin</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> yin <span class="comment">#导入 yin 的时候，yin 中的 number 没有还没有定义</span></span><br><span class="line">Hello <span class="keyword">from</span> yin</span><br><span class="line">Hello <span class="keyword">from</span> yang</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  ...</span><br><span class="line">  File <span class="string">&quot;.../yang.py&quot;</span>, line <span class="number">8</span>, <span class="keyword">in</span> combine</span><br><span class="line">    <span class="keyword">return</span> number + yin.number</span><br><span class="line">AttributeError: module <span class="string">&#x27;yin&#x27;</span> has no attribute <span class="string">&#x27;number&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>执行 <code>import yang</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> yang  <span class="comment">#yang 调用 combine() 的时候，yin 已经初始化完成</span></span><br><span class="line">Hello <span class="keyword">from</span> yang</span><br><span class="line">Hello <span class="keyword">from</span> yin</span><br><span class="line">Goodbye <span class="keyword">from</span> yin</span><br><span class="line">yin <span class="keyword">and</span> yang combined <span class="keyword">is</span> <span class="number">66</span></span><br><span class="line">Goodbye <span class="keyword">from</span> yang</span><br></pre></td></tr></table></figure>
+<p>如何避免这种情况呢？其实你的模块如果有存在互相引用，这意味着你的模块设计的不好，你需要想想怎么去组织你的代码。</p>
+<h2 id="优化你的导入速度">优化你的导入速度</h2>
+<p>你可能有些包导入的速度很慢，你想了解具体是在哪里速度变慢，自从 Python3.7 你可以有一个非常简单的办法了解你导入包的速度：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ python -X importtime -c <span class="string">&quot;import datetime&quot;</span></span><br><span class="line">import time: self [us] | cumulative | imported package</span><br><span class="line">...</span><br><span class="line">import time:        87 |         87 |   time</span><br><span class="line">import time:       180 |        180 |   math</span><br><span class="line">import time:       234 |        234 |   _datetime</span><br><span class="line">import time:       820 |       1320 | datetime</span><br></pre></td></tr></table></figure>
+<p>cumulative 列按包显示了导入的累计时间（以微秒为单位）。</p>
+<h1 id="总结">总结</h1>
+<p>这篇文章主要介绍了：</p>
+<ul>
+<li>命名空间包</li>
+<li>导入资源和数据文件</li>
+<li>使用动态导入</li>
+<li>扩展 Python 的导入机制</li>
+<li>处理不同版本的包</li>
+</ul>
+<p>这里还有一些优秀的参考信息：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.python.org/reference/import.html">The import system</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.python.org/library/importlib.html">The <code>importlib</code> package</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.python.org/dev/peps/pep-0420/">PEP 420: Implicit namespace packages</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.python.org/library/modules.html">Importing modules</a></li>
+</ul>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://realpython.com/python-import/#basic-python-import">Python import: Advanced Techniques and Tips</a></li>
+<li><a target="_blank" rel="noopener" href="https://python3-cookbook.readthedocs.io/zh_CN/latest/c10/p05_separate_directories_import_by_namespace.html">利用命名空间导入目录分散的代码</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/uploads/wechat-reward-image.png" alt="Scott 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/article/c8bc6f6.html" rel="prev" title="Python-模块与包">
+      <i class="fa fa-chevron-left"></i> Python-模块与包
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/article/140cd416.html" rel="next" title="Python设计模式-装饰器与观察者模式">
+      Python设计模式-装饰器与观察者模式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%AF%BC%E5%85%A5%E5%91%BD%E4%BB%A4"><span class="nav-number">1.</span> <span class="nav-text">基本导入命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E5%AF%BC%E5%85%A5%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">常见导入问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%95%E4%B8%8D%E5%88%9B%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8C%85"><span class="nav-number">3.</span> <span class="nav-text">何不创建自己的包？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4%E5%8C%85"><span class="nav-number">4.</span> <span class="nav-text">介绍命名空间包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5%E5%8C%85%E7%9A%84%E9%A3%8E%E6%A0%BC%E8%A7%84%E8%8C%83"><span class="nav-number">5.</span> <span class="nav-text">导入包的风格规范</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%AF%BC%E5%85%A5%E6%95%B0%E6%8D%AE%E8%B5%84%E6%BA%90"><span class="nav-number">6.</span> <span class="nav-text">如何导入数据资源？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%8A%A8%E6%80%81%E5%AF%BC%E5%85%A5"><span class="nav-number">7.</span> <span class="nav-text">使用动态导入</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%B1%E5%85%A5python-%E7%9A%84%E5%AF%BC%E5%85%A5%E7%B3%BB%E7%BB%9F"><span class="nav-number">8.</span> <span class="nav-text">深入Python 的导入系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AA%E5%AF%BC%E5%85%A5%E4%B8%80%E6%AC%A1"><span class="nav-number">8.1.</span> <span class="nav-text">只导入一次</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%B7%E6%96%B0%E8%A6%81%E5%AF%BC%E5%85%A5%E7%9A%84%E5%8C%85"><span class="nav-number">8.2.</span> <span class="nav-text">刷新要导入的包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E5%AF%BC%E5%85%A5%E9%A1%BA%E5%BA%8F"><span class="nav-number">8.3.</span> <span class="nav-text">理解导入顺序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90-%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6%E5%AF%BC%E5%85%A5"><span class="nav-number">8.4.</span> <span class="nav-text">例子: 数据文件导入</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E5%AF%BC%E5%85%A5%E6%8A%80%E5%B7%A7"><span class="nav-number">9.</span> <span class="nav-text">其他导入技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5%E7%89%B9%E5%AE%9A%E7%89%88%E6%9C%AC"><span class="nav-number">9.1.</span> <span class="nav-text">导入特定版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%89%E6%9D%A1%E4%BB%B6%E5%AF%BC%E5%85%A5%E4%BD%A0%E5%96%9C%E6%AC%A2%E7%9A%84%E5%8C%85"><span class="nav-number">9.2.</span> <span class="nav-text">有条件导入你喜欢的包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%84%E7%90%86%E5%8C%85%E7%9A%84%E7%BC%BA%E5%A4%B1"><span class="nav-number">9.3.</span> <span class="nav-text">处理包的缺失</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%86%E8%84%9A%E6%9C%AC%E5%AF%BC%E5%85%A5%E4%B8%BA%E6%A8%A1%E5%9D%97"><span class="nav-number">9.4.</span> <span class="nav-text">将脚本导入为模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E-zip-%E6%96%87%E4%BB%B6%E5%90%AF%E5%8A%A8%E8%84%9A%E6%9C%AC"><span class="nav-number">9.5.</span> <span class="nav-text">从 ZIP 文件启动脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%84%E7%90%86%E5%BE%AA%E7%8E%AF%E5%AF%BC%E5%85%A5"><span class="nav-number">9.6.</span> <span class="nav-text">处理循环导入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E4%BD%A0%E7%9A%84%E5%AF%BC%E5%85%A5%E9%80%9F%E5%BA%A6"><span class="nav-number">9.7.</span> <span class="nav-text">优化你的导入速度</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">10.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">11.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Scott"
+      src="/uploads/instagram_profile_image.png">
+  <p class="site-author-name" itemprop="name">Scott</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wittyfans" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/wittyfans" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/wittyfans0" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;wittyfans0" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Scott</span>
+</div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz","app_key":"qKXpoqGbK1sdFYMiik7Evuan","server_url":"https://7sscl0n1.lc-cn-n1-shared.com","security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz',
+      appKey     : 'qKXpoqGbK1sdFYMiik7Evuan',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

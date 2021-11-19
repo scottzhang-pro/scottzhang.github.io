@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wittyfans.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="概率与统计的基础概念。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="统计基础概念">
+<meta property="og:url" content="http://wittyfans.com/article/4187072417.html">
+<meta property="og:site_name" content="Scott&#39;s Blog">
+<meta property="og:description" content="概率与统计的基础概念。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/03/28/lbg2cPIiaHqfGBD.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/28/FgTQjHkDPYcIoUs.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/29/Dch4BEqaHNTnJ7b.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/29/ElgYG5SktiePJZu.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/03/30/FCkgKPpLjIShmrH.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/29/Ez6BOw4moXCx7gM.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/29/lItcEZOfhXn8Vju.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/29/QbJnsG5hw7TdLUp.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/05/syJ5TqSHGOrA4pf.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/05/Ve46vSliGoZ7Uth.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/05/Ve46vSliGoZ7Uth.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/05/U5dWXOKJkA1Hshq.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/05/jK7meLAH9l1WEZU.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/05/dvnTr6PucGeQFUm.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/05/ReZDQBT7lgu92H5.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/05/NegynLJ7pU3xTKB.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/07/1FbmP3zsrGCL8fg.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/16/YrKQpu8G6xnB9mj.png">
+<meta property="article:published_time" content="2021-08-15T15:03:54.000Z">
+<meta property="article:modified_time" content="2021-11-19T14:12:08.913Z">
+<meta property="article:author" content="Scott">
+<meta property="article:tag" content="math">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/03/28/lbg2cPIiaHqfGBD.png">
+
+<link rel="canonical" href="http://wittyfans.com/article/4187072417.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>统计基础概念 | Scott's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Scott's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Scott's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学则不固, 知则不惑</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://wittyfans.com/article/4187072417.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/instagram_profile_image.png">
+      <meta itemprop="name" content="Scott">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Scott's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          统计基础概念
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-08-15 23:03:54" itemprop="dateCreated datePublished" datetime="2021-08-15T23:03:54+08:00">2021-08-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-11-19 22:12:08" itemprop="dateModified" datetime="2021-11-19T22:12:08+08:00">2021-11-19</time>
+              </span>
+
+          
+            <span id="/article/4187072417.html" class="post-meta-item leancloud_visitors" data-flag-title="统计基础概念" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/article/4187072417.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/article/4187072417.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>概率与统计的基础概念。</p>
+</blockquote>
+<span id="more"></span>
+<h1 id="统计">统计</h1>
+<p>数据类型： - 离散类型，只能是某些既定的值 - 连续类型，可以是一个范围里任何的值</p>
+<p>离散数据是数出来的，连续数据是测量出来的。对于离散概率分布，我们关心的是取得一个特定数值的概率。例如抛硬币正面向上的概率为:p(x=正面)=1/2</p>
+<p>而对于连续概率分布来说，我们无法给出每一个数值的概率，因为我们不可能列举每一个精确数值。</p>
+<h2 id="histograms直方图">1. Histograms（直方图）</h2>
+<p>定义：是一种对数据分布情况的图形表示，横轴是统计样本，纵轴是统计样本某个属性的度量。</p>
+<p>我们测试人的身高，把这些数据放到数轴上，并分段，把数据这个段（bins）的数据从下往上堆，就得到了直方图。</p>
+<p>有了这个图，我们就可以预测未来的到某个身高值的概率。</p>
+<p>比如，你敢打赌下一个测量的人，有很大的几率处在直方图靠近中间的位置。</p>
+<p>如果你想要用一个图，来近似表示你的数据，或未来预测的测量值，就可以使用直方图。</p>
+<p>直方图中的bins的选择，很重要，太小或太大都不行，不要仅仅依靠程序的默认值。</p>
+<h2 id="statistical-distribution概率分布">2. Statistical distribution（概率分布）</h2>
+<p>现在你拿到了直方图，你的bins可能需要调整一下，你从1调整为0.5，这样让你的图像更直观，同时，也让你对数据的预测更准确。</p>
+<p>你会发现，你的数据量越多，和你的bins越小，都可以提高你对数据预测的准确率。</p>
+<p>你可以用一条曲线来表示分布，他比直方图更准确，因为直方图总会有在某个区间的值比较少或没有的情况，而曲线是连续的，且很方便计算。</p>
+<p>另外，当你没有足够的资源和钱做足够的测试，你其实可以用既有的数据算出这跟我曲线。曲线图和分布图都是描述分布的一种方式。</p>
+<h2 id="normal-distribution正态分布">3. Normal Distribution（正态分布）</h2>
+<p>我们看过身高的数据，会发现它是左右对称的，事实上人类身高是一种正态分布。</p>
+<p>刚出生的小孩和成年人的分布不一样，成年人高矮的区间比较大，而刚出生的小孩身高区间都在一个比较小的范围。</p>
+<p>这个分布的宽度（即身高的区间）由数据的标准差决定。</p>
+<p>知道这个标准差很重要，如在小孩的分布中，图像标准差为0.6，成人的为4.</p>
+<p>我们可以知道 95% 的数据会落在（平均值 +- 2* 标准差），自然界的很多事物都遵循正态分布，这是因为什么呢？这就是中心极限定理</p>
+<h2 id="population-parameters总体参数">4. Population Parameters（总体参数）</h2>
+<p>我们选择测量一些基因数据，得到了一个直方图，通过直方图计算概率。</p>
+<p><img src="https://i.loli.net/2020/03/28/lbg2cPIiaHqfGBD.png" /></p>
+<p>这个分布的 mean=20, std=10。</p>
+<p>同样的，我们也可以根据曲线图来计算概率。</p>
+<p><img src="https://i.loli.net/2020/03/28/FgTQjHkDPYcIoUs.png" /></p>
+<p>因为上述的直方图和曲线图，表示了所有的基因数据分布，在统计上会叫它为population，而mean和std，叫做 population mean 和 population std.</p>
+<p>分布有很多种，有： - 指数分布，指数分布的参数是rate,即population rate. - Gamma 分布, 参数是 shape 和 rate</p>
+<p>知道 population 参数的原因是，你的分布可以重复计算. 如果你有机器学习基础，你可以把 population参数看作是 training dataset, 曲线则是我们想要根据我们的方法作出的预测。</p>
+<p>事实上，你测量的数据得到的population参数，每次都是不一样的，那怎么估计真实的参数呢？事实上，当你做的测量越多，你得到的参数，就越接近真实的参数。</p>
+<p>统计的一个目的就是，根据你现有测量的数据，你对这个真实的参数，有多大的信心估计正确了。</p>
+<p>特别的，我们一般用 p-value 和 置信区间来描述这种信心。</p>
+<p>数据也多，你的信心就越大，</p>
+<h3 id="bootstrap-refresher">bootstrap refresher</h3>
+<p>我们测量12只母老鼠的体重，并计算这组老鼠体重的的平均值，这个平均值只是这12只老鼠的，而利用sample，我们可以利用手中已有的值，去估计所有老鼠体重的平均值。</p>
+<p>怎么做的，用 sampling with replacement，即有放回的抽样，抽12次之后，计算平均值。</p>
+<p>重复上面的步骤很多次，对这些平均值再取平均，即得到了你想要的值。</p>
+<p>再来说置信区间，我们一般说95%的置信区间，意思就是，那个包含了上述95%的平均值的范围。</p>
+<p>如果你拿母老鼠和公老鼠的数据对比，分别看他们95%的平均值的范围，如果彼此没有重合，那就可以说他们是不一样的，两组值的mean是统计显著的，而如果有重合的部分，就需要做t-test了。</p>
+<h2 id="meanvariancestd">5. Mean，Variance，STD</h2>
+<p>我们以上面的基因例子为例，对240万个基因值计算平均值，即得到了平均值，注意，这是对所有的值计算平均值，所以不是population mean，而是 真正的mean。</p>
+<p>注意区分：</p>
+<ul>
+<li>sample mean，estimated mean（x-bar）</li>
+<li>population mean（mu）</li>
+</ul>
+<p>总结：</p>
+<p>如果你有所有的值，那直接除以数量，就得到了平均值（mu） 如果你没有所有值，可以利用（x-bar）估计population mean，x-bar是你既有的值算出来的平均值。</p>
+<p>population variance，用你的data减去population mean（mu），平方后再除以样本数。</p>
+<p>population std则是对population variance开根号。</p>
+<p>然而，更多的情况是，你不可能直接算出来population mean，std，variance这些值，因为你只有有限的样本。</p>
+<p>所以你得用x-bar代替mu，并将n-1代替n作为样本空间，计算variance，以及std。</p>
+<p>因为我们算的是sample mean，而不是population mean，所以n需要减1。</p>
+<p>为什么呢？请看下图</p>
+<p><img src="https://i.loli.net/2020/03/29/Dch4BEqaHNTnJ7b.png" /></p>
+<p><img src="https://i.loli.net/2020/03/29/ElgYG5SktiePJZu.jpg" /></p>
+<p>因为数据与sample mean之间的差值，要小于数据与population mean之间的差值。</p>
+<h2 id="what-is-a-statistical-model">6. What is a statistical model?</h2>
+<p>model，即模型。比如根据老鼠体重，预测体长，这就是一个 model.</p>
+<p>在这个语境下，model是一种关系。</p>
+<p>体重越大，体长越长。</p>
+<p>有时候model中，x和y的关系，并不是一条直线。</p>
+<p>model 可以很简单，也可以很复杂。</p>
+<h2 id="sampling-a-distribution">7. Sampling A Distribution</h2>
+<p>对一个分布进行抽样，假设你现在有一个随机的分布，我们可以从中抽样，来计算这个分布的mean值（x-bar）</p>
+<p>你可以抽样很多次，于是你会得到一个mean值的分布，这个分布图像的mean，随着抽样的个数（sample size）的增加，抽样分布的mean，会趋向于真正的mean，即（population mean），抽样分布的图像，会接近正态分布，符合中心极限定理的定义。</p>
+<p>这里的n增加，我们的图像的std会变小，即图像变得更窄，但更高。</p>
+<h2 id="python-实践">Python 实践</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np </span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arr = np.random.randint(<span class="number">0</span>,<span class="number">100</span>,<span class="number">100</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="population-parametersactual">Population parameters(actual)</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 用 Numpy 自带包计算</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Population Mean: &#123;&#125; \nPopulation Variance:&#123;&#125;&quot;</span>.<span class="built_in">format</span>(np.mean(arr),np.var(arr)))</span><br></pre></td></tr></table></figure>
+<pre><code>Population Mean: 50.29 
+Population Variance:687.2659000000001</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 手动计算</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># mean</span></span><br><span class="line">population_mean = np.mean(arr)</span><br><span class="line"></span><br><span class="line"><span class="comment"># variance</span></span><br><span class="line">value_squares = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> num <span class="keyword">in</span> arr:</span><br><span class="line">    value = num - population_mean</span><br><span class="line">    value_square = np.square(value)</span><br><span class="line">    value_squares.append(value_square)</span><br><span class="line">    </span><br><span class="line">variance = np.<span class="built_in">sum</span>(value_squares) / <span class="built_in">len</span>(arr)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Population Mean: &#123;&#125; \nPopulation Variance:&#123;&#125;&quot;</span>.<span class="built_in">format</span>(population_mean,variance))</span><br></pre></td></tr></table></figure>
+<pre><code>Population Mean: 50.29 
+Population Variance:687.2659000000001</code></pre>
+<h3 id="samples-parametersestimate">Samples parameters(estimate)</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sampling</span></span><br><span class="line">sample = np.random.choice(arr,size=<span class="number">100</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># sample mean, x-bar</span></span><br><span class="line">sample_x_bar = np.mean(sample)</span><br><span class="line"></span><br><span class="line"><span class="comment"># sample variance with numpy</span></span><br><span class="line">sample_var = np.var(sample)</span><br><span class="line"></span><br><span class="line"><span class="comment"># sample variance by hand, n as denominator</span></span><br><span class="line">absolute_values = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> sample:</span><br><span class="line">    absolute_value = i - np.mean(sample)</span><br><span class="line">    absolute_value_square = np.square(absolute_value)</span><br><span class="line">    absolute_values.append(absolute_value_square)</span><br><span class="line"></span><br><span class="line">biased_variance = np.<span class="built_in">sum</span>(absolute_values)/<span class="built_in">len</span>(sample)</span><br><span class="line">unbiased_variance = np.<span class="built_in">sum</span>(absolute_values)/<span class="built_in">len</span>(sample) - <span class="number">1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Sample Mean:&#123;&#125;\nSample Variance:&#123;&#125;&quot;</span>.<span class="built_in">format</span>(sample_x_bar,sample_var))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;\n&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Sample Variance Biased:&#123;&#125;&quot;</span>.<span class="built_in">format</span>(biased_variance))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Sample Variance Unbiased:&#123;&#125;&quot;</span>.<span class="built_in">format</span>(unbiased_variance))</span><br></pre></td></tr></table></figure>
+<pre><code>Sample Mean:50.54
+Sample Variance:726.8484
+
+
+Sample Variance Biased:726.8484
+Sample Variance Unbiased:725.8484</code></pre>
+<h3 id="sampling-distribution">Sampling Distribution</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">x_bars = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">100</span>):</span><br><span class="line">    <span class="comment"># sampling</span></span><br><span class="line">    sample = np.random.choice(arr,size=<span class="number">100</span>)</span><br><span class="line">    <span class="comment"># sample mean, x-bar</span></span><br><span class="line">    sample_x_bar = np.mean(sample)</span><br><span class="line">    x_bars.append(sample_x_bar)</span><br><span class="line"></span><br><span class="line">plt.hist(x_bars)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/03/30/FCkgKPpLjIShmrH.png" /></p>
+<h1 id="p-values">8. P-values</h1>
+<p>对于两个药物的测试结果如下，我们完全可以观察出，A药物明显有效果，而B无效，且无法断定说，这两者的表现，只是一种随机现象。</p>
+<figure>
+<img src="https://i.loli.net/2020/03/29/Ez6BOw4moXCx7gM.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<p>这时候就可以请p value发挥作用了。</p>
+<figure>
+<img src="https://i.loli.net/2020/03/29/lItcEZOfhXn8Vju.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<figure>
+<img src="https://i.loli.net/2020/03/29/QbJnsG5hw7TdLUp.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<h2 id="calculate-p-values">Calculate P-values</h2>
+<p>P-values有两种，One-Sided 和 Two-Sided。</p>
+<p>我们一般谈后面那种，并避免使用第一种。</p>
+<p>你扔了两次硬币，都是国徽面朝上，你觉得这个硬币应该是不正常的，你搞到了一个神奇硬币！</p>
+<p>你想知道，这真的是一个神奇硬币吗？</p>
+<p>于是你想验证，你假设，这个这个硬币和别的硬币没什么区别（Null Hypothesis）。</p>
+<p>如果你接下，推翻了这个假设，即，这个硬币和别的是有区别的，那么你拿到的，就是神奇硬币了。</p>
+<p>为了验证这个假设，我们来计算抛两次硬币的概率, 使用树形图来看，很明显，两枚硬币都是国徽面的概率是25%。</p>
+<figure>
+<img src="https://i.loli.net/2020/04/05/syJ5TqSHGOrA4pf.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<p>现在，我们再来算，我们得到两个人像面的p value,p-value 由 3 部分组成：</p>
+<ol type="1">
+<li>The probability random chance would result in the observation，在这里就是一个正常硬币，扔两次得到两次人像的概率，即0.25。</li>
+<li>The probability of observing something else that is equally rare, 这里是两个人像或是两个国徽，也是0.25.</li>
+<li>The probability of observing something rarer or more extreme. 这里是0，因为没有其他的结果比两个人像、两个国徽的概率更低。</li>
+</ol>
+<p>​</p>
+<p>现在，p-value 就是 0.25 + 0.25 + 0 = 0.5. 注意我们计算 p-value 的目的是测试假设：</p>
+<p>我的硬币和其他硬币是一样的。</p>
+<p>通常来说，当 p-value 小于0.05 的时候，我们会拒绝这个假设，但是现在的概率是0.5,所以这个假设是真的，也就是你拿到的，不是神奇硬币啦。</p>
+<blockquote>
+<p>注意， 得到两个人像面概率为0.25与得到两个人像面得p-value为0.25，这两者不一样。</p>
+</blockquote>
+<p>为什么我们需要关心上面得条件2和3呢？</p>
+<p>举个例子，当你送一朵花给你得意中人，你说：这是这个品种的花中最特别的。于是你得到了它的芳心。</p>
+<p>但当她收到了10朵花，你说：这朵花和其余9朵花一样都很特殊。那这朵花，她也许就觉得不特别了，这是2的情况，所以我们把2的概率加进来。</p>
+<p>也有可能是这样，你跟她说：还有很多的花，比现在这朵更稀有。她也会觉得这朵花不特别，这是3的情况。</p>
+<p>现在我们知道扔2次，得到2个人像面的情况，如果扔5次得到4次人像呢？我们计算 p-value 看看(我们不关心顺序)：</p>
+<figure>
+<img src="https://i.loli.net/2020/04/05/Ve46vSliGoZ7Uth.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<figure>
+<img src="https://i.loli.net/2020/04/05/Ve46vSliGoZ7Uth.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<figure>
+<img src="https://i.loli.net/2020/04/05/U5dWXOKJkA1Hshq.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<p>我们需要p-value小于0.05就可以拒绝这个假设了，但目前来看，好像还是无法拒绝:</p>
+<figure>
+<img src="https://i.loli.net/2020/04/05/jK7meLAH9l1WEZU.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<p>对于连续的数据计算p-value，我们一般通过概率分布来计算，考虑一个身高的例子：</p>
+<figure>
+<img src="https://i.loli.net/2020/04/05/dvnTr6PucGeQFUm.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<figure>
+<img src="https://i.loli.net/2020/04/05/ReZDQBT7lgu92H5.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<figure>
+<img src="https://i.loli.net/2020/04/05/NegynLJ7pU3xTKB.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<h1 id="covariance-and-correlation">9. Covariance and Correlation</h1>
+<p>Covariance 一般可以分为三类，斜率为正的图像，斜率为负的图像，平行于x或y轴的图像。</p>
+<p>即 positive trends, negative trends, no trends.</p>
+<p>但 covariance 只能告诉你，数据是positive还是 negative 的trend，无法告诉你这个图像的slope，是陡峭还是平缓。</p>
+<p>它也无法告诉你各个点与图像之间的距离。</p>
+<p>如果所有的图像的 x或者y 值，是一样的，则 covariance 为0.</p>
+<p>如果我们根据x和x本身来算 Covariance, 同时对比 2*x与 2*x 本身的图像，会发现两者的图像是一致的:</p>
+<figure>
+<img src="https://i.loli.net/2020/04/07/1FbmP3zsrGCL8fg.png" alt="image.png" /><figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<p>总的来说，Covariance 是根据各个点与平均值之间的距离来算的，这意味着它会受到点与均值之间距离的影响，也会受到坐标轴的影响。解决这个问题，引入下一个概念，即 Correlation。</p>
+<h1 id="r-squared">10. R-squared</h1>
+<p>我们已经知道 Correlation 的概念。为什么需要 <span class="math inline">\(R^{2}\)</span> 的概念，某些时候，它更容易解释，如 0.7 是 0.5 的两倍不容易理解，而0.7方是0.5方的两倍却很简单。</p>
+<p>另外看一个老鼠的例子：</p>
+<figure>
+<img src="https://i.loli.net/2020/04/16/YrKQpu8G6xnB9mj.png" alt="老鼠的例子" /><figcaption aria-hidden="true">老鼠的例子</figcaption>
+</figure>
+<p>我们分别计算各点对于平均值（黑线）的方差，以及平均值对于fit的蓝线的方差，然后计算<span class="math inline">\(R^{2}\)</span>。</p>
+<p>公式为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var(mean) - var(blue line) / var(mean)</span><br></pre></td></tr></table></figure>
+<p>结果是 81%, 这意味着蓝线比平均值小了81%的方差。</p>
+<p>对于两个变量之间的关系来说，<span class="math inline">\(R^{2}\)</span> 越高，说明拟合程度越好。</p>
+<p>需要<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/32021302">区别</a>: <span class="math inline">\(R^{2}\)</span> 和相关系数的关系。</p>
+<h1 id="central-limit-theorem">11. Central Limit Theorem</h1>
+<p>中心极限定理，如果我们对0-1之间的数据抽样20个，计算mean，得出一个结果，然后绘制在另一个<strong>直方图</strong>上，如此反复几百遍后，我们得到的mean将会是一个正态分布的图。</p>
+<p>这个原理，对于任何分布的图都适用。</p>
+<p>摘录几则关于中心极限定理的话：</p>
+<blockquote>
+<p>摘录来自: “赤裸裸的统计学。” Apple Books.</p>
+</blockquote>
+<ul>
+<li>“中心极限定理是许多统计活动的“动力源泉”，这些活动存在着一个共同的特点，那就是使用样本对一个更大的数量对象进行推理”</li>
+<li>“个大型样本的正确抽样与其所代表的群体存在相似关系。当然，每个样本之间肯定会存在差异（比如前往马拉松起点的这么多辆客车，每辆客车乘客的组成都不可能完全相同），但是任一样本与整体之间存在巨大差异的概率是较低的”</li>
+<li>“如果我们掌握了某个正确抽取的样本的具体信息（平均数和标准差），就能对其所代表的群体做出令人惊讶的精确推理”</li>
+<li>“如果我们掌握了某个样本的数据，以及某个群体的数据，就能推理出该样本是否就是该群体的样本之一”</li>
+<li>“通过中心极限定理，我们就能计算出某个样本（客车上的肥胖乘客）属于某个群体（马拉松比赛选手）的概率是多少，如果概率非常低，那么我们就能自信满满地说该样本不属于该群体”</li>
+<li>“如果我们已知两个样本的基本特性，就能推理出这两个样本是否取自同一个群体。”</li>
+</ul>
+<p>那么，中心极限定理的实际意义是什么呢？</p>
+<ol type="1">
+<li>计算置信区间</li>
+<li>t-test，即两个sample的mean是否不同</li>
+<li>ANAVO,即三个sample或以上的mean是否不同</li>
+</ol>
+<p><em>通常来说，为了中心极限定理的有效性，sample size必须要至少大于30.</em></p>
+<h1 id="standard-deviation-vs-standard-error">12. Standard Deviation vs Standard Error</h1>
+<ul>
+<li>“标准差（Standard Deviation）是用来衡量群体中所有个体的离散性”，如心脏研究中所有参与者的体重分布”</li>
+<li>“标准误差（Standard Error）衡量的仅仅是样本平均值的离散性。如果我们反复从弗雷明汉心脏研究数据库中抽取100名参与者作为样本，并计算其平均值，那么这些样本平均值的分布会是怎样一种情况？”</li>
+</ul>
+<p>另外：</p>
+<p><strong>“标准误差就是所有样本平均值的标准差！”</strong></p>
+<p>“如果标准误差差很大，就意味着样本平均值在群体平均值周围分布得极为分散；如果标准误差差很小，就意味着样本平均值之间的聚集程度很高。”</p>
+<p>关于这两者，还有一些图像上的规律：</p>
+<ul>
+<li>“样本数量越多，其平均值就越不容易偏离整体平均值。图像也就越集中，因为大型样本受极端异常值的影响相对较小”</li>
+<li>“数据分布越分散，那么其样本平均值的聚集程度就越低。”</li>
+</ul>
+<p>其次，需要注意的是：</p>
+<p><strong>“如果标准差本身的数值很大，那么标准误差的数值也不会小。取自一个高度离散群体的大规模样本，其离散程度也会很高；与之对应，如果是一个高度聚集的群体，其样本围绕平均值的聚集程度也会很高。”</strong></p>
+<p>由于样本的平均值是正态分布的，即中心极限定理的内容，我们有以下的规律：</p>
+<p>“差不多有68%的样本平均值会在群体平均值一个标准误差的范围之内，有95%的样本平均值会在群体平均值的两个标准误差的范围之内，有99.7%的样本平均值会在群体平均值3个标准误差的范围之内。”</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/uploads/wechat-reward-image.png" alt="Scott 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/math/" rel="tag"># math</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/article/1895500896.html" rel="prev" title="数据结构与算法参考">
+      <i class="fa fa-chevron-left"></i> 数据结构与算法参考
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/article/a31aaf3c.html" rel="next" title="数据分析在做什么">
+      数据分析在做什么 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%9F%E8%AE%A1"><span class="nav-number">1.</span> <span class="nav-text">统计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#histograms%E7%9B%B4%E6%96%B9%E5%9B%BE"><span class="nav-number">1.1.</span> <span class="nav-text">1. Histograms（直方图）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#statistical-distribution%E6%A6%82%E7%8E%87%E5%88%86%E5%B8%83"><span class="nav-number">1.2.</span> <span class="nav-text">2. Statistical distribution（概率分布）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#normal-distribution%E6%AD%A3%E6%80%81%E5%88%86%E5%B8%83"><span class="nav-number">1.3.</span> <span class="nav-text">3. Normal Distribution（正态分布）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#population-parameters%E6%80%BB%E4%BD%93%E5%8F%82%E6%95%B0"><span class="nav-number">1.4.</span> <span class="nav-text">4. Population Parameters（总体参数）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#bootstrap-refresher"><span class="nav-number">1.4.1.</span> <span class="nav-text">bootstrap refresher</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#meanvariancestd"><span class="nav-number">1.5.</span> <span class="nav-text">5. Mean，Variance，STD</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#what-is-a-statistical-model"><span class="nav-number">1.6.</span> <span class="nav-text">6. What is a statistical model?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sampling-a-distribution"><span class="nav-number">1.7.</span> <span class="nav-text">7. Sampling A Distribution</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#python-%E5%AE%9E%E8%B7%B5"><span class="nav-number">1.8.</span> <span class="nav-text">Python 实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#population-parametersactual"><span class="nav-number">1.8.1.</span> <span class="nav-text">Population parameters(actual)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#samples-parametersestimate"><span class="nav-number">1.8.2.</span> <span class="nav-text">Samples parameters(estimate)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sampling-distribution"><span class="nav-number">1.8.3.</span> <span class="nav-text">Sampling Distribution</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#p-values"><span class="nav-number">2.</span> <span class="nav-text">8. P-values</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#calculate-p-values"><span class="nav-number">2.1.</span> <span class="nav-text">Calculate P-values</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#covariance-and-correlation"><span class="nav-number">3.</span> <span class="nav-text">9. Covariance and Correlation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#r-squared"><span class="nav-number">4.</span> <span class="nav-text">10. R-squared</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#central-limit-theorem"><span class="nav-number">5.</span> <span class="nav-text">11. Central Limit Theorem</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#standard-deviation-vs-standard-error"><span class="nav-number">6.</span> <span class="nav-text">12. Standard Deviation vs Standard Error</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Scott"
+      src="/uploads/instagram_profile_image.png">
+  <p class="site-author-name" itemprop="name">Scott</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wittyfans" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/wittyfans" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/wittyfans0" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;wittyfans0" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Scott</span>
+</div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz","app_key":"qKXpoqGbK1sdFYMiik7Evuan","server_url":"https://7sscl0n1.lc-cn-n1-shared.com","security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz',
+      appKey     : 'qKXpoqGbK1sdFYMiik7Evuan',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

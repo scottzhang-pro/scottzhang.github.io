@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wittyfans.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="元组、数组、字典、集合，及常用操作。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Built-in Data Structures in Python">
+<meta property="og:url" content="http://wittyfans.com/article/3036208594.html">
+<meta property="og:site_name" content="Scott&#39;s Blog">
+<meta property="og:description" content="元组、数组、字典、集合，及常用操作。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-02-06T02:38:36.000Z">
+<meta property="article:modified_time" content="2021-11-19T14:12:08.905Z">
+<meta property="article:author" content="Scott">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://wittyfans.com/article/3036208594.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Built-in Data Structures in Python | Scott's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Scott's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Scott's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学则不固, 知则不惑</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://wittyfans.com/article/3036208594.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/instagram_profile_image.png">
+      <meta itemprop="name" content="Scott">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Scott's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Built-in Data Structures in Python
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-02-06 10:38:36" itemprop="dateCreated datePublished" datetime="2019-02-06T10:38:36+08:00">2019-02-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-11-19 22:12:08" itemprop="dateModified" datetime="2021-11-19T22:12:08+08:00">2021-11-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/coding/" itemprop="url" rel="index"><span itemprop="name">coding</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/article/3036208594.html" class="post-meta-item leancloud_visitors" data-flag-title="Built-in Data Structures in Python" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/article/3036208594.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/article/3036208594.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>元组、数组、字典、集合，及常用操作。</p>
+</blockquote>
+<span id="more"></span>
+<h1 id="元组">元组</h1>
+<h2 id="性质">性质</h2>
+<p>元组内部元素确定以后，不可修改；如果元组里可以放数组，数组的元素是可以修改的，创建一个元组:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tup = 4,5,6</span><br></pre></td></tr></table></figure>
+<p>嵌套元组：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tup = (4,5,6),(7,8,9)</span><br></pre></td></tr></table></figure>
+<p>其实等于:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tup = ((4,5,6),(7,8,9))</span><br></pre></td></tr></table></figure>
+<p>任何序列或可迭代的对象都可以转化为元组：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tuple([3,4,5])</span><br><span class="line">tuple(&#x27;string&#x27;)</span><br></pre></td></tr></table></figure>
+<p>通过tuple[]这种方式起来访问元组的内容。</p>
+<p>元组可以相加，变成一个更长的元组，即a+b = ab；也可相乘，即ab*4 = abababab</p>
+<h2 id="解包">解包</h2>
+<p>如果你尝试将元组赋值给多个变量，Python会尝试把元组拆开分别赋值给这些变量（即解包）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tup = (1,2,3)</span><br><span class="line">a,b,c = tup</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这时候，a = 1, b = 2, c = 3;</p>
+<p>嵌套的元组也是可以的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tup = (1,2,(3,4))</span><br><span class="line">a,b,(c,d) = tup</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这时候，d = 4；</p>
+<p>在别的语言中，如果你要交换两个元素，需要这样操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tmp = a</span><br><span class="line">a = b</span><br><span class="line">b = tmp</span><br></pre></td></tr></table></figure>
+<p>python里面可以这样</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b,a = a,b</span><br></pre></td></tr></table></figure>
+<p>解包还有一些其他的用法，比如按照元组的数据结构解包：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">seq = [(1,2,3),(4,5,6),(7,8,9)]</span><br><span class="line">for a,b,c in seq:</span><br><span class="line">    print(&#x27;a=&#123;&#125;,b=&#123;&#125;,c=&#123;&#125;&#x27;.format(a,b,c))</span><br></pre></td></tr></table></figure>
+<p>只提取前面几个元素，后面的放一起：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">values = 1,2,3,4,5</span><br><span class="line">a,b,*rest = values</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>元组有一个方法，可以统计特定的值在元组中出现的次数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = (1,2,2,3)</span><br><span class="line">a.count(2) # 输出2,因为2出现了两次</span><br></pre></td></tr></table></figure>
+<h2 id="命名元组">命名元组</h2>
+<blockquote>
+<p>这部分为高级内容，看不懂的可以跳过。</p>
+</blockquote>
+<p>使用命名元组需要先导入,假设我们有一个故事Stock，里面有股票的名字，股份数量shares，还有股价price，那我们就可以设置一个命名元组如下： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">from collections import namedtuple</span><br><span class="line">Stock = namedtuple(&#x27;Stock&#x27;, [&#x27;name&#x27;, &#x27;shares&#x27;, &#x27;price&#x27;])</span><br></pre></td></tr></table></figure></p>
+<p>同时我们可以定义一个函数用来计算市值，可以注意到，在这个函数内部，我们创建了一个命名元组对象s,有了这个对象以后，我们就可以直接调用s的shares和price属性： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">def compute_cost(records):</span><br><span class="line">    total = 0.0</span><br><span class="line">    for rec in records:</span><br><span class="line">        s = Stock(*rec)</span><br><span class="line">        total += s.shares * s.price</span><br><span class="line">    return total</span><br></pre></td></tr></table></figure></p>
+<p>我们也可以直接这样操作:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apple = Stock(&#x27;name&#x27;,100,297)</span><br><span class="line">apple.shares * apple.price</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>需注意这样会报错：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">compute_cost(&#x27;apple&#x27;,100,297) ---&gt; takes 1 positional argument but 3 were given</span><br></pre></td></tr></table></figure>
+<p>命名元祖创建后不可修改，比如 apple.shares = 10 , 会报错。如果实在要改，可以使用apple = apple._replace(shares=10)，如果你的目标是定义一个需要更新很多实例属性的高效数据结构，那么命名元组并不是你的最佳选择。 这时候你应该考虑定义一个包含 <strong>slots</strong> 方法的类。 # 数组</p>
+<p>数组相信大家都不陌生，数组可以包含None值：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a_list = [1,2,None]</span><br></pre></td></tr></table></figure>
+<p>可以从元组转化而来:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tup = (&#x27;foo&#x27;,&#x27;bar&#x27;,&#x27;baz&#x27;)</span><br><span class="line">b_list = list(tup)</span><br></pre></td></tr></table></figure>
+<p>可以按照索引来修改数组的值:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b_list[1] = &#x27;peekaboo&#x27;</span><br></pre></td></tr></table></figure>
+<p>list可以直接转化生成器或者迭代器:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">gen = range(10)</span><br><span class="line">gen # 输出range(0,10)</span><br><span class="line"></span><br><span class="line">list(gen) # 输出[0,1,2,3,4,5,6,7,8,9,10]</span><br></pre></td></tr></table></figure>
+<h2 id="添加删除">添加、删除</h2>
+<p>使用append方法即可往数组添加元素:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">values = [&#x27;a&#x27;,&#x27;b&#x27;]</span><br><span class="line">values.append(&#x27;c&#x27;)</span><br></pre></td></tr></table></figure>
+<p>也可以使用insert方法向指定的位置插入元素：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">values.sert(1,&#x27;-&#x27;)</span><br><span class="line">values 输出# [&#x27;a&#x27;,&#x27;-&#x27;,&#x27;b&#x27;,&#x27;c&#x27;]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>insert比append要花费更多的资源，因为insert后，其后面的元素都要挪位置，如果你要在数组的首尾操作，可以去看看collections.deque</p>
+</blockquote>
+<p>相反的，我们可以使用pop方法来取出指定位置的元素, 这时候后面的元素也都会往前面移动:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">values.pop(0) # a</span><br></pre></td></tr></table></figure>
+<p>也可以直接根据值来删除某个元素：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">values.remove(&#x27;b&#x27;)</span><br></pre></td></tr></table></figure>
+<p>检查某个元素是否在数组中：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x27;a&#x27; in [&#x27;a&#x27;,&#x27;b&#x27;,&#x27;c&#x27;]</span><br><span class="line">&#x27;a&#x27; not in [&#x27;a&#x27;,&#x27;b&#x27;,&#x27;c&#x27;]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在数组是否包含某个元素，比字典和sets要慢的多。</p>
+</blockquote>
+<h2 id="运算">运算</h2>
+<p>数组的相加，即首尾相连，a+b = ab; 数组的相加需要创建新的数组，还要进行复制运算，所以耗费的资源会比较多，所以我们一般使用extend方法:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[&#x27;a&#x27;]+[&#x27;b&#x27;] # [&#x27;a&#x27;,&#x27;b&#x27;]</span><br><span class="line">[&#x27;a&#x27;].extend([&#x27;b&#x27;])</span><br></pre></td></tr></table></figure>
+<h2 id="排序">排序</h2>
+<p>你可以直接排序一个数组，且不需要创建一个新的数组，只需要调用sort方法即可:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a = [7,2,1]</span><br><span class="line">a.sort()</span><br><span class="line">a #输出 [1,2,7]</span><br></pre></td></tr></table></figure>
+<p>sort接收第二个参数，可以定义sort的条件，比如我们通过字符的长度来排序：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">b = [&#x27;saw&#x27;,&#x27;small&#x27;,&#x27;he&#x27;,&#x27;six&#x27;]</span><br><span class="line">b.sort(key=len)</span><br></pre></td></tr></table></figure>
+<h2 id="二分查找与操作">二分查找与操作</h2>
+<p>python内置了一个bisect模块，实现了基于二分查找的算法，在列表中查找元素可以使用 list.index() 方法，其时间复杂度为O(n)。对于大数据量，则可以用二分查找进行优化，二分查找也成为折半查找，算法每一次比较都使搜索范围缩小一半， 其时间复杂度为 O(logn)，需要注意，二分查找要求对象必须有序。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">c = [1,2,2,2,3,4,7]</span><br><span class="line">bisect.bisect(c,2) # 返回会插入的位置，即索引4</span><br><span class="line">bisect.bisect(c,5) # 返回5</span><br><span class="line">bisect.insort(c,6) # 插入到4后面</span><br></pre></td></tr></table></figure>
+<h2 id="切片">切片</h2>
+<p>通过将形如start:stoped的格式传给[],就可以在序列对象中切出你想要的部分，举例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">seq = [6,5,3,5,7,2]</span><br><span class="line">seq[2:4] # 输出 [3, 5]</span><br></pre></td></tr></table></figure>
+<p>切片也可以赋值，比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">seq[2:4] = [0,0]</span><br><span class="line">seq # 输出 [6, 5, 0, 0, 7, 2]</span><br></pre></td></tr></table></figure>
+<p>如果你要选择之前或者之后的所有值，将一边省略即可，比如我要选择index=3之后的所有值，即[3:]。</p>
+<p>你甚至可以指定步长，也就是隔多远选一个值，例如:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">seq = [6,5,3,5,7,2]</span><br><span class="line">seq[::2] # 输出 [6, 3, 7]</span><br><span class="line">seq[::3] # 输出 [6, 5]</span><br></pre></td></tr></table></figure>
+<p>如果你想将数组反转，将步长设为-1试试：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">seq = [6,5,3,5,7,2]</span><br><span class="line">seq[::-1] # 输出[2, 7, 5, 3, 5, 6]</span><br></pre></td></tr></table></figure>
+<h1 id="内置的序列函数">内置的序列函数</h1>
+<h2 id="enumerate">enumerate</h2>
+<p>在用for in循环一个序列的时候，我们经常想要跟踪index，为此你可能会声明一个i来记录:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">i = 0</span><br><span class="line">for v in values:</span><br><span class="line">    ...</span><br><span class="line">    i+=1</span><br></pre></td></tr></table></figure>
+<p>不过python已经内置了一个函数，可以帮到你：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">for index,value in enumerate([&#x27;a&#x27;,&#x27;b&#x27;,&#x27;c&#x27;]):</span><br><span class="line">    print(value,index)</span><br></pre></td></tr></table></figure>
+<p>这里的index就是你想要的那个i了。enumerate在将列表转化为字典的时候尤其方便:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">some_list = [&#x27;for&#x27;,&#x27;bar&#x27;,&#x27;baz&#x27;]</span><br><span class="line">mapping = &#123;&#125;</span><br><span class="line">for i,v in enumerate(some_list):</span><br><span class="line">    mapping[v] = i</span><br><span class="line">    </span><br><span class="line">#输出: &#123;&#x27;bar&#x27;:1,&#x27;baz&#x27;:2,&#x27;foo&#x27;:0&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="sorted">sorted</h2>
+<p>sorted函数接收一个序列对象，排序后返回一个新的。</p>
+<h2 id="zip">zip</h2>
+<p>zip会将两个序列中的元素一一对应。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">seq1 = [&#x27;scott&#x27;,&#x27;frank&#x27;,&#x27;jason&#x27;]</span><br><span class="line">seq2 = [&#x27;1&#x27;,&#x27;2&#x27;,&#x27;3&#x27;]</span><br><span class="line">zipped = zip(seq1,seq2)</span><br><span class="line">list(zipped) # 输出: [(&#x27;scott&#x27;,&#x27;1&#x27;),(&#x27;frank&#x27;,&#x27;2&#x27;),(&#x27;jason&#x27;,&#x27;3&#x27;)]</span><br></pre></td></tr></table></figure>
+<p>zip可以接受3个序列一一对应，对应关系按照最短的处理。</p>
+<p>将如上函数结合，可以实现一些很骚的写法，看下面的例子，将序列结合并按顺序打印： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">for i (a,b) in enmerate(zip(se1,seq2)):</span><br><span class="line">    print(&#x27;&#123;&#125;:&#123;&#125;,&#123;&#125;&#x27;.format(i,a,b))</span><br><span class="line">    </span><br></pre></td></tr></table></figure></p>
+<p>统计名和姓：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">pitchers = [(&#x27;Nolan&#x27;, &#x27;Ryan&#x27;), (&#x27;Roger&#x27;, &#x27;Clemens&#x27;),(&#x27;Schilling&#x27;, &#x27;Curt&#x27;)]</span><br><span class="line"></span><br><span class="line">first_names, last_names = zip(*pitchers)</span><br><span class="line"></span><br><span class="line">first_names # (&#x27;Nolan&#x27;, &#x27;Roger&#x27;, &#x27;Schilling&#x27;)</span><br><span class="line"></span><br><span class="line">last_names # (&#x27;Ryan&#x27;, &#x27;Clemens&#x27;, &#x27;Curt&#x27;)</span><br></pre></td></tr></table></figure>
+<h2 id="reversed">reversed</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list(reversed(range(10)))</span><br></pre></td></tr></table></figure>
+<p>reversed返回一个生成器，如果你想要取出其中数据，需要用list包装一下。</p>
+<h1 id="字典">字典</h1>
+<p>字典是python中最重要的数据结构之一，创建dict很简单，直接使用花括号就创建了一个dict。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">d = &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>增加元素：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">d[1] = &#x27;hi&#x27;</span><br><span class="line">d[&#x27;one&#x27;] = 1</span><br></pre></td></tr></table></figure>
+<p>检查字典中是否有某个key(检查的不是values，而是key)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 in d</span><br></pre></td></tr></table></figure>
+<p>删除字典中的值，可以用del命令，或者pop方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">d = &#123;&#125;</span><br><span class="line">d[&#x27;v&#x27;] = 10</span><br><span class="line">d[&#x27;C&#x27;] = 11</span><br><span class="line">del d[&#x27;v&#x27;]</span><br><span class="line"></span><br><span class="line">ret = d.pop(&#x27;C&#x27;)</span><br><span class="line">ret # 11</span><br></pre></td></tr></table></figure>
+<p>pop方法会返回删除的元素。</p>
+<p>可以直接使用d.keys()，和d.values()方法访问dict的所有keys和values。</p>
+<p>使用d.update()方法，可以将两个dict合并。</p>
+<p>从两个序列创建一个字典，你也许会准备一个index列表和values列表，再用for循环手动创建，大可不必。你可以直接使用dict+zip函数来定义：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mapping = dict(zip(indexs,values))</span><br></pre></td></tr></table></figure>
+<h2 id="默认值">默认值</h2>
+<p>检测dict是否拥有某个值，如果有就取出来，没有就设置默认值，这应该是很常用的操作了，为此你可能会写如下的代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if key in some_dict:</span><br><span class="line">    value = some_dict[key]</span><br><span class="line">else:</span><br><span class="line">    value = default_value</span><br></pre></td></tr></table></figure>
+<p>使用dict内置的get方法，可以让你的代码更简洁：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">value = some_dict.get(key,default_value)</span><br></pre></td></tr></table></figure>
+<p>如果你有一堆字符串需要按照首字母分类，你可能会这样写:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">words = [&#x27;apple&#x27;,&#x27;bat&#x27;,&#x27;bar&#x27;,&#x27;atom&#x27;,&#x27;book&#x27;]</span><br><span class="line">by_letter = &#123;&#125;</span><br><span class="line"></span><br><span class="line">for word in words:</span><br><span class="line">letter = word[0]</span><br><span class="line">if letter not in by_letter:</span><br><span class="line">    by_letter[letter] = [word]</span><br><span class="line">else:</span><br><span class="line">    by_letter[letter].append(word)</span><br></pre></td></tr></table></figure>
+<p>借助dict的setdefault方法，可以让你的代码更简洁:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">words = [&#x27;apple&#x27;,&#x27;bat&#x27;,&#x27;bar&#x27;,&#x27;atom&#x27;,&#x27;book&#x27;]</span><br><span class="line">by_letter = &#123;&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="key的类型">key的类型</h2>
+<p>字典的值可以是任何python的对象，而key则不行，必须是不可变类型，你可以用hash函数去检测，如果能返回值，说明它可以作为字典的key，如果报错就不行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hash(&#x27;string&#x27;) # ok</span><br><span class="line">hash((1,2,[2,3])) # 报错，因为list是可变的</span><br></pre></td></tr></table></figure>
+<p>如果一定要list作为键，可以先将它转化成元组。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">d = &#123;&#125;</span><br><span class="line">d[tuple([1,2,3])] = 5</span><br><span class="line">d</span><br></pre></td></tr></table></figure>
+<h2 id="字典高级用法">字典高级用法</h2>
+<p>collection模块对字典也提供了很多方便的方法：</p>
+<h3 id="多个字典遍历">多个字典遍历</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">from collections import ChainMap</span><br><span class="line">c = ChainMap(a,b)</span><br><span class="line">print(c[&#x27;x&#x27;]) # Outputs 1 (from a)</span><br><span class="line">print(c[&#x27;y&#x27;]) # Outputs 2 (from b)</span><br><span class="line">print(c[&#x27;z&#x27;]) # Outputs 3 (from a)</span><br></pre></td></tr></table></figure>
+<h2 id="字典合并">字典合并</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">a = &#123;&#x27;x&#x27;: 1, &#x27;z&#x27;: 3 &#125;</span><br><span class="line">b = &#123;&#x27;y&#x27;: 2, &#x27;z&#x27;: 4 &#125;</span><br><span class="line">merged = ChainMap(a, b)</span><br><span class="line">merged[&#x27;x&#x27;] # 输出 1</span><br><span class="line"></span><br><span class="line"># 修改</span><br><span class="line">a[&#x27;x&#x27;] = 42</span><br><span class="line">merged[&#x27;x&#x27;] # 输出42</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="集合">集合</h1>
+<p>集合是没有顺序关系的元素放在一起。你可以想象成是字典中，只有key，没有值。字典的创建有两种方式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set([1,2,3,4])</span><br><span class="line">&#123;1,2,3,4&#125;</span><br></pre></td></tr></table></figure>
+<p>集合支持数学层面的运算，比如交集、并集等。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">a =&#123;1,2,3,4,5,6,7,8&#125;</span><br><span class="line">b = &#123;3,4,5,6,7,8&#125;</span><br><span class="line">&#125;</span><br><span class="line">a.union(b) 或者 a | b</span><br><span class="line">a.intersection(b) 或者 a &amp; b</span><br><span class="line"></span><br><span class="line">&#123;1,2,3&#125;.issubset(a)</span><br></pre></td></tr></table></figure>
+<p>更多的运算规则可以去网上查查看。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/uploads/wechat-reward-image.png" alt="Scott 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/article/1738406626.html" rel="prev" title="Python如何连接WindowsSMB共享文件夹?">
+      <i class="fa fa-chevron-left"></i> Python如何连接WindowsSMB共享文件夹?
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/article/1514644266.html" rel="next" title="Python推导式探究">
+      Python推导式探究 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%83%E7%BB%84"><span class="nav-number">1.</span> <span class="nav-text">元组</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%B4%A8"><span class="nav-number">1.1.</span> <span class="nav-text">性质</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%8C%85"><span class="nav-number">1.2.</span> <span class="nav-text">解包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E5%90%8D%E5%85%83%E7%BB%84"><span class="nav-number">1.3.</span> <span class="nav-text">命名元组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E5%88%A0%E9%99%A4"><span class="nav-number">1.4.</span> <span class="nav-text">添加、删除</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E7%AE%97"><span class="nav-number">1.5.</span> <span class="nav-text">运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%92%E5%BA%8F"><span class="nav-number">1.6.</span> <span class="nav-text">排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE%E4%B8%8E%E6%93%8D%E4%BD%9C"><span class="nav-number">1.7.</span> <span class="nav-text">二分查找与操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%87%E7%89%87"><span class="nav-number">1.8.</span> <span class="nav-text">切片</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E7%BD%AE%E7%9A%84%E5%BA%8F%E5%88%97%E5%87%BD%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">内置的序列函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#enumerate"><span class="nav-number">2.1.</span> <span class="nav-text">enumerate</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sorted"><span class="nav-number">2.2.</span> <span class="nav-text">sorted</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#zip"><span class="nav-number">2.3.</span> <span class="nav-text">zip</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reversed"><span class="nav-number">2.4.</span> <span class="nav-text">reversed</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%97%E5%85%B8"><span class="nav-number">3.</span> <span class="nav-text">字典</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%BB%98%E8%AE%A4%E5%80%BC"><span class="nav-number">3.1.</span> <span class="nav-text">默认值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#key%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.2.</span> <span class="nav-text">key的类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E5%85%B8%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95"><span class="nav-number">3.3.</span> <span class="nav-text">字典高级用法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E4%B8%AA%E5%AD%97%E5%85%B8%E9%81%8D%E5%8E%86"><span class="nav-number">3.3.1.</span> <span class="nav-text">多个字典遍历</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E5%85%B8%E5%90%88%E5%B9%B6"><span class="nav-number">3.4.</span> <span class="nav-text">字典合并</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9B%86%E5%90%88"><span class="nav-number">4.</span> <span class="nav-text">集合</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Scott"
+      src="/uploads/instagram_profile_image.png">
+  <p class="site-author-name" itemprop="name">Scott</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wittyfans" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/wittyfans" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/wittyfans0" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;wittyfans0" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Scott</span>
+</div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz","app_key":"qKXpoqGbK1sdFYMiik7Evuan","server_url":"https://7sscl0n1.lc-cn-n1-shared.com","security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz',
+      appKey     : 'qKXpoqGbK1sdFYMiik7Evuan',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

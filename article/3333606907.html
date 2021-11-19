@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wittyfans.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="自从08年比特币发布以来，数以百计类似的基于区块链技术的产品层出不穷。我们称这些为加密货币，时至今日，某些加密货币已经大幅上涨，某些在未来可能也极具上涨空间。实际上，在2017年12月6日，比特币的市值超过2000亿美元。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="加密货币市值分析">
+<meta property="og:url" content="http://wittyfans.com/article/3333606907.html">
+<meta property="og:site_name" content="Scott&#39;s Blog">
+<meta property="og:description" content="自从08年比特币发布以来，数以百计类似的基于区块链技术的产品层出不穷。我们称这些为加密货币，时至今日，某些加密货币已经大幅上涨，某些在未来可能也极具上涨空间。实际上，在2017年12月6日，比特币的市值超过2000亿美元。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2019/12/06/UD9XlmW3fxoSIa5.png">
+<meta property="og:image" content="https://i.loli.net/2019/12/06/XFakbKp1f4ML5ul.png">
+<meta property="og:image" content="https://i.loli.net/2019/12/06/QJCehqgOsF6EdZT.png">
+<meta property="og:image" content="https://i.loli.net/2019/12/06/6JMto7jFVD5gknu.png">
+<meta property="og:image" content="https://i.loli.net/2019/12/06/tyx5TMCD8J3Hszh.png">
+<meta property="og:image" content="https://i.loli.net/2019/12/06/arEDO1QFAGVwqCB.png">
+<meta property="article:published_time" content="2019-12-06T07:22:17.000Z">
+<meta property="article:modified_time" content="2021-11-19T14:12:08.911Z">
+<meta property="article:author" content="Scott">
+<meta property="article:tag" content="data analysis">
+<meta property="article:tag" content="pandas">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2019/12/06/UD9XlmW3fxoSIa5.png">
+
+<link rel="canonical" href="http://wittyfans.com/article/3333606907.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>加密货币市值分析 | Scott's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Scott's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Scott's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学则不固, 知则不惑</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://wittyfans.com/article/3333606907.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/instagram_profile_image.png">
+      <meta itemprop="name" content="Scott">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Scott's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          加密货币市值分析
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-12-06 15:22:17" itemprop="dateCreated datePublished" datetime="2019-12-06T15:22:17+08:00">2019-12-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-11-19 22:12:08" itemprop="dateModified" datetime="2021-11-19T22:12:08+08:00">2021-11-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/coding/" itemprop="url" rel="index"><span itemprop="name">coding</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/article/3333606907.html" class="post-meta-item leancloud_visitors" data-flag-title="加密货币市值分析" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/article/3333606907.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/article/3333606907.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img src="https://i.loli.net/2019/12/06/UD9XlmW3fxoSIa5.png" /></p>
+<blockquote>
+<p>自从08年比特币发布以来，数以百计类似的基于区块链技术的产品层出不穷。我们称这些为加密货币，时至今日，某些加密货币已经大幅上涨，某些在未来可能也极具上涨空间。实际上，在2017年12月6日，比特币的市值超过2000亿美元。</p>
+</blockquote>
+<span id="more"></span>
+<p>加密货币市值分析</p>
+<h1 id="席卷全球的加密货币">席卷全球的加密货币</h1>
+<p>让我们来研究研究加密货币，第一个任务，我们将从coinmarketcap API加载当前数据，并将其显示在输出中。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># Importing pandas</span><br><span class="line">import pandas as pd</span><br><span class="line"></span><br><span class="line"># Importing matplotlib and setting aesthetics for plotting later.</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line">%matplotlib inline</span><br><span class="line">%config InlineBackend.figure_format = &#x27;svg&#x27; </span><br><span class="line">plt.style.use(&#x27;fivethirtyeight&#x27;)</span><br><span class="line"></span><br><span class="line"># Reading in current data from coinmarketcap.com</span><br><span class="line">current = pd.read_json(&quot;https://api.coinmarketcap.com/v1/ticker/&quot;)</span><br><span class="line"></span><br><span class="line"># Printing out the first few lines</span><br><span class="line">print(current.head())</span><br></pre></td></tr></table></figure>
+<p>从api返回的结果只包含了100条数据，像这种开放的api基本上都是只提供试用，如果想要更多更全的数据一般需要付费，这里我们使用一份我从网站里下载的csv数据，包括了17年6月的数据，这个数据集保存在本地，叫做<code>datasets/coinmarketcap_06122017.csv.</code></p>
+<h1 id="加载数据">加载数据</h1>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># Reading datasets/coinmarketcap_06122017.csv into pandas</span><br><span class="line">dec6 = pd.read_csv(&#x27;datasets/coinmarketcap_06122017.csv&#x27;)</span><br><span class="line"></span><br><span class="line"># Selecting the &#x27;id&#x27; and the &#x27;market_cap_usd&#x27; columns</span><br><span class="line">market_cap_raw = dec6[[&#x27;id&#x27;,&#x27;market_cap_usd&#x27;]]</span><br><span class="line"></span><br><span class="line"># Counting the number of values</span><br><span class="line">market_cap_raw.count()</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">id                1326</span><br><span class="line">market_cap_usd    1031</span><br><span class="line">dtype: int64</span><br></pre></td></tr></table></figure>
+<p>从输出种，我们看到这两个数据的条目数不一样，这是因为在列 <code>market_cap_usd</code> 种，存在一些空值（na值），而count函数是不将空值计算入内的，我们将它去掉。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Filtering out rows without a market capitalization</span><br><span class="line">cap = market_cap_raw.query(&#x27;market_cap_usd &gt; 0&#x27;)</span><br><span class="line"></span><br><span class="line"># Counting the number of values again</span><br><span class="line">cap.count()</span><br></pre></td></tr></table></figure>
+<h1 id="比较比特币与其他加密货币">比较比特币与其他加密货币</h1>
+<p>现在比特币正处于与其他加密货币的激烈竞争中，但它仍然在市值中占主导地位，我们来比较一下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#Declaring these now for later use in the plots</span><br><span class="line">TOP_CAP_TITLE = &#x27;Top 10 market capitalization&#x27;</span><br><span class="line">TOP_CAP_YLABEL = &#x27;% of total cap&#x27;</span><br><span class="line"></span><br><span class="line"># Selecting the first 10 rows and setting the index</span><br><span class="line">cap10 = cap.head(10).set_index(&#x27;id&#x27;)</span><br><span class="line"></span><br><span class="line"># Calculating market_cap_perc</span><br><span class="line">cap10 = cap10.assign(market_cap_perc =</span><br><span class="line">    lambda x: (x.market_cap_usd / cap.market_cap_usd.sum()) * 100)</span><br><span class="line"></span><br><span class="line"># Plotting the barplot with the title defined above </span><br><span class="line">ax = cap10.market_cap_perc.plot.bar(title=&#x27;Top 10 market capitalization&#x27;)</span><br><span class="line"></span><br><span class="line"># Annotating the y axis with the label defined above</span><br><span class="line">ax.set_ylabel(&#x27;% of total cap&#x27;)</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<p><img src="https://i.loli.net/2019/12/06/XFakbKp1f4ML5ul.png" /></p>
+<p>可以看到比特币在整个加密货币中所占的份额多大，但是这个图还存在一个信息，可以对其进行改进，那就是比特币所占份额太大了，其他的加密货币之间就很难区分。</p>
+<h1 id="可视化优化">可视化优化</h1>
+<p>解决上面的办法是我们需要更改坐标轴的单位，我们从百分比换成 log^10,如果你不知道如何优化你的数据可视化步骤，可以参考我的<a href="http://wittyfans.com/coding/数据可视化基础与技术.html">另一篇文章</a></p>
+<p>另外，我们把类似的加密货币合并成同一个颜色,把x轴上的信息隐藏</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># Colors for the bar plot</span><br><span class="line">COLORS = [&#x27;orange&#x27;, &#x27;green&#x27;, &#x27;orange&#x27;, &#x27;cyan&#x27;, &#x27;cyan&#x27;, &#x27;blue&#x27;, &#x27;silver&#x27;, &#x27;orange&#x27;, &#x27;red&#x27;, &#x27;green&#x27;]</span><br><span class="line"></span><br><span class="line"># Plotting market_cap_usd as before but adding the colors and scaling the y-axis  </span><br><span class="line">ax = cap10.market_cap_perc.plot.bar(title=&#x27;Top 10 market capitalization&#x27;,color=COLORS)</span><br><span class="line"></span><br><span class="line"># Annotating the y axis with &#x27;USD&#x27;</span><br><span class="line">ax.set_ylabel(&#x27;USD&#x27;)</span><br><span class="line"></span><br><span class="line"># Final touch! Removing the xlabel as it is not very informative</span><br><span class="line">ax.set_xlabel(&#x27;&#x27;)</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2019/12/06/QJCehqgOsF6EdZT.png" /></p>
+<p><strong>隐藏X轴上的字的另一种方式：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x_axis = ax.xaxis</span><br><span class="line">x_axis.label.set_visible(False)</span><br></pre></td></tr></table></figure>
+<h1 id="恐怖的波动性">恐怖的波动性</h1>
+<p>加密货币发布以来就以其惊人的波动性著称，让我们来探索一下这种波动性，我们会选择24小时和一周的时间短来统计波动性。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># Selecting the id, percent_change_24h and percent_change_7d columns</span><br><span class="line">volatility = dec6[[&#x27;id&#x27;,&#x27;percent_change_24h&#x27;,&#x27;percent_change_7d&#x27;]]</span><br><span class="line"></span><br><span class="line"># Setting the index to &#x27;id&#x27; and dropping all NaN rows</span><br><span class="line">volatility = volatility.set_index(&#x27;id&#x27;).dropna()</span><br><span class="line"></span><br><span class="line"># Sorting the DataFrame by percent_change_24h in ascending order</span><br><span class="line">volatility = volatility.sort_values(by=&#x27;percent_change_24h&#x27;)</span><br><span class="line"></span><br><span class="line"># Checking the first few rows</span><br><span class="line">print(volatility.head())</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">               percent_change_24h  percent_change_7d</span><br><span class="line">id                                                  </span><br><span class="line">flappycoin                 -95.85             -96.61</span><br><span class="line">credence-coin              -94.22             -95.31</span><br><span class="line">coupecoin                  -93.93             -61.24</span><br><span class="line">tyrocoin                   -79.02             -87.43</span><br><span class="line">petrodollar                -76.55             542.96</span><br></pre></td></tr></table></figure>
+<p>第一名flappycoin，24小时内的波动为95%，这意味着1万块钱的投入24小时后只剩500.</p>
+<p>的确，波动性如此之大的产品亏损起来是很快的，但高风险也意味着高收益，我们来看一下24小时内最大的赢家与输家的对比：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">#Defining a function with 2 parameters, the series to plot and the title</span><br><span class="line">def top10_subplot(volatility_series, title):</span><br><span class="line">    # Making the subplot and the figure for two side by side plots</span><br><span class="line">    fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(10, 6))</span><br><span class="line">    </span><br><span class="line">    # Plotting with pandas the barchart for the top 10 losers</span><br><span class="line">    ax = volatility_series[:10].plot.bar(color=&#x27;darkred&#x27;,ax=axes[0])</span><br><span class="line">    </span><br><span class="line">    # Setting the figure&#x27;s main title to the text passed as parameter</span><br><span class="line">    fig.suptitle(title)</span><br><span class="line">    </span><br><span class="line">    # Setting the ylabel to &#x27;% change&#x27;</span><br><span class="line">    ax.set_ylabel(&#x27;% change&#x27;)</span><br><span class="line">    </span><br><span class="line">    # Same as above, but for the top 10 winners</span><br><span class="line">    ax = volatility_series[-10:].plot.bar(color=&#x27;darkblue&#x27;,ax=axes[1])</span><br><span class="line">    </span><br><span class="line">    # Returning this for good practice, might use later</span><br><span class="line">    return fig, ax</span><br><span class="line"></span><br><span class="line">DTITLE = &quot;24 hours top losers and winners&quot;</span><br><span class="line"></span><br><span class="line"># Calling the function above with the 24 hours period series and title DTITLE  </span><br><span class="line">fig, ax = top10_subplot(volatility.percent_change_24h,&#x27;24 hours top losers and winners&#x27;)</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<p><img src="https://i.loli.net/2019/12/06/6JMto7jFVD5gknu.png" /></p>
+<p>24小时百分之800的收益？为什么你还在看这篇文章不赶快去买比特币！（开玩笑😝）</p>
+<p>我们再来看看周收益吧：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># Sorting in ascending order</span><br><span class="line">volatility7d = volatility.sort_values(by=&#x27;percent_change_7d&#x27;)</span><br><span class="line"></span><br><span class="line">WTITLE = &quot;Weekly top losers and winners&quot;</span><br><span class="line"></span><br><span class="line"># Calling the top10_subplot function</span><br><span class="line">fig, ax = top10_subplot(volatility7d.percent_change_7d,WTITLE)</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2019/12/06/tyx5TMCD8J3Hszh.png" /></p>
+<p>3500的收益，好了我不说什么了。</p>
+<h1 id="关注低市值加密货币">关注低市值加密货币</h1>
+<p>上面的这些加密货币感觉都没见过，事实上这些加密货币的市值都很小,而投资低市值的加密货币风险也是很高的，这也印证了之前说的高风险高收益。</p>
+<p>对于市值要怎么划分呢？多少可以划分成高市值，多少又是低市值呢？我们一般按下表来：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Large cap: +10 billion</span><br><span class="line">Mid cap: 2 billion - 10 billion</span><br><span class="line">Small cap: 300 million - 2 billion</span><br><span class="line">Micro cap: 50 million - 300 million</span><br><span class="line">Nano cap: Below 50 million</span><br></pre></td></tr></table></figure>
+<p>我们来看一下大于一百亿市值的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Selecting everything bigger than 10 billion </span><br><span class="line">largecaps = cap.query(&#x27;market_cap_usd&gt;10000000000&#x27;)</span><br><span class="line"></span><br><span class="line"># Printing out largecaps</span><br><span class="line">print(largecaps)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">             id  market_cap_usd</span><br><span class="line">0       bitcoin    2.130493e+11</span><br><span class="line">1      ethereum    4.352945e+10</span><br><span class="line">2  bitcoin-cash    2.529585e+10</span><br><span class="line">3          iota    1.475225e+10</span><br></pre></td></tr></table></figure>
+<h1 id="大多数加密货币市值很低">大多数加密货币市值很低</h1>
+<p>通过将加密货币按照市值分类，进而对其按区间统计个数，我们可以看到🧍‍♂️市值区间加密货币的个数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"># Making a nice function for counting different marketcaps from the</span><br><span class="line"># &quot;cap&quot; DataFrame. Returns an int.</span><br><span class="line"># INSTRUCTORS NOTE: Since you made it to the end, consider it a gift :D</span><br><span class="line">def capcount(query_string):</span><br><span class="line">    return cap.query(query_string).count().id</span><br><span class="line"></span><br><span class="line"># Labels for the plot</span><br><span class="line">LABELS = [&quot;biggish&quot;, &quot;micro&quot;, &quot;nano&quot;]</span><br><span class="line"></span><br><span class="line"># Using capcount count the biggish cryptos</span><br><span class="line">biggish = capcount(&#x27;market_cap_usd&gt;3000000000&#x27;)</span><br><span class="line"></span><br><span class="line"># Same as above for micro ...</span><br><span class="line">micro = capcount(&#x27;market_cap_usd&gt;50000000 and market_cap_usd&lt;300000000&#x27;)</span><br><span class="line"></span><br><span class="line"># ... and for nano</span><br><span class="line">nano =  capcount(&#x27;market_cap_usd&lt;50000000&#x27;)</span><br><span class="line"></span><br><span class="line"># Making a list with the 3 counts</span><br><span class="line">values = [biggish,micro,nano]</span><br><span class="line"></span><br><span class="line"># Plotting them with matplotlib </span><br><span class="line">plt.bar(range(len(values)),values,label=LABELS)</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2019/12/06/arEDO1QFAGVwqCB.png" /></p>
+<p>可以发现，大部分的加密货币市值都很小。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/uploads/wechat-reward-image.png" alt="Scott 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/data-analysis/" rel="tag"># data analysis</a>
+              <a href="/tags/pandas/" rel="tag"># pandas</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/article/1648150364.html" rel="prev" title="Python神经网络分析基础">
+      <i class="fa fa-chevron-left"></i> Python神经网络分析基础
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/article/1775964342.html" rel="next" title="机器学习相关概念解读P1">
+      机器学习相关概念解读P1 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%AD%E5%8D%B7%E5%85%A8%E7%90%83%E7%9A%84%E5%8A%A0%E5%AF%86%E8%B4%A7%E5%B8%81"><span class="nav-number">1.</span> <span class="nav-text">席卷全球的加密货币</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE"><span class="nav-number">2.</span> <span class="nav-text">加载数据</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AF%94%E8%BE%83%E6%AF%94%E7%89%B9%E5%B8%81%E4%B8%8E%E5%85%B6%E4%BB%96%E5%8A%A0%E5%AF%86%E8%B4%A7%E5%B8%81"><span class="nav-number">3.</span> <span class="nav-text">比较比特币与其他加密货币</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%AF%E8%A7%86%E5%8C%96%E4%BC%98%E5%8C%96"><span class="nav-number">4.</span> <span class="nav-text">可视化优化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%81%90%E6%80%96%E7%9A%84%E6%B3%A2%E5%8A%A8%E6%80%A7"><span class="nav-number">5.</span> <span class="nav-text">恐怖的波动性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E6%B3%A8%E4%BD%8E%E5%B8%82%E5%80%BC%E5%8A%A0%E5%AF%86%E8%B4%A7%E5%B8%81"><span class="nav-number">6.</span> <span class="nav-text">关注低市值加密货币</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%A7%E5%A4%9A%E6%95%B0%E5%8A%A0%E5%AF%86%E8%B4%A7%E5%B8%81%E5%B8%82%E5%80%BC%E5%BE%88%E4%BD%8E"><span class="nav-number">7.</span> <span class="nav-text">大多数加密货币市值很低</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Scott"
+      src="/uploads/instagram_profile_image.png">
+  <p class="site-author-name" itemprop="name">Scott</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wittyfans" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/wittyfans" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/wittyfans0" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;wittyfans0" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Scott</span>
+</div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz","app_key":"qKXpoqGbK1sdFYMiik7Evuan","server_url":"https://7sscl0n1.lc-cn-n1-shared.com","security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz',
+      appKey     : 'qKXpoqGbK1sdFYMiik7Evuan',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

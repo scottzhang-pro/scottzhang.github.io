@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wittyfans.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="非监督学习的最后两章，我们会学习 Dimension reduction, Dimension reduction就是从数据中发现一定的模式，通过这种模式我们就可以对数据进行压缩，这对于计算和存储来说都是非常有利的，特别是在大数据时代。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="非监督学习：PCA and NMF">
+<meta property="og:url" content="http://wittyfans.com/article/1777482023.html">
+<meta property="og:site_name" content="Scott&#39;s Blog">
+<meta property="og:description" content="非监督学习的最后两章，我们会学习 Dimension reduction, Dimension reduction就是从数据中发现一定的模式，通过这种模式我们就可以对数据进行压缩，这对于计算和存储来说都是非常有利的，特别是在大数据时代。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2019/11/21/I34aLMFuywnHqzA.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/20/qolJbVCpOUg5PBY.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/20/XuxqSG6vWB7Ddlf.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/20/kPyiZ9QhEKxY58S.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/20/iUkctja8u2RovbA.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/20/qDPFfX7E8xjMwAu.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/21/1RKTpP4MFcVuyfS.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/21/PTgzFwfcnsX5uQp.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/21/Astuv1eTKCGHDyP.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/21/SnX2JGWdIgsM6oL.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/21/TqmufiSXRHQchPZ.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/21/8fwGTU7L96uIc5e.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/21/k9Ml5mUPoBg4SZC.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/21/Astuv1eTKCGHDyP.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/21/c9QkmIZ5TbEUFMY.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/21/I34aLMFuywnHqzA.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/21/q865U2sbpad9x3l.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/21/qUIHQT75DZ6Rhdk.png">
+<meta property="article:published_time" content="2019-11-21T08:20:37.000Z">
+<meta property="article:modified_time" content="2021-11-19T14:12:08.914Z">
+<meta property="article:author" content="Scott">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="data analysis">
+<meta property="article:tag" content="sklearn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2019/11/21/I34aLMFuywnHqzA.png">
+
+<link rel="canonical" href="http://wittyfans.com/article/1777482023.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>非监督学习：PCA and NMF | Scott's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Scott's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Scott's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学则不固, 知则不惑</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://wittyfans.com/article/1777482023.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/instagram_profile_image.png">
+      <meta itemprop="name" content="Scott">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Scott's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          非监督学习：PCA and NMF
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-21 16:20:37" itemprop="dateCreated datePublished" datetime="2019-11-21T16:20:37+08:00">2019-11-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-11-19 22:12:08" itemprop="dateModified" datetime="2021-11-19T22:12:08+08:00">2021-11-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/coding/" itemprop="url" rel="index"><span itemprop="name">coding</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/article/1777482023.html" class="post-meta-item leancloud_visitors" data-flag-title="非监督学习：PCA and NMF" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/article/1777482023.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/article/1777482023.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img src="https://i.loli.net/2019/11/21/I34aLMFuywnHqzA.png" /></p>
+<blockquote>
+<p>非监督学习的最后两章，我们会学习 Dimension reduction, Dimension reduction就是从数据中发现一定的模式，通过这种模式我们就可以对数据进行压缩，这对于计算和存储来说都是非常有利的，特别是在大数据时代。</p>
+</blockquote>
+<span id="more"></span>
+<p>dimension reduction核心的功能是去除数据中的噪音，保留那些最基本的东西，噪音去除之后，有助于减少我们处理 classfication 与 regression 中碰到的问题。</p>
+<p>接下来我们介绍最基本的 dimension reduction 算法，<em>Principal Component Analysis</em> (PCA).</p>
+<h1 id="pca">PCA</h1>
+<p>PCA 主要有两个步骤：</p>
+<ol type="1">
+<li>decorrlation</li>
+<li>dimension reduction</li>
+</ol>
+<p>我们先讲第一个步骤，decorrlation, decorrlation会将数据旋转到与坐标轴对齐，并将其均值移动到0附近，所以PCA并不会改变原始数据。</p>
+<p><img src="https://i.loli.net/2019/11/20/qolJbVCpOUg5PBY.png" /></p>
+<p>PCA和 StandardScaler 一样，有fit和transform方法，fit方法会学习如何去shift与rotate数据，但并不会做出任何操作。</p>
+<p>transform方法，则会应用fit学习到的东西。</p>
+<p>在PCA对数据transform后，原来数据的columns对应数据的features，转换后的数据列则对应pca的features。</p>
+<p>我们用皮尔逊系数来衡量相关性，如果原来的数据是有相关性的，则转化后的数据不会再具备这种特性。</p>
+<p>以我们的谷物的长、宽数据为例，</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># Perform the necessary imports</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line">from scipy.stats import pearsonr</span><br><span class="line"></span><br><span class="line"># Assign the 0th column of grains: width</span><br><span class="line">width = grains[:,0]</span><br><span class="line"></span><br><span class="line"># Assign the 1st column of grains: length</span><br><span class="line">length = grains[:,1]</span><br><span class="line"></span><br><span class="line"># Scatter plot width vs length</span><br><span class="line">plt.scatter(width, length)</span><br><span class="line">plt.axis(&#x27;equal&#x27;)</span><br><span class="line">plt.show()</span><br><span class="line"></span><br><span class="line"># Calculate the Pearson correlation</span><br><span class="line">correlation, pvalue = pearsonr(width,length)</span><br><span class="line"></span><br><span class="line"># Display the correlation</span><br><span class="line">print(correlation)</span><br></pre></td></tr></table></figure>
+<figure>
+<img src="https://i.loli.net/2019/11/20/XuxqSG6vWB7Ddlf.png" alt="transform前" /><figcaption aria-hidden="true">transform前</figcaption>
+</figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"># Import PCA</span><br><span class="line">from sklearn.decomposition import PCA</span><br><span class="line"></span><br><span class="line"># Create PCA instance: model</span><br><span class="line">model = PCA()</span><br><span class="line"></span><br><span class="line"># Apply the fit_transform method of model to grains: pca_features</span><br><span class="line">pca_features = model.fit_transform(grains)</span><br><span class="line"></span><br><span class="line"># Assign 0th column of pca_features: xs</span><br><span class="line">xs = pca_features[:,0]</span><br><span class="line"></span><br><span class="line"># Assign 1st column of pca_features: ys</span><br><span class="line">ys = pca_features[:,1]</span><br><span class="line"></span><br><span class="line"># Scatter plot xs vs ys</span><br><span class="line">plt.scatter(xs, ys)</span><br><span class="line">plt.axis(&#x27;equal&#x27;)</span><br><span class="line">plt.show()</span><br><span class="line"></span><br><span class="line"># Calculate the Pearson correlation of xs and ys</span><br><span class="line">correlation, pvalue = pearsonr(xs, ys)</span><br><span class="line"></span><br><span class="line"># Display the correlation</span><br><span class="line">print(correlation)</span><br></pre></td></tr></table></figure>
+<figure>
+<img src="https://i.loli.net/2019/11/20/kPyiZ9QhEKxY58S.png" alt="transform后" /><figcaption aria-hidden="true">transform后</figcaption>
+</figure>
+<p>可以看到，谷物的长与宽是有相关性的，即它的叶片越长，宽度也越宽。但在transofor后，数据就与坐标系对齐了。</p>
+<h2 id="intrinsic-dimension">Intrinsic dimension</h2>
+<p>Intrinsic dimension 即在降维或者压缩数据过程中，为了让你的数据特征最大程度的保持，你最低限度需要保留哪些features。</p>
+<p>它同时也告诉了我们可以把数据压缩到什么样的程度，所以你需要了解哪些 feature 对你的数据集影响是最大的。</p>
+<p>比如我们衡量电脑性能，我们可以把键盘鼠标这些feature去掉，但是cpu、gpu、内存性能这些你肯定要保留对不对？cpu、gpu、内存性能，这就是我们说的 features required to approximate it。</p>
+<p>但有的人说，我觉得硬盘也得加上去，这样我们的 intrinsic dimension 就从 3 增加到4了。</p>
+<p>所以你看，intrinsic dimension 数量是一个视不同情况而定的值。</p>
+<p>那我们将设为多少比较合适呢？考虑我们的iris数据，我们选择</p>
+<ul>
+<li>sepal width</li>
+<li>sepal length</li>
+<li>petal width</li>
+</ul>
+<p>这3个变量，这样我们就可以将它绘制到3维空间，但我们发现它的图像在3维空间是很平的，这意味着某个变量的值的方差很小，也就是说它对整个图像的影响不大，我们只选择另外2个变量，也可以不损失太多的细节。</p>
+<p><img src="https://i.loli.net/2019/11/20/iUkctja8u2RovbA.png" /></p>
+<p>但scatter图只能表示3维以下的数据，如果我们的 features 有很多个，我们要如何找到那些影响程度大的 features 呢？</p>
+<p>这就是 PCA 擅长的地方，我们可以统计 PCA 中那些方差显著的features。</p>
+<p>下面是iris数据集各个features的方差排序图：</p>
+<p><img src="https://i.loli.net/2019/11/20/qDPFfX7E8xjMwAu.png" /></p>
+<p>可以看到最后的那个数据方差非常小，所以它对我们数据集的影响完全可以去除掉。</p>
+<p>那么如何绘制数据集的 variances 呢？</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"># Perform the necessary imports</span><br><span class="line">from sklearn.decomposition import PCA</span><br><span class="line">from sklearn.preprocessing import StandardScaler</span><br><span class="line">from sklearn.pipeline import make_pipeline</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line"></span><br><span class="line"># Create scaler: scaler</span><br><span class="line">scaler = StandardScaler()</span><br><span class="line"></span><br><span class="line"># Create a PCA instance: pca</span><br><span class="line">pca = PCA()</span><br><span class="line"></span><br><span class="line"># Create pipeline: pipeline</span><br><span class="line">pipeline = make_pipeline(scaler,pca)</span><br><span class="line"></span><br><span class="line"># Fit the pipeline to &#x27;samples&#x27;</span><br><span class="line">pipeline.fit(samples)</span><br><span class="line"></span><br><span class="line"># Plot the explained variances</span><br><span class="line">features = range(pca.n_components_)</span><br><span class="line">plt.bar(features,pca.explained_variance_)</span><br><span class="line">plt.xlabel(&#x27;PCA feature&#x27;)</span><br><span class="line">plt.ylabel(&#x27;variance&#x27;)</span><br><span class="line">plt.xticks(features)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<h2 id="pca降维">PCA降维</h2>
+<p>我们在做数据降维的时候，得指定需要保留的features，即通过指定pca的参数<code>n_components=2</code>, 我们保留多少个features，这可以通过Intrinsic dimension来计算。</p>
+<p>我们以iris数据为例，当我们用PCA把数据从四维（petal width,length和sepal length,width）降到2维后，我们再绘制它的scatter图，会发现它们还是分为三部分。</p>
+<p>但是对于如字词统计的例子中，我们可能需要用其他的算法来代替，在这种数据中，每一行代表一个文档，每一列代表某个固定词组（fixed vocabulary）中的词语.</p>
+<p>我们会统计，每个词语在每个文档中出现的次数array。不过，只有少数的词语会出现很多的文档之中，大部分词语在某些文档中的出现次数都是0，这样的array叫做sparse(稀疏的），sparse array中大部分的值都是0.</p>
+<p>我们使用 <em>csr_matrix</em> 来代替 <em>numpy array</em> 去处理这样的数据。</p>
+<p><em>csr_matrix</em> 只会保存那些非0值，这样就更方便，但是PCA不支持 <em>csr_matrix</em>，我们需要用 <em>TruncatedSVD</em> 来代替 PCA。</p>
+<p><em>‌TruncatedSVD</em> 的效果与 PCA 是一样的，只不过它接受 <em>csr_matrix</em> 数组，除此之外使用方法都是一样的。</p>
+<p>示例，我们来对一组词语进行分词操作，我们的词组如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># data</span><br><span class="line">documents=[&#x27;cats say meow&#x27;, &#x27;dogs say woof&#x27;, &#x27;dogs chase cats&#x27;]</span><br><span class="line"></span><br><span class="line"># Import TfidfVectorizer</span><br><span class="line">from sklearn.feature_extraction.text import TfidfVectorizer</span><br><span class="line"></span><br><span class="line"># Create a TfidfVectorizer: tfidf</span><br><span class="line">tfidf = TfidfVectorizer() </span><br><span class="line"></span><br><span class="line"># Apply fit_transform to document: csr_mat</span><br><span class="line">csr_mat = tfidf.fit_transform(documents)</span><br><span class="line"></span><br><span class="line"># Print result of toarray() method</span><br><span class="line">print(csr_mat.toarray())</span><br><span class="line"></span><br><span class="line"># Get the words: words</span><br><span class="line">words = tfidf.get_feature_names()</span><br><span class="line"></span><br><span class="line"># Print words</span><br><span class="line">print(words)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">output: [[0.51785612 0.         0.         0.68091856 0.51785612 0.        ]</span><br><span class="line"> [0.         0.         0.51785612 0.         0.51785612 0.68091856]</span><br><span class="line"> [0.51785612 0.68091856 0.51785612 0.         0.         0.        ]]</span><br><span class="line"> </span><br><span class="line"> [&#x27;cats&#x27;, &#x27;chase&#x27;, &#x27;dogs&#x27;, &#x27;meow&#x27;, &#x27;say&#x27;, &#x27;woof&#x27;]</span><br></pre></td></tr></table></figure>
+<h1 id="nmf">NMF</h1>
+<p>NMF与PCA一样，都是降维算法。不过NMF不能用于所有的预测，只能用于非负值。</p>
+<p>NMF会将数据集中的每组数据分解并分别计算其和。</p>
+<p>考虑字词统计的例子，NMF使用tf-idf来计算字词出现的频率。 tf是词语出现的频率，在每一个document中，如果一个词占整个document中文字的百分之10，那么NMF的输出的tf就是0.1.</p>
+<p>而idf用来降低那些常用词的影响，如,<code>的,那个，这个</code>等等。</p>
+<p>我们知道，在PCA中，我们定义了多少个<code>n_components</code>,就相当于是保留了多少个features。</p>
+<p>在NMF中，它也会去学习数据集的 <em>component dimension</em>。</p>
+<p>需注意，NMF的条目，以及features的值，总是正数。</p>
+<h2 id="nmf算法使用">NMF算法使用</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># Import NMF</span><br><span class="line">from sklearn.decomposition import NMF</span><br><span class="line"></span><br><span class="line"># Create an NMF instance: model</span><br><span class="line">model = NMF(n_components=6)</span><br><span class="line"></span><br><span class="line"># Fit the model to articles</span><br><span class="line">model.fit(articles)</span><br><span class="line"></span><br><span class="line"># Transform the articles: nmf_features</span><br><span class="line">nmf_features = model.transform(articles)</span><br><span class="line"></span><br><span class="line"># Print the NMF features</span><br><span class="line">print(nmf_features)</span><br></pre></td></tr></table></figure>
+<h2 id="论文字词统计">论文字词统计</h2>
+<blockquote>
+<p>Components correspond to topics of documents, and the NMF features reconstruct the documents from the topics</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># Import pandas</span><br><span class="line">import pandas as pd</span><br><span class="line"></span><br><span class="line"># Create a DataFrame: components_df</span><br><span class="line">components_df = pd.DataFrame(model.components_,columns=words)</span><br><span class="line"></span><br><span class="line"># Print the shape of the DataFrame</span><br><span class="line">print(components_df.shape)</span><br><span class="line"></span><br><span class="line"># Select row 3: component</span><br><span class="line">component = components_df.iloc[3]</span><br><span class="line"></span><br><span class="line"># Print result of nlargest</span><br><span class="line">print(component.nlargest())</span><br></pre></td></tr></table></figure>
+<h2 id="用户喜好预测">用户喜好预测</h2>
+<p>NMF有一个重要的应用是作为内容推荐，假设我们有一个用户和一部电影，我们想要根据电影的内容做出预测：</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">喜剧片</th>
+<th style="text-align: left;">动作片</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">小雅</td>
+<td style="text-align: left;">喜欢</td>
+<td style="text-align: left;">不喜欢</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">百货战警</td>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">1</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>红番区是动作喜剧片。</p>
+</blockquote>
+<p>现在假设小雅喜欢喜剧片，不喜欢动作片，同时假设我们现在只根据一部电影拥有多少喜剧成分与动作片成分来评价它。</p>
+<p>现在因为小雅喜欢喜剧片<code>+3</code>，不喜欢动作片<code>+0</code>，所以它可能给出的评价是 3分 。</p>
+<p>我们再来考虑小明的情况：</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">喜剧片</th>
+<th style="text-align: left;">动作片</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">小明</td>
+<td style="text-align: left;">不喜欢</td>
+<td style="text-align: left;">喜欢</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">红番区</td>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">1</td>
+</tr>
+</tbody>
+</table>
+<p>小明喜欢动作片，不喜欢喜剧片，所以喜剧片的3分不计，动作片1分计入，即小明只给出了1分的评价。</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">喜剧片</th>
+<th style="text-align: left;">动作片</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">小雅</td>
+<td style="text-align: left;">喜欢</td>
+<td style="text-align: left;">喜欢</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">红番区</td>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">1</td>
+</tr>
+</tbody>
+</table>
+<p>再考虑一个例子：</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">喜剧片</th>
+<th style="text-align: left;">动作片</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">小刘</td>
+<td style="text-align: left;">喜欢</td>
+<td style="text-align: left;">喜欢</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">让子弹飞</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">3</td>
+</tr>
+</tbody>
+</table>
+<p>小刘喜欢喜剧也喜欢动作，所以这部电影他可能会给出1+3，四分的评价。</p>
+<p>我们把一批电影编号为M1-M5,列表示分别占喜剧与动作的成分，同时把一批用户分类为他们是否喜欢喜剧或动作片。</p>
+<p><img src="https://i.loli.net/2019/11/21/1RKTpP4MFcVuyfS.png" /></p>
+<p>当我们把左边的两个表结合，就可以得到后面的这个表：</p>
+<p><img src="https://i.loli.net/2019/11/21/PTgzFwfcnsX5uQp.png" /></p>
+<p>这是通过算点积算出来的，你可以看到：</p>
+<p><img src="https://i.loli.net/2019/11/21/Astuv1eTKCGHDyP.png" /></p>
+<ul>
+<li>有些人的喜好一样，则他们给出的电影评分也是一样的</li>
+<li>如果两个电影所占的成分差不多，则也会得到一样的评分</li>
+<li>B+C=D,这是因为B的喜欢与C的喜好相反，而D对与这两者都喜欢</li>
+<li>M2与M3的平均值是M5，即M5的喜剧与动作成分是M2与M3的平均值，所以M5的评分也是M2与M3的平均值</li>
+</ul>
+<p>上面的这个表叫做Matrix Factorization, 我们要存储这个表是非常费存储的，假设我们有很多的电影与用户，算一下我们需要一个多大的Matrix.</p>
+<p><img src="https://i.loli.net/2019/11/21/SnX2JGWdIgsM6oL.png" /></p>
+<p>所以我们在存储的时候，只存储用户的喜好与电影的信息,再通过图表演示一下：</p>
+<p><img src="https://i.loli.net/2019/11/21/TqmufiSXRHQchPZ.png" /></p>
+<p>第一种方案是我们直接存储用户对所有电影评分与可能的评分，假设有2000个用户，1000部电影，这意味着200万份数据。</p>
+<p><img src="https://i.loli.net/2019/11/21/8fwGTU7L96uIc5e.png" /></p>
+<p>如果我们通过feature计算，则只需要30万份数据</p>
+<p><img src="https://i.loli.net/2019/11/21/k9Ml5mUPoBg4SZC.png" /></p>
+<p>现在我们回到以前，对与NMP算法，其中一个问题是，</p>
+<p><img src="https://i.loli.net/2019/11/21/Astuv1eTKCGHDyP.png" /></p>
+<p>如何通过中间的点积，得到两边的数据？就像24可以是2x12,也可以是4x6.</p>
+<p>最开始我们可以随机的将两边的数据列出来，算出点积并与手上的点积比对，如果过低，那么我们将相应的用户喜好与电影评分做出调整，直到所有的值接近我们已有的点积中的值。</p>
+<p><img src="https://i.loli.net/2019/11/21/c9QkmIZ5TbEUFMY.png" /></p>
+<p>我们算到什么程度，才停止呢？我们需要定义一个error function,它就是告诉机器，你哪里错了，做的还不够，得继续算。</p>
+<p><img src="https://i.loli.net/2019/11/21/I34aLMFuywnHqzA.png" /></p>
+<p>这里的error就是我们手上的数据与机器算出来的数据的差的平方，我们把每个用户或者每个电影的error加起来，error function的作用就是尽量让error的和最小。</p>
+<p>在现实的情况中，我们不可能每个用户对每个电影都有评分，所以我们拿到的点积图中间可能有很多空白:</p>
+<p><img src="https://i.loli.net/2019/11/21/q865U2sbpad9x3l.png" /></p>
+<p>但是我们可以根据这些值算出来用户与电影的属性,进而给用户推荐电影:</p>
+<p><img src="https://i.loli.net/2019/11/21/qUIHQT75DZ6Rhdk.png" /></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=ZspR5PZemcs&amp;t=693s">参考:How does Netflix recommend movies? Matrix Factorization</a></p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/uploads/wechat-reward-image.png" alt="Scott 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/data-analysis/" rel="tag"># data analysis</a>
+              <a href="/tags/sklearn/" rel="tag"># sklearn</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/article/766428778.html" rel="prev" title="非监督学习：Clustering and Visualization">
+      <i class="fa fa-chevron-left"></i> 非监督学习：Clustering and Visualization
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/article/1854275205.html" rel="next" title="机器学习：Classification and Regression Trees">
+      机器学习：Classification and Regression Trees <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#pca"><span class="nav-number">1.</span> <span class="nav-text">PCA</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#intrinsic-dimension"><span class="nav-number">1.1.</span> <span class="nav-text">Intrinsic dimension</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pca%E9%99%8D%E7%BB%B4"><span class="nav-number">1.2.</span> <span class="nav-text">PCA降维</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#nmf"><span class="nav-number">2.</span> <span class="nav-text">NMF</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#nmf%E7%AE%97%E6%B3%95%E4%BD%BF%E7%94%A8"><span class="nav-number">2.1.</span> <span class="nav-text">NMF算法使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E5%AD%97%E8%AF%8D%E7%BB%9F%E8%AE%A1"><span class="nav-number">2.2.</span> <span class="nav-text">论文字词统计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E5%96%9C%E5%A5%BD%E9%A2%84%E6%B5%8B"><span class="nav-number">2.3.</span> <span class="nav-text">用户喜好预测</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Scott"
+      src="/uploads/instagram_profile_image.png">
+  <p class="site-author-name" itemprop="name">Scott</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wittyfans" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/wittyfans" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/wittyfans0" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;wittyfans0" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Scott</span>
+</div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz","app_key":"qKXpoqGbK1sdFYMiik7Evuan","server_url":"https://7sscl0n1.lc-cn-n1-shared.com","security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz',
+      appKey     : 'qKXpoqGbK1sdFYMiik7Evuan',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

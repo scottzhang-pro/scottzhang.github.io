@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wittyfans.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="对数组的操作是 NumPy 中很重要的一部分，了解这些内置的方法，可以让你的效率事半功倍。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NumPy操作数组">
+<meta property="og:url" content="http://wittyfans.com/article/2815417585.html">
+<meta property="og:site_name" content="Scott&#39;s Blog">
+<meta property="og:description" content="对数组的操作是 NumPy 中很重要的一部分，了解这些内置的方法，可以让你的效率事半功倍。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2019/02/08/5c5d6f5855efe.png">
+<meta property="og:image" content="https://i.loli.net/2019/02/09/5c5e8e1bb9f55.jpg">
+<meta property="og:image" content="https://i.loli.net/2019/02/09/5c5eea638e62f.jpeg">
+<meta property="article:published_time" content="2019-02-09T15:00:40.000Z">
+<meta property="article:modified_time" content="2021-11-19T14:12:08.905Z">
+<meta property="article:author" content="Scott">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="numpy">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2019/02/08/5c5d6f5855efe.png">
+
+<link rel="canonical" href="http://wittyfans.com/article/2815417585.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>NumPy操作数组 | Scott's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Scott's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Scott's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学则不固, 知则不惑</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://wittyfans.com/article/2815417585.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/instagram_profile_image.png">
+      <meta itemprop="name" content="Scott">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Scott's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          NumPy操作数组
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-02-09 23:00:40" itemprop="dateCreated datePublished" datetime="2019-02-09T23:00:40+08:00">2019-02-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-11-19 22:12:08" itemprop="dateModified" datetime="2021-11-19T22:12:08+08:00">2021-11-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/coding/" itemprop="url" rel="index"><span itemprop="name">coding</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/article/2815417585.html" class="post-meta-item leancloud_visitors" data-flag-title="NumPy操作数组" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/article/2815417585.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/article/2815417585.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>对数组的操作是 <em>NumPy</em> 中很重要的一部分，了解这些内置的方法，可以让你的效率事半功倍。</p>
+</blockquote>
+<span id="more"></span>
+<h1 id="操作数组">操作数组</h1>
+<h2 id="np.meshgrid方法">np.meshgrid方法</h2>
+<p>如果你给meshgrid两个一位数组，A像这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[𝑎1,𝑎2,𝑎3]</span><br></pre></td></tr></table></figure>
+<p>B像这样:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[𝑏1,𝑏2,𝑏3]</span><br></pre></td></tr></table></figure>
+<p>如果你运行 <em>np.meshgrid(A,B)</em>,那么你会得到一个嵌套数组，里面分别是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[𝑎1,𝑎1,𝑎1],[𝑎2,𝑎2,𝑎2],[𝑎3,𝑎3,𝑎3]]</span><br></pre></td></tr></table></figure>
+<p>和</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[𝑏1,𝑏1,𝑏1],[𝑏2,𝑏2,𝑏2],[𝑏3,𝑏3,𝑏3]]</span><br></pre></td></tr></table></figure>
+<p>By adding these two arrays together, we can create the 2D array containing, as its elements, every combination of sums between the numbers in the original elements. Arrays such as linspace and arange are typically used to constuct N-D arrays used to plot in 3 dimensions.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">import plotly.plotly as py</span><br><span class="line">import plotly.graph_objs as go</span><br><span class="line"></span><br><span class="line">x = np.arange(-10, 10, 0.4)</span><br><span class="line">y = np.arange(-10, 10, 0.4)</span><br><span class="line">XX, YY = np.meshgrid(x, y)</span><br><span class="line">ZZ = np.sin(XX**2 + YY**2) / (XX**2 + YY**2)</span><br><span class="line"></span><br><span class="line">lines = []</span><br><span class="line">line_marker = dict(color=&#x27;#0066FF&#x27;, width=2)</span><br><span class="line">for i, j, k in zip(XX, YY, ZZ):</span><br><span class="line">    lines.append(go.Scatter3d(x=i, y=j, z=k, mode=&#x27;lines&#x27;, line=line_marker))</span><br><span class="line"></span><br><span class="line">layout = go.Layout(</span><br><span class="line">    title=&#x27;Wireframe with Meshgrid&#x27;,</span><br><span class="line">    showlegend=False</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">fig = go.Figure(data=lines, layout=layout)</span><br><span class="line">py.iplot(fig, filename=&#x27;numpy-arange-to-meshgrid&#x27;)</span><br></pre></td></tr></table></figure>
+<figure>
+<img src="https://i.loli.net/2019/02/08/5c5d6f5855efe.png" alt="绘图请配合plotly" /><figcaption aria-hidden="true">绘图请配合plotly</figcaption>
+</figure>
+<h2 id="np.where方法">np.where方法</h2>
+<p>假设你有三个数组，第三个数组存的是布尔值，你想要按照条件去前两个数组中选值，如果第三个数组中的值是真，那么就去第一个数组中拿对应的值，否则就拿第二个数组中的值。</p>
+<p>我们可以利用<em>zip</em> 函数实现这一需求：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line"></span><br><span class="line">xarr = np.array([1.1, 1.2, 1.3, 1.4, 1.5])</span><br><span class="line"></span><br><span class="line">yarr = np.array([2.1, 2.2, 2.3, 2.4, 2.5])</span><br><span class="line"></span><br><span class="line">cond = np.array([True, False, True, True, False])</span><br><span class="line"></span><br><span class="line">result = [(x if contidion else y) for x,y,contidion in zip(xarr,yarr,cond)]</span><br><span class="line">result</span><br></pre></td></tr></table></figure>
+<p>虽然这样可以实现，但是会有一些问题：</p>
+<ol type="1">
+<li>如果数组很大就会有性能问题</li>
+<li>多重数组无法这样操作</li>
+</ol>
+<p>利用 <em>np.where</em> 方法，就可以简单的实现：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">result = np.where(cond,xarr,yarr)</span><br></pre></td></tr></table></figure>
+<p><em>np.where</em> 会返回一个新的数组，其中包含了你需要的值。</p>
+<p>再举一个例子，将一堆数中的值进行替换，正数变成2，负数变成-2:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">arr = np.random.randn(2, 10)</span><br><span class="line">arr</span><br><span class="line"></span><br><span class="line"># out</span><br><span class="line">array([[-0.81110748,  0.68433723,  0.52473733, -0.41852741, -2.84401244,</span><br><span class="line">        -1.68747418, -0.11169401, -1.10101844, -0.8750002 ,  1.18884515],</span><br><span class="line">       [-0.30515971,  0.60605408,  0.16320091, -0.99053775, -0.76669183,</span><br><span class="line">        -0.29594746,  0.33500369,  0.28612921, -0.93350166, -0.67301814]])</span><br><span class="line"></span><br><span class="line">np.where(arr&lt;0,-2,2)</span><br><span class="line"># out</span><br><span class="line">array([[-2,  2,  2, -2, -2, -2, -2, -2, -2,  2],</span><br><span class="line">       [-2,  2,  2, -2, -2, -2,  2,  2, -2, -2]])</span><br></pre></td></tr></table></figure>
+<p>通过将arr本身传进去，可以指修改某一部分的值，比如下面是指将负数修改为-2，正数不变:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">np.where(arr&lt;0,-2,arr)</span><br><span class="line"># out</span><br><span class="line"></span><br><span class="line">array([[-2.        ,  0.68433723,  0.52473733, -2.        , -2.        ,</span><br><span class="line">        -2.        , -2.        , -2.        , -2.        ,  1.18884515],</span><br><span class="line">       [-2.        ,  0.60605408,  0.16320091, -2.        , -2.        ,</span><br><span class="line">        -2.        ,  0.33500369,  0.28612921, -2.        , -2.        ]])</span><br></pre></td></tr></table></figure>
+<h2 id="数学方法">数学方法</h2>
+<p><em>Numpy</em> 支持很多常用的数学方法，比如对数组求和，算平均值，等等，可以直接对数组对象调用，也可以通过 <em>np.method</em> 的方式调用。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">arr = np.random.rand(2,2)*10</span><br><span class="line">arr</span><br><span class="line">out:</span><br><span class="line">array([[ 0.89779239,  8.62581317],</span><br><span class="line">       [ 3.48522587,  5.17990087]])</span><br></pre></td></tr></table></figure>
+<h2 id="平均值">平均值</h2>
+<p><em>arr.mean()</em></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4.5471830734485419</span><br></pre></td></tr></table></figure>
+<p>对横向数值求平均：</p>
+<p><em>arr.mean(axis=1)</em></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array([ 4.76180278,  4.33256337])</span><br></pre></td></tr></table></figure>
+<p>纵向数求平均：</p>
+<p><em>arr.mean(axis=0)</em></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">array([ 2.19150913,  6.90285702])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="求和">求和</h2>
+<p><em>arr.sum()</em></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">18.188732293794168</span><br></pre></td></tr></table></figure>
+<p>求和函数也可以用 <em>axis</em> 来指定行或列求和。</p>
+<blockquote>
+<p>更多方法请参考附录。</p>
+</blockquote>
+<h2 id="附录">附录</h2>
+<figure>
+<img src="https://i.loli.net/2019/02/09/5c5e8e1bb9f55.jpg" alt="math_funcs.jpg" /><figcaption aria-hidden="true">math_funcs.jpg</figcaption>
+</figure>
+<h2 id="布尔数组方法">布尔数组方法</h2>
+<p>可以对一个包含True和False的布尔数组执行 <em>sum</em> 运算：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">arr = np.random.randn(100)</span><br><span class="line">(arr &gt; 0).sum()</span><br><span class="line"></span><br><span class="line">49</span><br></pre></td></tr></table></figure>
+<p><em>bools.any()</em> 测试数组中是否有 <em>True</em> 的:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bools = np.array([False])</span><br><span class="line">bools.any()</span><br><span class="line"></span><br><span class="line"># 输出</span><br><span class="line">False</span><br></pre></td></tr></table></figure>
+<p><em>bools.all()</em> 测试所有值是否都是 <em>True</em>.</p>
+<h2 id="排序">排序</h2>
+<p>NumPy 的数组排序：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">arr = np.random.randn(6)</span><br><span class="line">arr.sort()</span><br></pre></td></tr></table></figure>
+<p><em>sort</em> 是 <em>in-place</em> 的， 也就是会修改原来数组的数据。</p>
+<h2 id="unique函数">Unique函数</h2>
+<p>unique函数返回排序后的、数组中唯一的值。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">names = np.array([&#x27;Bob&#x27;, &#x27;Joe&#x27;, &#x27;Will&#x27;, &#x27;Bob&#x27;, &#x27;Will&#x27;, &#x27;Joe&#x27;, &#x27;Joe&#x27;])</span><br><span class="line">np.unique(names)</span><br></pre></td></tr></table></figure>
+<p>它的作用和下面的代码差不多:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sorted(set(names))</span><br></pre></td></tr></table></figure>
+<h2 id="in1d函数">in1d函数</h2>
+<p>in1d函数测试一个数组中的值，是否都在另一个数组中，如果在就返回True，不再返回False:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">values = np.array([1,2,3])</span><br><span class="line">np.in1d(values,[1])</span><br><span class="line"># </span><br><span class="line">arrray([True,False,False])</span><br></pre></td></tr></table></figure>
+<p>更多函数请参考下图：</p>
+<figure>
+<img src="https://i.loli.net/2019/02/09/5c5eea638e62f.jpeg" alt="array_set_operations.jpeg" /><figcaption aria-hidden="true">array_set_operations.jpeg</figcaption>
+</figure>
+<h1 id="numpy数据持久化随机数生成">NumPy数据持久化、随机数生成</h1>
+<p>NumPy可以从磁盘读取数据，也可以将数据保存到本地。这个部分只讲一些基本的内容，因为大家可能更喜欢用 <em>Pandas</em> 来导入数据。</p>
+<p>分别介绍两个方法：</p>
+<ul>
+<li><em>np.save</em></li>
+<li><em>np.load</em></li>
+</ul>
+<h2 id="存储">存储</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">arr = np.arrange(10)</span><br><span class="line">np.save(&#x27;/Users/wittyfans/Desktop/data&#x27;,arr)</span><br></pre></td></tr></table></figure>
+<h2 id="读取">读取</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">saved = np.load(&#x27;/Users/wittyfans/Desktop/data.npy&#x27;)</span><br><span class="line">saved</span><br><span class="line"># 输出</span><br><span class="line"></span><br><span class="line">array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])</span><br></pre></td></tr></table></figure>
+<h2 id="打包储存">打包储存</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">np.savez(&#x27;path&#x27;,a=arr,b=arr)</span><br></pre></td></tr></table></figure>
+<h2 id="读取打包文件">读取打包文件</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">arch = np.load(&#x27;path.npz&#x27;)</span><br><span class="line">arch[&#x27;a&#x27;] # 通过类似dict的方式来读取数据</span><br><span class="line">arch[&#x27;b&#x27;]</span><br></pre></td></tr></table></figure>
+<h2 id="随机生成">随机生成</h2>
+<p>生成符合正态分布的4x4数组:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">samples = np.random.normal(size=(4, 4))</span><br><span class="line">samples</span><br><span class="line"># 输出</span><br><span class="line"></span><br><span class="line">array([[ 0.5732,</span><br><span class="line"></span><br><span class="line">0.1933, 0.4429, 1.2796],</span><br><span class="line"></span><br><span class="line">[ 0.575 , [-0.5367, [ 0.1525,</span><br><span class="line"></span><br><span class="line">0.4339, -0.7658, -1.237 ],</span><br><span class="line"></span><br><span class="line">1.8545, -0.92 , -0.1082],</span><br><span class="line"></span><br><span class="line">0.9435, -1.0953, -0.144 ]])</span><br></pre></td></tr></table></figure>
+<p>Python内置的 <em>random</em> 模块，相比于NumPy要慢一个数量级。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">from random import normalvariate</span><br><span class="line"></span><br><span class="line">N = 1000000</span><br><span class="line"></span><br><span class="line">%timeit samples = [normalvariate(0, 1) for _ in range(N)] 1.77 s +- 126 ms per loop (mean +- std. dev. of 7 runs, 1 loop each)</span><br><span class="line"></span><br><span class="line">%timeit np.random.normal(size=N) 61.7 ms +- 1.32 ms per loop (mean +- std. dev. of 7 runs, 10 loops each)</span><br></pre></td></tr></table></figure>
+<p>这些随机数都是根据种子即 <em>seed</em> 生成的,如果每次生成随机数的时候seed都不变，那么每次生成的随机数都会是一样的。默认NumPy会根据时间来更改seed，这样每次我们就可以拿到不一样的随机数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># 随机产生一个数据，此随机数是变动的</span><br><span class="line">print(np.random.random())</span><br><span class="line">print(&#x27;--分割线0--&#x27;)</span><br><span class="line"># 设置随机数种子</span><br><span class="line">np.random.seed(1)</span><br><span class="line"># 产生一组顺序的固定的数数据</span><br><span class="line">for _ in range(5):</span><br><span class="line">    print(np.random.random())</span><br><span class="line"># 此时，如果再生成一个数据，该数据也是固定的</span><br><span class="line">print(&#x27;--分割线1--&#x27;)</span><br><span class="line">print(np.random.random())</span><br><span class="line"># 说明我们设置的种子会一直有效，除非我们再次设置</span><br><span class="line">np.random.seed()</span><br><span class="line">print(&#x27;--分割线2--&#x27;)</span><br><span class="line"># 此随机数是变动的</span><br><span class="line">print(np.random.random())</span><br></pre></td></tr></table></figure>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/7f4f2303a125">数据分析学习笔记</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/uploads/wechat-reward-image.png" alt="Scott 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/numpy/" rel="tag"># numpy</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/article/1505895851.html" rel="prev" title="Numpy Universal Functions">
+      <i class="fa fa-chevron-left"></i> Numpy Universal Functions
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/article/4247104031.html" rel="next" title="PowerShell通过http, Https, 和Ftp下载文件">
+      PowerShell通过http, Https, 和Ftp下载文件 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E6%95%B0%E7%BB%84"><span class="nav-number">1.</span> <span class="nav-text">操作数组</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#np.meshgrid%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.</span> <span class="nav-text">np.meshgrid方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#np.where%E6%96%B9%E6%B3%95"><span class="nav-number">1.2.</span> <span class="nav-text">np.where方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E5%AD%A6%E6%96%B9%E6%B3%95"><span class="nav-number">1.3.</span> <span class="nav-text">数学方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B3%E5%9D%87%E5%80%BC"><span class="nav-number">1.4.</span> <span class="nav-text">平均值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B1%82%E5%92%8C"><span class="nav-number">1.5.</span> <span class="nav-text">求和</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95"><span class="nav-number">1.6.</span> <span class="nav-text">附录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%83%E5%B0%94%E6%95%B0%E7%BB%84%E6%96%B9%E6%B3%95"><span class="nav-number">1.7.</span> <span class="nav-text">布尔数组方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%92%E5%BA%8F"><span class="nav-number">1.8.</span> <span class="nav-text">排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#unique%E5%87%BD%E6%95%B0"><span class="nav-number">1.9.</span> <span class="nav-text">Unique函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#in1d%E5%87%BD%E6%95%B0"><span class="nav-number">1.10.</span> <span class="nav-text">in1d函数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#numpy%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90"><span class="nav-number">2.</span> <span class="nav-text">NumPy数据持久化、随机数生成</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%98%E5%82%A8"><span class="nav-number">2.1.</span> <span class="nav-text">存储</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%BB%E5%8F%96"><span class="nav-number">2.2.</span> <span class="nav-text">读取</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E5%8C%85%E5%82%A8%E5%AD%98"><span class="nav-number">2.3.</span> <span class="nav-text">打包储存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%BB%E5%8F%96%E6%89%93%E5%8C%85%E6%96%87%E4%BB%B6"><span class="nav-number">2.4.</span> <span class="nav-text">读取打包文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%8F%E6%9C%BA%E7%94%9F%E6%88%90"><span class="nav-number">2.5.</span> <span class="nav-text">随机生成</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Scott"
+      src="/uploads/instagram_profile_image.png">
+  <p class="site-author-name" itemprop="name">Scott</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wittyfans" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/wittyfans" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/wittyfans0" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;wittyfans0" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Scott</span>
+</div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz","app_key":"qKXpoqGbK1sdFYMiik7Evuan","server_url":"https://7sscl0n1.lc-cn-n1-shared.com","security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz',
+      appKey     : 'qKXpoqGbK1sdFYMiik7Evuan',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
