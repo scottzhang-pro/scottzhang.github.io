@@ -16,13 +16,13 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wittyfans.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"scottzhang.pro","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="自从08年比特币发布以来，数以百计类似的基于区块链技术的产品层出不穷。我们称这些为加密货币，时至今日，某些加密货币已经大幅上涨，某些在未来可能也极具上涨空间。实际上，在2017年12月6日，比特币的市值超过2000亿美元。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="加密货币市值分析">
-<meta property="og:url" content="http://wittyfans.com/article/3333606907.html">
+<meta property="og:url" content="https://scottzhang.pro/article/3333606907.html">
 <meta property="og:site_name" content="Scott&#39;s Blog">
 <meta property="og:description" content="自从08年比特币发布以来，数以百计类似的基于区块链技术的产品层出不穷。我们称这些为加密货币，时至今日，某些加密货币已经大幅上涨，某些在未来可能也极具上涨空间。实际上，在2017年12月6日，比特币的市值超过2000亿美元。">
 <meta property="og:locale" content="zh_CN">
@@ -40,7 +40,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.loli.net/2019/12/06/UD9XlmW3fxoSIa5.png">
 
-<link rel="canonical" href="http://wittyfans.com/article/3333606907.html">
+<link rel="canonical" href="https://scottzhang.pro/article/3333606907.html">
 
 
 <script id="page-configurations">
@@ -176,7 +176,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://wittyfans.com/article/3333606907.html">
+    <link itemprop="mainEntityOfPage" href="https://scottzhang.pro/article/3333606907.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/instagram_profile_image.png">
@@ -273,7 +273,7 @@
 <p><img src="https://i.loli.net/2019/12/06/XFakbKp1f4ML5ul.png" /></p>
 <p>可以看到比特币在整个加密货币中所占的份额多大，但是这个图还存在一个信息，可以对其进行改进，那就是比特币所占份额太大了，其他的加密货币之间就很难区分。</p>
 <h1 id="可视化优化">可视化优化</h1>
-<p>解决上面的办法是我们需要更改坐标轴的单位，我们从百分比换成 log^10,如果你不知道如何优化你的数据可视化步骤，可以参考我的<a href="http://wittyfans.com/coding/数据可视化基础与技术.html">另一篇文章</a></p>
+<p>解决上面的办法是我们需要更改坐标轴的单位，我们从百分比换成 log^10,如果你不知道如何优化你的数据可视化步骤，可以参考我的<a target="_blank" rel="noopener" href="http://wittyfans.com/coding/数据可视化基础与技术.html">另一篇文章</a></p>
 <p>另外，我们把类似的加密货币合并成同一个颜色,把x轴上的信息隐藏</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># Colors for the bar plot</span><br><span class="line">COLORS = [&#x27;orange&#x27;, &#x27;green&#x27;, &#x27;orange&#x27;, &#x27;cyan&#x27;, &#x27;cyan&#x27;, &#x27;blue&#x27;, &#x27;silver&#x27;, &#x27;orange&#x27;, &#x27;red&#x27;, &#x27;green&#x27;]</span><br><span class="line"></span><br><span class="line"># Plotting market_cap_usd as before but adding the colors and scaling the y-axis  </span><br><span class="line">ax = cap10.market_cap_perc.plot.bar(title=&#x27;Top 10 market capitalization&#x27;,color=COLORS)</span><br><span class="line"></span><br><span class="line"># Annotating the y axis with &#x27;USD&#x27;</span><br><span class="line">ax.set_ylabel(&#x27;USD&#x27;)</span><br><span class="line"></span><br><span class="line"># Final touch! Removing the xlabel as it is not very informative</span><br><span class="line">ax.set_xlabel(&#x27;&#x27;)</span><br></pre></td></tr></table></figure>
 <p><img src="https://i.loli.net/2019/12/06/QJCehqgOsF6EdZT.png" /></p>
@@ -422,14 +422,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-count">44</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">

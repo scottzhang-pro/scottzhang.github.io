@@ -3,11 +3,11 @@
   <title>Scott&#39;s Blog</title>
   
   <subtitle>学则不固, 知则不惑</subtitle>
-  <link href="http://wittyfans.com/atom.xml" rel="self"/>
+  <link href="https://scottzhang.pro/atom.xml" rel="self"/>
   
-  <link href="http://wittyfans.com/"/>
-  <updated>2021-11-19T14:12:08.908Z</updated>
-  <id>http://wittyfans.com/</id>
+  <link href="https://scottzhang.pro/"/>
+  <updated>2021-11-21T07:53:50.012Z</updated>
+  <id>https://scottzhang.pro/</id>
   
   <author>
     <name>Scott</name>
@@ -17,9 +17,34 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Python设计模式-模版模式</title>
+    <link href="https://scottzhang.pro/article/ebf9c4b3.html"/>
+    <id>https://scottzhang.pro/article/ebf9c4b3.html</id>
+    <published>2021-11-21T07:51:22.000Z</published>
+    <updated>2021-11-21T07:53:50.012Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>模版模式一般利用继承实现。比如我们有不同的任务要完成，其中有一些任务是相同的，我们可以将这些任务放在公共的基类中完成，其余特殊的任务设计在子类中。</p></blockquote><span id="more"></span><p>模版模式有助于去除重复代码，并满足了”DRY-不要重复自己“原则。</p><p>平时遇到数据处理的需求，我们需要执行一些常见的任务，如：</p><ol type="1"><li>去数据库取数，并将某些结果打印至控制台</li><li>去数据库取数，简单处理后，将结果保存到 csv 文件</li></ol><p>在这两个步骤中，有些子步骤是一样的，比如连接数据库，发出查询请求，执行 query 语句等。</p><p>可以将这部分功能集成到基类中，而其他特殊的功能可以放到子类中。</p><p>我们举例来说明，首先准备一个数据库。</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sqlite3</span><br><span class="line"></span><br><span class="line">conn = sqlite3.connect(<span class="string">&quot;sales.db&quot;</span>)</span><br><span class="line">conn.execute(</span><br><span class="line">    <span class="string">&quot;CREATE TABLE sales&quot;</span></span><br><span class="line">    <span class="string">&quot;(&quot;</span></span><br><span class="line">    <span class="string">&quot;salespersion txt,&quot;</span></span><br><span class="line">    <span class="string">&quot;amt currency,&quot;</span></span><br><span class="line">    <span class="string">&quot;year integer,&quot;</span></span><br><span class="line">    <span class="string">&quot;model text,&quot;</span></span><br><span class="line">    <span class="string">&quot;new boolen&quot;</span></span><br><span class="line">    <span class="string">&quot;)&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>插入一些假数据：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># delete all rows from db before any new rows insert into table</span></span><br><span class="line">conn.execute(<span class="string">&quot;delete from sales&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># insert rows</span></span><br><span class="line">conn.execute(</span><br><span class="line">    <span class="string">&quot;insert into sales values&quot;</span></span><br><span class="line">    <span class="string">&quot;(&#x27;Scott&#x27;, 1400, 2007, &#x27;Toyota&#x27;, &#x27;false&#x27;)&quot;</span></span><br><span class="line">)</span><br><span class="line">conn.execute(</span><br><span class="line">    <span class="string">&quot;insert into sales values&quot;</span></span><br><span class="line">    <span class="string">&quot;(&#x27;Desmond&#x27;, 1600, 2010, &#x27;Honda fit&#x27;, &#x27;true&#x27;)&quot;</span></span><br><span class="line">)</span><br><span class="line">conn.execute(</span><br><span class="line">    <span class="string">&quot;insert into sales values&quot;</span></span><br><span class="line">    <span class="string">&quot;(&#x27;Burney&#x27;, 1600, 2010, &#x27;Honda fit&#x27;, &#x27;true&#x27;)&quot;</span></span><br><span class="line">)</span><br><span class="line">conn.execute(</span><br><span class="line">    <span class="string">&quot;insert into sales values&quot;</span></span><br><span class="line">    <span class="string">&quot;(&#x27;Austin&#x27;, 1600, 2010, &#x27;Honda fit&#x27;, &#x27;true&#x27;)&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">cursor = conn.execute(<span class="string">&quot;select * from sales&quot;</span>)</span><br><span class="line">cursor.fetchall()</span><br></pre></td></tr></table></figure><p>查询结果输出如下：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[(<span class="string">&#x27;Scott&#x27;</span>, 1400, 2007, <span class="string">&#x27;Toyota&#x27;</span>, <span class="string">&#x27;false&#x27;</span>),</span><br><span class="line"> (<span class="string">&#x27;Desmond&#x27;</span>, 1600, 2010, <span class="string">&#x27;Honda fit&#x27;</span>, <span class="string">&#x27;true&#x27;</span>),</span><br><span class="line"> (<span class="string">&#x27;Burney&#x27;</span>, 1600, 2010, <span class="string">&#x27;Honda fit&#x27;</span>, <span class="string">&#x27;true&#x27;</span>),</span><br><span class="line"> (<span class="string">&#x27;Austin&#x27;</span>, 1600, 2010, <span class="string">&#x27;Honda fit&#x27;</span>, <span class="string">&#x27;true&#x27;</span>)]</span><br></pre></td></tr></table></figure><p>现在我们设计一个 query 的模版类，想想它需要有哪些功能？</p><p>一个可能的基类是这样的：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">QueryTemplate</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">connect</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">construct_query</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_query</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">format_results</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">output_results</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_format</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;暴露给外部调用的方法，用来保证每个方法按照顺序执行。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        self.connect()</span><br><span class="line">        self.construct_query()</span><br><span class="line">        self.do_query()</span><br><span class="line">        self.format_results()</span><br><span class="line">        self.output_results()</span><br></pre></td></tr></table></figure><p>基类定义了我们需要有哪些功能，现在根据我们的需求，将其中一些可以共用的代码实现：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">QueryTemplate</span>:</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;这个类提供了连接数据库、执行 query，格式化结果的功能</span></span><br><span class="line"><span class="string">       而对于构造 query、导出结果的功能，则抽象成接口交给子类去实现</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">connect</span>(<span class="params">self</span>):</span></span><br><span class="line">        self.conn = sqlite3.connect(<span class="string">&quot;sales.db&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">construct_query</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">raise</span> NotImplementedError()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_query</span>(<span class="params">self</span>):</span></span><br><span class="line">        result = self.conn.execute(self.query)  <span class="comment"># query 待 construct_query 实现</span></span><br><span class="line">        self.result = result.fetchall()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">format_result</span>(<span class="params">self</span>):</span></span><br><span class="line">        output = []</span><br><span class="line">        <span class="keyword">for</span> row <span class="keyword">in</span> self.result:</span><br><span class="line">            row = [<span class="built_in">str</span>(i) <span class="keyword">for</span> i <span class="keyword">in</span> row]</span><br><span class="line">            output.append(row)</span><br><span class="line">        self.formated_result = <span class="string">&#x27;\n&#x27;</span>.join(output)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">output_result</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">raise</span> NotImplementedError()</span><br></pre></td></tr></table></figure><p>现在实现我们自己的需求就很容易了，因为我们只需要将精力放在构造 query 和 输出结果这两个方法上。</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NewVehiclesQuery</span>(<span class="params">QueryTemplate</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">construct_query</span>(<span class="params">self</span>):</span></span><br><span class="line">        self.query = <span class="string">&quot;select * from sales where new = &#x27;true&#x27;&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">output_result</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="built_in">print</span>(self.format_result)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OtherQuery</span>(<span class="params">QueryTemplate</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">construct_query</span>(<span class="params">self</span>):</span></span><br><span class="line">        self.do_query = <span class="string">&quot;select * from sales&quot;</span>  <span class="comment"># do what you want to do</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">output_result</span>(<span class="params">self</span>):</span></span><br><span class="line">        file_name = <span class="string">&quot;output_file.csv&quot;</span></span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span> (file_name, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> file:</span><br><span class="line">            file.write(self.formated_result)</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;模版模式一般利用继承实现。比如我们有不同的任务要完成，其中有一些任务是相同的，我们可以将这些任务放在公共的基类中完成，其余特殊的任务设计在子类中。&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="design pattern" scheme="https://scottzhang.pro/categories/design-pattern/"/>
+    
+    
+    <category term="python" scheme="https://scottzhang.pro/tags/python/"/>
+    
+    <category term="design pattern" scheme="https://scottzhang.pro/tags/design-pattern/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Python设计模式-单例模式及其实现原理</title>
-    <link href="http://wittyfans.com/article/18dbdeeb.html"/>
-    <id>http://wittyfans.com/article/18dbdeeb.html</id>
+    <link href="https://scottzhang.pro/article/18dbdeeb.html"/>
+    <id>https://scottzhang.pro/article/18dbdeeb.html</id>
     <published>2021-11-18T13:25:00.000Z</published>
     <updated>2021-11-19T14:12:08.908Z</updated>
     
@@ -32,35 +57,35 @@
     
     
     
-    <category term="coding" scheme="http://wittyfans.com/categories/coding/"/>
+    <category term="coding" scheme="https://scottzhang.pro/categories/coding/"/>
     
     
-    <category term="python" scheme="http://wittyfans.com/tags/python/"/>
+    <category term="python" scheme="https://scottzhang.pro/tags/python/"/>
     
-    <category term="design pattern" scheme="http://wittyfans.com/tags/design-pattern/"/>
+    <category term="design pattern" scheme="https://scottzhang.pro/tags/design-pattern/"/>
     
-    <category term="OOP" scheme="http://wittyfans.com/tags/OOP/"/>
+    <category term="OOP" scheme="https://scottzhang.pro/tags/OOP/"/>
     
-    <category term="singleton" scheme="http://wittyfans.com/tags/singleton/"/>
+    <category term="singleton" scheme="https://scottzhang.pro/tags/singleton/"/>
     
-    <category term="super" scheme="http://wittyfans.com/tags/super/"/>
+    <category term="super" scheme="https://scottzhang.pro/tags/super/"/>
     
-    <category term="staticmethod" scheme="http://wittyfans.com/tags/staticmethod/"/>
+    <category term="staticmethod" scheme="https://scottzhang.pro/tags/staticmethod/"/>
     
-    <category term="classmethod" scheme="http://wittyfans.com/tags/classmethod/"/>
+    <category term="classmethod" scheme="https://scottzhang.pro/tags/classmethod/"/>
     
-    <category term="Abstract methods" scheme="http://wittyfans.com/tags/Abstract-methods/"/>
+    <category term="Abstract methods" scheme="https://scottzhang.pro/tags/Abstract-methods/"/>
     
-    <category term="abc" scheme="http://wittyfans.com/tags/abc/"/>
+    <category term="abc" scheme="https://scottzhang.pro/tags/abc/"/>
     
-    <category term="MRO" scheme="http://wittyfans.com/tags/MRO/"/>
+    <category term="MRO" scheme="https://scottzhang.pro/tags/MRO/"/>
     
   </entry>
   
   <entry>
     <title>Python设计模式-策略与状态模式</title>
-    <link href="http://wittyfans.com/article/8a706eb8.html"/>
-    <id>http://wittyfans.com/article/8a706eb8.html</id>
+    <link href="https://scottzhang.pro/article/8a706eb8.html"/>
+    <id>https://scottzhang.pro/article/8a706eb8.html</id>
     <published>2021-11-16T13:32:21.000Z</published>
     <updated>2021-11-19T14:12:08.908Z</updated>
     
@@ -78,8 +103,8 @@
   
   <entry>
     <title>Python设计模式-装饰器与观察者模式</title>
-    <link href="http://wittyfans.com/article/140cd416.html"/>
-    <id>http://wittyfans.com/article/140cd416.html</id>
+    <link href="https://scottzhang.pro/article/140cd416.html"/>
+    <id>https://scottzhang.pro/article/140cd416.html</id>
     <published>2021-11-15T12:50:18.000Z</published>
     <updated>2021-11-19T14:12:08.909Z</updated>
     
@@ -92,19 +117,19 @@
     
     
     
-    <category term="coding" scheme="http://wittyfans.com/categories/coding/"/>
+    <category term="coding" scheme="https://scottzhang.pro/categories/coding/"/>
     
     
-    <category term="python" scheme="http://wittyfans.com/tags/python/"/>
+    <category term="python" scheme="https://scottzhang.pro/tags/python/"/>
     
-    <category term="design pattern" scheme="http://wittyfans.com/tags/design-pattern/"/>
+    <category term="design pattern" scheme="https://scottzhang.pro/tags/design-pattern/"/>
     
   </entry>
   
   <entry>
     <title>Python-高级导入技巧</title>
-    <link href="http://wittyfans.com/article/935fa388.html"/>
-    <id>http://wittyfans.com/article/935fa388.html</id>
+    <link href="https://scottzhang.pro/article/935fa388.html"/>
+    <id>https://scottzhang.pro/article/935fa388.html</id>
     <published>2021-09-21T15:33:14.000Z</published>
     <updated>2021-11-19T14:12:08.907Z</updated>
     
@@ -117,17 +142,17 @@
     
     
     
-    <category term="coding" scheme="http://wittyfans.com/categories/coding/"/>
+    <category term="coding" scheme="https://scottzhang.pro/categories/coding/"/>
     
     
-    <category term="python" scheme="http://wittyfans.com/tags/python/"/>
+    <category term="python" scheme="https://scottzhang.pro/tags/python/"/>
     
   </entry>
   
   <entry>
     <title>Python-模块与包</title>
-    <link href="http://wittyfans.com/article/c8bc6f6.html"/>
-    <id>http://wittyfans.com/article/c8bc6f6.html</id>
+    <link href="https://scottzhang.pro/article/c8bc6f6.html"/>
+    <id>https://scottzhang.pro/article/c8bc6f6.html</id>
     <published>2021-09-18T09:59:07.000Z</published>
     <updated>2021-11-19T14:12:08.907Z</updated>
     
@@ -140,17 +165,17 @@
     
     
     
-    <category term="coding" scheme="http://wittyfans.com/categories/coding/"/>
+    <category term="coding" scheme="https://scottzhang.pro/categories/coding/"/>
     
     
-    <category term="python" scheme="http://wittyfans.com/tags/python/"/>
+    <category term="python" scheme="https://scottzhang.pro/tags/python/"/>
     
   </entry>
   
   <entry>
     <title>Python 与 Go 开发环境配置</title>
-    <link href="http://wittyfans.com/article/dfea7f59.html"/>
-    <id>http://wittyfans.com/article/dfea7f59.html</id>
+    <link href="https://scottzhang.pro/article/dfea7f59.html"/>
+    <id>https://scottzhang.pro/article/dfea7f59.html</id>
     <published>2021-09-14T04:50:03.000Z</published>
     <updated>2021-11-19T14:12:08.906Z</updated>
     
@@ -163,15 +188,15 @@
     
     
     
-    <category term="coding" scheme="http://wittyfans.com/categories/coding/"/>
+    <category term="coding" scheme="https://scottzhang.pro/categories/coding/"/>
     
     
   </entry>
   
   <entry>
     <title>数据仓库-维度建模</title>
-    <link href="http://wittyfans.com/article/c721127b.html"/>
-    <id>http://wittyfans.com/article/c721127b.html</id>
+    <link href="https://scottzhang.pro/article/c721127b.html"/>
+    <id>https://scottzhang.pro/article/c721127b.html</id>
     <published>2021-09-14T03:39:28.000Z</published>
     <updated>2021-11-19T14:12:08.911Z</updated>
     
@@ -184,19 +209,19 @@
     
     
     
-    <category term="data" scheme="http://wittyfans.com/categories/data/"/>
+    <category term="data" scheme="https://scottzhang.pro/categories/data/"/>
     
     
-    <category term="data warehouse" scheme="http://wittyfans.com/tags/data-warehouse/"/>
+    <category term="data warehouse" scheme="https://scottzhang.pro/tags/data-warehouse/"/>
     
-    <category term="data base" scheme="http://wittyfans.com/tags/data-base/"/>
+    <category term="data base" scheme="https://scottzhang.pro/tags/data-base/"/>
     
   </entry>
   
   <entry>
     <title>B 树索引与位图索引简述</title>
-    <link href="http://wittyfans.com/article/a8fa00e8.html"/>
-    <id>http://wittyfans.com/article/a8fa00e8.html</id>
+    <link href="https://scottzhang.pro/article/a8fa00e8.html"/>
+    <id>https://scottzhang.pro/article/a8fa00e8.html</id>
     <published>2021-09-09T13:04:16.000Z</published>
     <updated>2021-11-19T14:12:08.904Z</updated>
     
@@ -209,19 +234,19 @@
     
     
     
-    <category term="coding" scheme="http://wittyfans.com/categories/coding/"/>
+    <category term="coding" scheme="https://scottzhang.pro/categories/coding/"/>
     
     
-    <category term="data structure" scheme="http://wittyfans.com/tags/data-structure/"/>
+    <category term="data structure" scheme="https://scottzhang.pro/tags/data-structure/"/>
     
-    <category term="database" scheme="http://wittyfans.com/tags/database/"/>
+    <category term="database" scheme="https://scottzhang.pro/tags/database/"/>
     
   </entry>
   
   <entry>
     <title>数据分析在做什么</title>
-    <link href="http://wittyfans.com/article/a31aaf3c.html"/>
-    <id>http://wittyfans.com/article/a31aaf3c.html</id>
+    <link href="https://scottzhang.pro/article/a31aaf3c.html"/>
+    <id>https://scottzhang.pro/article/a31aaf3c.html</id>
     <published>2021-09-06T15:42:25.000Z</published>
     <updated>2021-11-19T14:12:08.911Z</updated>
     
@@ -234,15 +259,15 @@
     
     
     
-    <category term="data analysis" scheme="http://wittyfans.com/categories/data-analysis/"/>
+    <category term="data analysis" scheme="https://scottzhang.pro/categories/data-analysis/"/>
     
     
   </entry>
   
   <entry>
     <title>统计基础概念</title>
-    <link href="http://wittyfans.com/article/4187072417.html"/>
-    <id>http://wittyfans.com/article/4187072417.html</id>
+    <link href="https://scottzhang.pro/article/4187072417.html"/>
+    <id>https://scottzhang.pro/article/4187072417.html</id>
     <published>2021-08-15T15:03:54.000Z</published>
     <updated>2021-11-19T14:12:08.913Z</updated>
     
@@ -256,14 +281,14 @@
     
     
     
-    <category term="math" scheme="http://wittyfans.com/tags/math/"/>
+    <category term="math" scheme="https://scottzhang.pro/tags/math/"/>
     
   </entry>
   
   <entry>
     <title>数据结构与算法参考</title>
-    <link href="http://wittyfans.com/article/1895500896.html"/>
-    <id>http://wittyfans.com/article/1895500896.html</id>
+    <link href="https://scottzhang.pro/article/1895500896.html"/>
+    <id>https://scottzhang.pro/article/1895500896.html</id>
     <published>2021-08-15T14:40:06.000Z</published>
     <updated>2021-11-19T14:12:08.912Z</updated>
     
@@ -276,19 +301,19 @@
     
     
     
-    <category term="Data Structure" scheme="http://wittyfans.com/categories/Data-Structure/"/>
+    <category term="Data Structure" scheme="https://scottzhang.pro/categories/Data-Structure/"/>
     
     
-    <category term="算法" scheme="http://wittyfans.com/tags/%E7%AE%97%E6%B3%95/"/>
+    <category term="算法" scheme="https://scottzhang.pro/tags/%E7%AE%97%E6%B3%95/"/>
     
-    <category term="数据结构" scheme="http://wittyfans.com/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
+    <category term="数据结构" scheme="https://scottzhang.pro/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
     
   </entry>
   
   <entry>
     <title>cx_Oracle 在 Linux 上的安装与配置</title>
-    <link href="http://wittyfans.com/article/3551438313.html"/>
-    <id>http://wittyfans.com/article/3551438313.html</id>
+    <link href="https://scottzhang.pro/article/3551438313.html"/>
+    <id>https://scottzhang.pro/article/3551438313.html</id>
     <published>2021-03-04T14:23:56.000Z</published>
     <updated>2021-11-19T14:12:08.909Z</updated>
     
@@ -301,23 +326,23 @@
     
     
     
-    <category term="coding" scheme="http://wittyfans.com/categories/coding/"/>
+    <category term="coding" scheme="https://scottzhang.pro/categories/coding/"/>
     
     
-    <category term="Oracle" scheme="http://wittyfans.com/tags/Oracle/"/>
+    <category term="Oracle" scheme="https://scottzhang.pro/tags/Oracle/"/>
     
-    <category term="cx_Oracle" scheme="http://wittyfans.com/tags/cx-Oracle/"/>
+    <category term="cx_Oracle" scheme="https://scottzhang.pro/tags/cx-Oracle/"/>
     
-    <category term="Python" scheme="http://wittyfans.com/tags/Python/"/>
+    <category term="Python" scheme="https://scottzhang.pro/tags/Python/"/>
     
-    <category term="Database" scheme="http://wittyfans.com/tags/Database/"/>
+    <category term="Database" scheme="https://scottzhang.pro/tags/Database/"/>
     
   </entry>
   
   <entry>
     <title>Spark 笔记</title>
-    <link href="http://wittyfans.com/article/3170800033.html"/>
-    <id>http://wittyfans.com/article/3170800033.html</id>
+    <link href="https://scottzhang.pro/article/3170800033.html"/>
+    <id>https://scottzhang.pro/article/3170800033.html</id>
     <published>2021-03-02T13:27:00.000Z</published>
     <updated>2021-11-19T14:12:08.909Z</updated>
     
@@ -330,17 +355,17 @@
     
     
     
-    <category term="coding" scheme="http://wittyfans.com/categories/coding/"/>
+    <category term="coding" scheme="https://scottzhang.pro/categories/coding/"/>
     
     
-    <category term="spark" scheme="http://wittyfans.com/tags/spark/"/>
+    <category term="spark" scheme="https://scottzhang.pro/tags/spark/"/>
     
   </entry>
   
   <entry>
     <title>Bash for Data Manipulation</title>
-    <link href="http://wittyfans.com/article/2196900071.html"/>
-    <id>http://wittyfans.com/article/2196900071.html</id>
+    <link href="https://scottzhang.pro/article/2196900071.html"/>
+    <id>https://scottzhang.pro/article/2196900071.html</id>
     <published>2021-02-25T15:20:39.000Z</published>
     <updated>2021-11-19T14:12:08.904Z</updated>
     
@@ -353,19 +378,19 @@
     
     
     
-    <category term="coding" scheme="http://wittyfans.com/categories/coding/"/>
+    <category term="coding" scheme="https://scottzhang.pro/categories/coding/"/>
     
     
-    <category term="bash" scheme="http://wittyfans.com/tags/bash/"/>
+    <category term="bash" scheme="https://scottzhang.pro/tags/bash/"/>
     
-    <category term="linux" scheme="http://wittyfans.com/tags/linux/"/>
+    <category term="linux" scheme="https://scottzhang.pro/tags/linux/"/>
     
   </entry>
   
   <entry>
     <title>机器学习相关概念解读P1</title>
-    <link href="http://wittyfans.com/article/1775964342.html"/>
-    <id>http://wittyfans.com/article/1775964342.html</id>
+    <link href="https://scottzhang.pro/article/1775964342.html"/>
+    <id>https://scottzhang.pro/article/1775964342.html</id>
     <published>2019-12-27T08:30:13.000Z</published>
     <updated>2021-11-19T14:12:08.912Z</updated>
     
@@ -378,17 +403,17 @@
     
     
     
-    <category term="coding" scheme="http://wittyfans.com/categories/coding/"/>
+    <category term="coding" scheme="https://scottzhang.pro/categories/coding/"/>
     
     
-    <category term="machine learning" scheme="http://wittyfans.com/tags/machine-learning/"/>
+    <category term="machine learning" scheme="https://scottzhang.pro/tags/machine-learning/"/>
     
   </entry>
   
   <entry>
     <title>加密货币市值分析</title>
-    <link href="http://wittyfans.com/article/3333606907.html"/>
-    <id>http://wittyfans.com/article/3333606907.html</id>
+    <link href="https://scottzhang.pro/article/3333606907.html"/>
+    <id>https://scottzhang.pro/article/3333606907.html</id>
     <published>2019-12-06T07:22:17.000Z</published>
     <updated>2021-11-19T14:12:08.911Z</updated>
     
@@ -402,19 +427,19 @@
     
     
     
-    <category term="coding" scheme="http://wittyfans.com/categories/coding/"/>
+    <category term="coding" scheme="https://scottzhang.pro/categories/coding/"/>
     
     
-    <category term="data analysis" scheme="http://wittyfans.com/tags/data-analysis/"/>
+    <category term="data analysis" scheme="https://scottzhang.pro/tags/data-analysis/"/>
     
-    <category term="pandas" scheme="http://wittyfans.com/tags/pandas/"/>
+    <category term="pandas" scheme="https://scottzhang.pro/tags/pandas/"/>
     
   </entry>
   
   <entry>
     <title>Python神经网络分析基础</title>
-    <link href="http://wittyfans.com/article/1648150364.html"/>
-    <id>http://wittyfans.com/article/1648150364.html</id>
+    <link href="https://scottzhang.pro/article/1648150364.html"/>
+    <id>https://scottzhang.pro/article/1648150364.html</id>
     <published>2019-12-04T08:30:41.000Z</published>
     <updated>2021-11-19T14:12:08.908Z</updated>
     
@@ -428,21 +453,21 @@
     
     
     
-    <category term="coding" scheme="http://wittyfans.com/categories/coding/"/>
+    <category term="coding" scheme="https://scottzhang.pro/categories/coding/"/>
     
     
-    <category term="python" scheme="http://wittyfans.com/tags/python/"/>
+    <category term="python" scheme="https://scottzhang.pro/tags/python/"/>
     
-    <category term="data analysis" scheme="http://wittyfans.com/tags/data-analysis/"/>
+    <category term="data analysis" scheme="https://scottzhang.pro/tags/data-analysis/"/>
     
-    <category term="nexworkX" scheme="http://wittyfans.com/tags/nexworkX/"/>
+    <category term="nexworkX" scheme="https://scottzhang.pro/tags/nexworkX/"/>
     
   </entry>
   
   <entry>
     <title>机器学习：泛化误差与随机森林</title>
-    <link href="http://wittyfans.com/article/2942468479.html"/>
-    <id>http://wittyfans.com/article/2942468479.html</id>
+    <link href="https://scottzhang.pro/article/2942468479.html"/>
+    <id>https://scottzhang.pro/article/2942468479.html</id>
     <published>2019-11-24T13:03:54.000Z</published>
     <updated>2021-11-19T14:12:08.913Z</updated>
     
@@ -456,23 +481,23 @@
     
     
     
-    <category term="coding" scheme="http://wittyfans.com/categories/coding/"/>
+    <category term="coding" scheme="https://scottzhang.pro/categories/coding/"/>
     
     
-    <category term="python" scheme="http://wittyfans.com/tags/python/"/>
+    <category term="python" scheme="https://scottzhang.pro/tags/python/"/>
     
-    <category term="data analysis" scheme="http://wittyfans.com/tags/data-analysis/"/>
+    <category term="data analysis" scheme="https://scottzhang.pro/tags/data-analysis/"/>
     
-    <category term="sklearn" scheme="http://wittyfans.com/tags/sklearn/"/>
+    <category term="sklearn" scheme="https://scottzhang.pro/tags/sklearn/"/>
     
-    <category term="data science" scheme="http://wittyfans.com/tags/data-science/"/>
+    <category term="data science" scheme="https://scottzhang.pro/tags/data-science/"/>
     
   </entry>
   
   <entry>
     <title>机器学习：Classification and Regression Trees</title>
-    <link href="http://wittyfans.com/article/1854275205.html"/>
-    <id>http://wittyfans.com/article/1854275205.html</id>
+    <link href="https://scottzhang.pro/article/1854275205.html"/>
+    <id>https://scottzhang.pro/article/1854275205.html</id>
     <published>2019-11-22T08:06:42.000Z</published>
     <updated>2021-11-19T14:12:08.912Z</updated>
     
@@ -486,42 +511,14 @@
     
     
     
-    <category term="coding" scheme="http://wittyfans.com/categories/coding/"/>
+    <category term="coding" scheme="https://scottzhang.pro/categories/coding/"/>
     
     
-    <category term="python" scheme="http://wittyfans.com/tags/python/"/>
+    <category term="python" scheme="https://scottzhang.pro/tags/python/"/>
     
-    <category term="data analysis" scheme="http://wittyfans.com/tags/data-analysis/"/>
+    <category term="data analysis" scheme="https://scottzhang.pro/tags/data-analysis/"/>
     
-    <category term="sklearn" scheme="http://wittyfans.com/tags/sklearn/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>非监督学习：PCA and NMF</title>
-    <link href="http://wittyfans.com/article/1777482023.html"/>
-    <id>http://wittyfans.com/article/1777482023.html</id>
-    <published>2019-11-21T08:20:37.000Z</published>
-    <updated>2021-11-19T14:12:08.914Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="https://i.loli.net/2019/11/21/I34aLMFuywnHqzA.png" /></p><blockquote><p>非监督学习的最后两章，我们会学习 Dimension reduction, Dimension reduction就是从数据中发现一定的模式，通过这种模式我们就可以对数据进行压缩，这对于计算和存储来说都是非常有利的，特别是在大数据时代。</p></blockquote><span id="more"></span><p>dimension reduction核心的功能是去除数据中的噪音，保留那些最基本的东西，噪音去除之后，有助于减少我们处理 classfication 与 regression 中碰到的问题。</p><p>接下来我们介绍最基本的 dimension reduction 算法，<em>Principal Component Analysis</em> (PCA).</p><h1 id="pca">PCA</h1><p>PCA 主要有两个步骤：</p><ol type="1"><li>decorrlation</li><li>dimension reduction</li></ol><p>我们先讲第一个步骤，decorrlation, decorrlation会将数据旋转到与坐标轴对齐，并将其均值移动到0附近，所以PCA并不会改变原始数据。</p><p><img src="https://i.loli.net/2019/11/20/qolJbVCpOUg5PBY.png" /></p><p>PCA和 StandardScaler 一样，有fit和transform方法，fit方法会学习如何去shift与rotate数据，但并不会做出任何操作。</p><p>transform方法，则会应用fit学习到的东西。</p><p>在PCA对数据transform后，原来数据的columns对应数据的features，转换后的数据列则对应pca的features。</p><p>我们用皮尔逊系数来衡量相关性，如果原来的数据是有相关性的，则转化后的数据不会再具备这种特性。</p><p>以我们的谷物的长、宽数据为例，</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># Perform the necessary imports</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line">from scipy.stats import pearsonr</span><br><span class="line"></span><br><span class="line"># Assign the 0th column of grains: width</span><br><span class="line">width = grains[:,0]</span><br><span class="line"></span><br><span class="line"># Assign the 1st column of grains: length</span><br><span class="line">length = grains[:,1]</span><br><span class="line"></span><br><span class="line"># Scatter plot width vs length</span><br><span class="line">plt.scatter(width, length)</span><br><span class="line">plt.axis(&#x27;equal&#x27;)</span><br><span class="line">plt.show()</span><br><span class="line"></span><br><span class="line"># Calculate the Pearson correlation</span><br><span class="line">correlation, pvalue = pearsonr(width,length)</span><br><span class="line"></span><br><span class="line"># Display the correlation</span><br><span class="line">print(correlation)</span><br></pre></td></tr></table></figure><figure><img src="https://i.loli.net/2019/11/20/XuxqSG6vWB7Ddlf.png" alt="transform前" /><figcaption aria-hidden="true">transform前</figcaption></figure><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"># Import PCA</span><br><span class="line">from sklearn.decomposition import PCA</span><br><span class="line"></span><br><span class="line"># Create PCA instance: model</span><br><span class="line">model = PCA()</span><br><span class="line"></span><br><span class="line"># Apply the fit_transform method of model to grains: pca_features</span><br><span class="line">pca_features = model.fit_transform(grains)</span><br><span class="line"></span><br><span class="line"># Assign 0th column of pca_features: xs</span><br><span class="line">xs = pca_features[:,0]</span><br><span class="line"></span><br><span class="line"># Assign 1st column of pca_features: ys</span><br><span class="line">ys = pca_features[:,1]</span><br><span class="line"></span><br><span class="line"># Scatter plot xs vs ys</span><br><span class="line">plt.scatter(xs, ys)</span><br><span class="line">plt.axis(&#x27;equal&#x27;)</span><br><span class="line">plt.show()</span><br><span class="line"></span><br><span class="line"># Calculate the Pearson correlation of xs and ys</span><br><span class="line">correlation, pvalue = pearsonr(xs, ys)</span><br><span class="line"></span><br><span class="line"># Display the correlation</span><br><span class="line">print(correlation)</span><br></pre></td></tr></table></figure><figure><img src="https://i.loli.net/2019/11/20/kPyiZ9QhEKxY58S.png" alt="transform后" /><figcaption aria-hidden="true">transform后</figcaption></figure><p>可以看到，谷物的长与宽是有相关性的，即它的叶片越长，宽度也越宽。但在transofor后，数据就与坐标系对齐了。</p><h2 id="intrinsic-dimension">Intrinsic dimension</h2><p>Intrinsic dimension 即在降维或者压缩数据过程中，为了让你的数据特征最大程度的保持，你最低限度需要保留哪些features。</p><p>它同时也告诉了我们可以把数据压缩到什么样的程度，所以你需要了解哪些 feature 对你的数据集影响是最大的。</p><p>比如我们衡量电脑性能，我们可以把键盘鼠标这些feature去掉，但是cpu、gpu、内存性能这些你肯定要保留对不对？cpu、gpu、内存性能，这就是我们说的 features required to approximate it。</p><p>但有的人说，我觉得硬盘也得加上去，这样我们的 intrinsic dimension 就从 3 增加到4了。</p><p>所以你看，intrinsic dimension 数量是一个视不同情况而定的值。</p><p>那我们将设为多少比较合适呢？考虑我们的iris数据，我们选择</p><ul><li>sepal width</li><li>sepal length</li><li>petal width</li></ul><p>这3个变量，这样我们就可以将它绘制到3维空间，但我们发现它的图像在3维空间是很平的，这意味着某个变量的值的方差很小，也就是说它对整个图像的影响不大，我们只选择另外2个变量，也可以不损失太多的细节。</p><p><img src="https://i.loli.net/2019/11/20/iUkctja8u2RovbA.png" /></p><p>但scatter图只能表示3维以下的数据，如果我们的 features 有很多个，我们要如何找到那些影响程度大的 features 呢？</p><p>这就是 PCA 擅长的地方，我们可以统计 PCA 中那些方差显著的features。</p><p>下面是iris数据集各个features的方差排序图：</p><p><img src="https://i.loli.net/2019/11/20/qDPFfX7E8xjMwAu.png" /></p><p>可以看到最后的那个数据方差非常小，所以它对我们数据集的影响完全可以去除掉。</p><p>那么如何绘制数据集的 variances 呢？</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"># Perform the necessary imports</span><br><span class="line">from sklearn.decomposition import PCA</span><br><span class="line">from sklearn.preprocessing import StandardScaler</span><br><span class="line">from sklearn.pipeline import make_pipeline</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line"></span><br><span class="line"># Create scaler: scaler</span><br><span class="line">scaler = StandardScaler()</span><br><span class="line"></span><br><span class="line"># Create a PCA instance: pca</span><br><span class="line">pca = PCA()</span><br><span class="line"></span><br><span class="line"># Create pipeline: pipeline</span><br><span class="line">pipeline = make_pipeline(scaler,pca)</span><br><span class="line"></span><br><span class="line"># Fit the pipeline to &#x27;samples&#x27;</span><br><span class="line">pipeline.fit(samples)</span><br><span class="line"></span><br><span class="line"># Plot the explained variances</span><br><span class="line">features = range(pca.n_components_)</span><br><span class="line">plt.bar(features,pca.explained_variance_)</span><br><span class="line">plt.xlabel(&#x27;PCA feature&#x27;)</span><br><span class="line">plt.ylabel(&#x27;variance&#x27;)</span><br><span class="line">plt.xticks(features)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure><h2 id="pca降维">PCA降维</h2><p>我们在做数据降维的时候，得指定需要保留的features，即通过指定pca的参数<code>n_components=2</code>, 我们保留多少个features，这可以通过Intrinsic dimension来计算。</p><p>我们以iris数据为例，当我们用PCA把数据从四维（petal width,length和sepal length,width）降到2维后，我们再绘制它的scatter图，会发现它们还是分为三部分。</p><p>但是对于如字词统计的例子中，我们可能需要用其他的算法来代替，在这种数据中，每一行代表一个文档，每一列代表某个固定词组（fixed vocabulary）中的词语.</p><p>我们会统计，每个词语在每个文档中出现的次数array。不过，只有少数的词语会出现很多的文档之中，大部分词语在某些文档中的出现次数都是0，这样的array叫做sparse(稀疏的），sparse array中大部分的值都是0.</p><p>我们使用 <em>csr_matrix</em> 来代替 <em>numpy array</em> 去处理这样的数据。</p><p><em>csr_matrix</em> 只会保存那些非0值，这样就更方便，但是PCA不支持 <em>csr_matrix</em>，我们需要用 <em>TruncatedSVD</em> 来代替 PCA。</p><p><em>‌TruncatedSVD</em> 的效果与 PCA 是一样的，只不过它接受 <em>csr_matrix</em> 数组，除此之外使用方法都是一样的。</p><p>示例，我们来对一组词语进行分词操作，我们的词组如下：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># data</span><br><span class="line">documents=[&#x27;cats say meow&#x27;, &#x27;dogs say woof&#x27;, &#x27;dogs chase cats&#x27;]</span><br><span class="line"></span><br><span class="line"># Import TfidfVectorizer</span><br><span class="line">from sklearn.feature_extraction.text import TfidfVectorizer</span><br><span class="line"></span><br><span class="line"># Create a TfidfVectorizer: tfidf</span><br><span class="line">tfidf = TfidfVectorizer() </span><br><span class="line"></span><br><span class="line"># Apply fit_transform to document: csr_mat</span><br><span class="line">csr_mat = tfidf.fit_transform(documents)</span><br><span class="line"></span><br><span class="line"># Print result of toarray() method</span><br><span class="line">print(csr_mat.toarray())</span><br><span class="line"></span><br><span class="line"># Get the words: words</span><br><span class="line">words = tfidf.get_feature_names()</span><br><span class="line"></span><br><span class="line"># Print words</span><br><span class="line">print(words)</span><br></pre></td></tr></table></figure><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">output: [[0.51785612 0.         0.         0.68091856 0.51785612 0.        ]</span><br><span class="line"> [0.         0.         0.51785612 0.         0.51785612 0.68091856]</span><br><span class="line"> [0.51785612 0.68091856 0.51785612 0.         0.         0.        ]]</span><br><span class="line"> </span><br><span class="line"> [&#x27;cats&#x27;, &#x27;chase&#x27;, &#x27;dogs&#x27;, &#x27;meow&#x27;, &#x27;say&#x27;, &#x27;woof&#x27;]</span><br></pre></td></tr></table></figure><h1 id="nmf">NMF</h1><p>NMF与PCA一样，都是降维算法。不过NMF不能用于所有的预测，只能用于非负值。</p><p>NMF会将数据集中的每组数据分解并分别计算其和。</p><p>考虑字词统计的例子，NMF使用tf-idf来计算字词出现的频率。 tf是词语出现的频率，在每一个document中，如果一个词占整个document中文字的百分之10，那么NMF的输出的tf就是0.1.</p><p>而idf用来降低那些常用词的影响，如,<code>的,那个，这个</code>等等。</p><p>我们知道，在PCA中，我们定义了多少个<code>n_components</code>,就相当于是保留了多少个features。</p><p>在NMF中，它也会去学习数据集的 <em>component dimension</em>。</p><p>需注意，NMF的条目，以及features的值，总是正数。</p><h2 id="nmf算法使用">NMF算法使用</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># Import NMF</span><br><span class="line">from sklearn.decomposition import NMF</span><br><span class="line"></span><br><span class="line"># Create an NMF instance: model</span><br><span class="line">model = NMF(n_components=6)</span><br><span class="line"></span><br><span class="line"># Fit the model to articles</span><br><span class="line">model.fit(articles)</span><br><span class="line"></span><br><span class="line"># Transform the articles: nmf_features</span><br><span class="line">nmf_features = model.transform(articles)</span><br><span class="line"></span><br><span class="line"># Print the NMF features</span><br><span class="line">print(nmf_features)</span><br></pre></td></tr></table></figure><h2 id="论文字词统计">论文字词统计</h2><blockquote><p>Components correspond to topics of documents, and the NMF features reconstruct the documents from the topics</p></blockquote><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># Import pandas</span><br><span class="line">import pandas as pd</span><br><span class="line"></span><br><span class="line"># Create a DataFrame: components_df</span><br><span class="line">components_df = pd.DataFrame(model.components_,columns=words)</span><br><span class="line"></span><br><span class="line"># Print the shape of the DataFrame</span><br><span class="line">print(components_df.shape)</span><br><span class="line"></span><br><span class="line"># Select row 3: component</span><br><span class="line">component = components_df.iloc[3]</span><br><span class="line"></span><br><span class="line"># Print result of nlargest</span><br><span class="line">print(component.nlargest())</span><br></pre></td></tr></table></figure><h2 id="用户喜好预测">用户喜好预测</h2><p>NMF有一个重要的应用是作为内容推荐，假设我们有一个用户和一部电影，我们想要根据电影的内容做出预测：</p><table><thead><tr class="header"><th style="text-align: left;"></th><th style="text-align: left;">喜剧片</th><th style="text-align: left;">动作片</th></tr></thead><tbody><tr class="odd"><td style="text-align: left;">小雅</td><td style="text-align: left;">喜欢</td><td style="text-align: left;">不喜欢</td></tr><tr class="even"><td style="text-align: left;">百货战警</td><td style="text-align: left;">3</td><td style="text-align: left;">1</td></tr></tbody></table><blockquote><p>红番区是动作喜剧片。</p></blockquote><p>现在假设小雅喜欢喜剧片，不喜欢动作片，同时假设我们现在只根据一部电影拥有多少喜剧成分与动作片成分来评价它。</p><p>现在因为小雅喜欢喜剧片<code>+3</code>，不喜欢动作片<code>+0</code>，所以它可能给出的评价是 3分 。</p><p>我们再来考虑小明的情况：</p><table><thead><tr class="header"><th style="text-align: left;"></th><th style="text-align: left;">喜剧片</th><th style="text-align: left;">动作片</th></tr></thead><tbody><tr class="odd"><td style="text-align: left;">小明</td><td style="text-align: left;">不喜欢</td><td style="text-align: left;">喜欢</td></tr><tr class="even"><td style="text-align: left;">红番区</td><td style="text-align: left;">3</td><td style="text-align: left;">1</td></tr></tbody></table><p>小明喜欢动作片，不喜欢喜剧片，所以喜剧片的3分不计，动作片1分计入，即小明只给出了1分的评价。</p><table><thead><tr class="header"><th style="text-align: left;"></th><th style="text-align: left;">喜剧片</th><th style="text-align: left;">动作片</th></tr></thead><tbody><tr class="odd"><td style="text-align: left;">小雅</td><td style="text-align: left;">喜欢</td><td style="text-align: left;">喜欢</td></tr><tr class="even"><td style="text-align: left;">红番区</td><td style="text-align: left;">3</td><td style="text-align: left;">1</td></tr></tbody></table><p>再考虑一个例子：</p><table><thead><tr class="header"><th style="text-align: left;"></th><th style="text-align: left;">喜剧片</th><th style="text-align: left;">动作片</th></tr></thead><tbody><tr class="odd"><td style="text-align: left;">小刘</td><td style="text-align: left;">喜欢</td><td style="text-align: left;">喜欢</td></tr><tr class="even"><td style="text-align: left;">让子弹飞</td><td style="text-align: left;">1</td><td style="text-align: left;">3</td></tr></tbody></table><p>小刘喜欢喜剧也喜欢动作，所以这部电影他可能会给出1+3，四分的评价。</p><p>我们把一批电影编号为M1-M5,列表示分别占喜剧与动作的成分，同时把一批用户分类为他们是否喜欢喜剧或动作片。</p><p><img src="https://i.loli.net/2019/11/21/1RKTpP4MFcVuyfS.png" /></p><p>当我们把左边的两个表结合，就可以得到后面的这个表：</p><p><img src="https://i.loli.net/2019/11/21/PTgzFwfcnsX5uQp.png" /></p><p>这是通过算点积算出来的，你可以看到：</p><p><img src="https://i.loli.net/2019/11/21/Astuv1eTKCGHDyP.png" /></p><ul><li>有些人的喜好一样，则他们给出的电影评分也是一样的</li><li>如果两个电影所占的成分差不多，则也会得到一样的评分</li><li>B+C=D,这是因为B的喜欢与C的喜好相反，而D对与这两者都喜欢</li><li>M2与M3的平均值是M5，即M5的喜剧与动作成分是M2与M3的平均值，所以M5的评分也是M2与M3的平均值</li></ul><p>上面的这个表叫做Matrix Factorization, 我们要存储这个表是非常费存储的，假设我们有很多的电影与用户，算一下我们需要一个多大的Matrix.</p><p><img src="https://i.loli.net/2019/11/21/SnX2JGWdIgsM6oL.png" /></p><p>所以我们在存储的时候，只存储用户的喜好与电影的信息,再通过图表演示一下：</p><p><img src="https://i.loli.net/2019/11/21/TqmufiSXRHQchPZ.png" /></p><p>第一种方案是我们直接存储用户对所有电影评分与可能的评分，假设有2000个用户，1000部电影，这意味着200万份数据。</p><p><img src="https://i.loli.net/2019/11/21/8fwGTU7L96uIc5e.png" /></p><p>如果我们通过feature计算，则只需要30万份数据</p><p><img src="https://i.loli.net/2019/11/21/k9Ml5mUPoBg4SZC.png" /></p><p>现在我们回到以前，对与NMP算法，其中一个问题是，</p><p><img src="https://i.loli.net/2019/11/21/Astuv1eTKCGHDyP.png" /></p><p>如何通过中间的点积，得到两边的数据？就像24可以是2x12,也可以是4x6.</p><p>最开始我们可以随机的将两边的数据列出来，算出点积并与手上的点积比对，如果过低，那么我们将相应的用户喜好与电影评分做出调整，直到所有的值接近我们已有的点积中的值。</p><p><img src="https://i.loli.net/2019/11/21/c9QkmIZ5TbEUFMY.png" /></p><p>我们算到什么程度，才停止呢？我们需要定义一个error function,它就是告诉机器，你哪里错了，做的还不够，得继续算。</p><p><img src="https://i.loli.net/2019/11/21/I34aLMFuywnHqzA.png" /></p><p>这里的error就是我们手上的数据与机器算出来的数据的差的平方，我们把每个用户或者每个电影的error加起来，error function的作用就是尽量让error的和最小。</p><p>在现实的情况中，我们不可能每个用户对每个电影都有评分，所以我们拿到的点积图中间可能有很多空白:</p><p><img src="https://i.loli.net/2019/11/21/q865U2sbpad9x3l.png" /></p><p>但是我们可以根据这些值算出来用户与电影的属性,进而给用户推荐电影:</p><p><img src="https://i.loli.net/2019/11/21/qUIHQT75DZ6Rhdk.png" /></p><blockquote><p><a href="https://www.youtube.com/watch?v=ZspR5PZemcs&amp;t=693s">参考:How does Netflix recommend movies? Matrix Factorization</a></p></blockquote>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://i.loli.net/2019/11/21/I34aLMFuywnHqzA.png&quot; /&gt;&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;非监督学习的最后两章，我们会学习 Dimension reduction, Dimension reduction就是从数据中发现一定的模式，通过这种模式我们就可以对数据进行压缩，这对于计算和存储来说都是非常有利的，特别是在大数据时代。&lt;/p&gt;
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="coding" scheme="http://wittyfans.com/categories/coding/"/>
-    
-    
-    <category term="python" scheme="http://wittyfans.com/tags/python/"/>
-    
-    <category term="data analysis" scheme="http://wittyfans.com/tags/data-analysis/"/>
-    
-    <category term="sklearn" scheme="http://wittyfans.com/tags/sklearn/"/>
+    <category term="sklearn" scheme="https://scottzhang.pro/tags/sklearn/"/>
     
   </entry>
   
