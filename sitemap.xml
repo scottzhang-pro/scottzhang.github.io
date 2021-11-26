@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://scottzhang.pro/article/c6a5215a.html</loc>
+    
+    <lastmod>2021-11-26</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://scottzhang.pro/article/ebf9c4b3.html</loc>
     
     <lastmod>2021-11-21</lastmod>
@@ -340,7 +347,7 @@
 
   <url>
     <loc>https://scottzhang.pro/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -348,385 +355,420 @@
   
   <url>
     <loc>https://scottzhang.pro/tags/jira/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/HelpDesk/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/python/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/data-structure/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/database/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/bash/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/linux/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/data-analysis/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/NumPy/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/numpy/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/ndarrays/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/PowerShell/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/AD/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/helpdesk/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/powershell/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/windows/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/Windows/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/%E6%8A%80%E6%9C%AF%E6%94%AF%E6%8C%81/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/smb/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/design-pattern/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/OOP/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/singleton/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/super/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/staticmethod/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/classmethod/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/Abstract-methods/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/abc/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/MRO/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/nexworkX/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/spark/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/cmd/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/Oracle/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/cx-Oracle/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/Python/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/Database/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/BigData/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/Kafka/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/machine-learning/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/sklearn/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/Mac/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/%E7%B3%BB%E7%BB%9F/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/Data-Science/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/Pandas/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/Big-Data/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/pandas/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/data-warehouse/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/data-base/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/data-science/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/math/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/hadoop/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/yarn/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/bigdata/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/tags/wordcount/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://scottzhang.pro/tags/deploy/</loc>
+    <lastmod>2021-11-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://scottzhang.pro/tags/airflow/</loc>
+    <lastmod>2021-11-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://scottzhang.pro/tags/data-engineer/</loc>
+    <lastmod>2021-11-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://scottzhang.pro/tags/data/</loc>
+    <lastmod>2021-11-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://scottzhang.pro/tags/DAG/</loc>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -735,35 +777,42 @@
   
   <url>
     <loc>https://scottzhang.pro/categories/coding/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/categories/data/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/categories/data-analysis/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/categories/Data-Structure/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://scottzhang.pro/categories/design-pattern/</loc>
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://scottzhang.pro/categories/deploy/</loc>
+    <lastmod>2021-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
