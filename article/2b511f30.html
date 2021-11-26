@@ -19,15 +19,21 @@
     var CONFIG = {"hostname":"scottzhang.pro","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Scott&#39;s Blog">
-<meta property="og:url" content="https://scottzhang.pro/categories/coding/page/2/index.html">
+  <meta name="description" content="适配器模式让你可以兼容现有代码，外观模式则是为了封装代码而设计。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python设计模式-适配器与外观模式">
+<meta property="og:url" content="https://scottzhang.pro/article/2b511f30.html">
 <meta property="og:site_name" content="Scott&#39;s Blog">
+<meta property="og:description" content="适配器模式让你可以兼容现有代码，外观模式则是为了封装代码而设计。">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-11-26T09:46:19.000Z">
+<meta property="article:modified_time" content="2021-11-26T09:48:21.026Z">
 <meta property="article:author" content="Scott">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="design pattern">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://scottzhang.pro/categories/coding/page/2/">
+<link rel="canonical" href="https://scottzhang.pro/article/2b511f30.html">
 
 
 <script id="page-configurations">
@@ -35,12 +41,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>分类: coding | Scott's Blog</title>
+  <title>Python设计模式-适配器与外观模式 | Scott's Blog</title>
   
 
 
@@ -156,363 +162,153 @@
         <div class="content-wrap">
           
 
-          <div class="content category">
+          <div class="content post posts-expand">
             
 
+    
   
   
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://scottzhang.pro/article/2b511f30.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/instagram_profile_image.png">
+      <meta itemprop="name" content="Scott">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Scott's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Python设计模式-适配器与外观模式
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-11-26 17:46:19 / 修改时间：17:48:21" itemprop="dateCreated datePublished" datetime="2021-11-26T17:46:19+08:00">2021-11-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/design-pattern/" itemprop="url" rel="index"><span itemprop="name">design pattern</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/article/2b511f30.html" class="post-meta-item leancloud_visitors" data-flag-title="Python设计模式-适配器与外观模式" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
   
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">coding
-          <small>分类</small>
-        </h2>
-      </div>
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/article/2b511f30.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/article/2b511f30.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2019</span>
+        <blockquote>
+<p>适配器模式让你可以兼容现有代码，外观模式则是为了封装代码而设计。</p>
+</blockquote>
+<span id="more"></span>
+<h1 id="适配器模式">适配器模式</h1>
+<p>适配器模式，顾名思义就好像是电脑的转接头一样，目的就是让不同的系统之间可以协同工作。</p>
+<p>比如现在已经存在一些代码了，但你不想对它做任何更改，因为这意味着你要修改大量的内容，这时候你可以写一个适配器，将输入转化成现有代码可以直接使用的，这就叫适配器。</p>
+<p>举个例子，假设我们有一个奇怪的日期格式，它的年和月中间有一个14，现在有一个代码的逻辑是得到初始日期和结束日期中间的天数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DaysCalculator</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, start, end</span>):</span></span><br><span class="line">        self.start = start</span><br><span class="line">        self.end = end</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_days</span>(<span class="params">self</span>):</span></span><br><span class="line">        start = datetime.datetime.strptime(self.start, <span class="string">&#x27;%Y14%m&#x27;</span>)</span><br><span class="line">        end = datetime.datetime.strptime(self.end, <span class="string">&#x27;%Y14%m&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> (end - start).days</span><br><span class="line"></span><br><span class="line">DaysCalculator(start=<span class="string">&#x27;20211403&#x27;</span>, end=<span class="string">&#x27;20211409&#x27;</span>).get_days()</span><br><span class="line"><span class="comment"># 输出 184</span></span><br></pre></td></tr></table></figure>
+<p>现在你有一些方法需要依赖这段代码，你不得不也按照这个奇怪的格式工作，那么这时候你可以写一个适配器：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DaysAdaptor</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, start, end</span>):</span></span><br><span class="line">        start = datetime.datetime.strftime(start, <span class="string">&#x27;%Y14%m&#x27;</span>)</span><br><span class="line">        end = datetime.datetime.strftime(end, <span class="string">&#x27;%Y14%m&#x27;</span>)</span><br><span class="line">        self.calculator = DaysCalculator(start, end)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_days</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">return</span> self.calculator.get_days()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构造两个标准日期对象作为输入</span></span><br><span class="line">start = datetime.datetime.strptime(<span class="string">&#x27;2021/3&#x27;</span>, <span class="string">&#x27;%Y/%m&#x27;</span>)</span><br><span class="line">end = datetime.datetime.strptime(<span class="string">&#x27;2021/9&#x27;</span>, <span class="string">&#x27;%Y/%m&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里传入的日期类的日期，但也可以正常工作</span></span><br><span class="line">DaysAdaptor(start, end).get_days()</span><br></pre></td></tr></table></figure>
+<h1 id="外观模式">外观模式</h1>
+<p>外观模式更关注外部的体验，为了用户体验的方便，它将复杂的内部代码封装起来，只暴露一个简单的方法接受参数供用户调用，从而实现不同的功能。</p>
+<p>一个例子是，你想编写一个接受/发送邮件的客户端，对于用户而言，它只需关心：</p>
+<ul>
+<li>发件人地址</li>
+<li>邮件内容</li>
+<li>接受人地址</li>
+</ul>
+<p>所以我们可以编写一个简单的方法，只关心这几个参数，而其余的对于地址的处理、检查，对于用户密码的验证等等则隐藏在函数内部。</p>
+<p>相信你已经在自己的代码中使用过外观模式，此处不在举例。</p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-11-18T20:10:20+08:00"
-              content="2019-11-18">
-          11-18
-        </time>
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/uploads/wechat-reward-image.png" alt="Scott 微信支付">
+        <p>微信支付</p>
       </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/article/2329768004.html" itemprop="url">
-            <span itemprop="name">机器学习：处理Jira工单的分类问题</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-08-18T00:02:27+08:00"
-              content="2019-08-18">
-          08-18
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/article/3314439962.html" itemprop="url">
-            <span itemprop="name">监督学习实例：学校图书数据分类</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-07-26T17:38:14+08:00"
-              content="2019-07-26">
-          07-26
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/article/1659388510.html" itemprop="url">
-            <span itemprop="name">Scikit-Learn与监督学习</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-07-01T10:45:05+08:00"
-              content="2019-07-01">
-          07-01
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/article/2233116729.html" itemprop="url">
-            <span itemprop="name">Numpy Ndarray 基本操作</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-04-08T22:13:44+08:00"
-              content="2019-04-08">
-          04-08
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/article/4247104031.html" itemprop="url">
-            <span itemprop="name">PowerShell通过http, Https, 和Ftp下载文件</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-02-09T23:00:40+08:00"
-              content="2019-02-09">
-          02-09
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/article/2815417585.html" itemprop="url">
-            <span itemprop="name">NumPy操作数组</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-02-09T16:01:12+08:00"
-              content="2019-02-09">
-          02-09
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/article/1505895851.html" itemprop="url">
-            <span itemprop="name">Numpy Universal Functions</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-02-08T17:24:34+08:00"
-              content="2019-02-08">
-          02-08
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/article/1289150797.html" itemprop="url">
-            <span itemprop="name">Windows 批量映射并重命名网络驱动器</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-02-08T16:55:13+08:00"
-              content="2019-02-08">
-          02-08
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/article/1110487719.html" itemprop="url">
-            <span itemprop="name">NumPy之NDarrays创建、运算、切片、索引</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-02-06T22:34:30+08:00"
-              content="2019-02-06">
-          02-06
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/article/757386008.html" itemprop="url">
-            <span itemprop="name">Python文件操作与编码</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-02-06T15:40:48+08:00"
-              content="2019-02-06">
-          02-06
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/article/3070750455.html" itemprop="url">
-            <span itemprop="name">Python函数、生成器、异常处理</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-02-06T12:08:59+08:00"
-              content="2019-02-06">
-          02-06
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/article/1514644266.html" itemprop="url">
-            <span itemprop="name">Python推导式探究</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-02-06T10:38:36+08:00"
-              content="2019-02-06">
-          02-06
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/article/3036208594.html" itemprop="url">
-            <span itemprop="name">Built-in Data Structures in Python</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-01-16T20:48:05+08:00"
-              content="2019-01-16">
-          01-16
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/article/1738406626.html" itemprop="url">
-            <span itemprop="name">Python如何连接WindowsSMB共享文件夹?</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-01-12T14:23:30+08:00"
-              content="2019-01-12">
-          01-12
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/article/4058015651.html" itemprop="url">
-            <span itemprop="name">利用Pandas分析美国交警开放的搜查数据</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-    <div class="collection-year">
-      <span class="collection-header">2018</span>
-    </div>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2018-10-05T22:40:07+08:00"
-              content="2018-10-05">
-          10-05
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/article/2579500036.html" itemprop="url">
-            <span itemprop="name">Auto Assign Ticket With Jira Python Api</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-    </div>
   </div>
-  
-  
-  
+</div>
 
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/design-pattern/" rel="tag"># design pattern</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/article/56f28bda.html" rel="prev" title="Python设计模式-享元与命令模式">
+      <i class="fa fa-chevron-left"></i> Python设计模式-享元与命令模式
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
   
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/categories/coding/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/categories/coding/">1</a><span class="page-number current">2</span><a class="page-number" href="/categories/coding/page/3/">3</a><a class="extend next" rel="next" href="/categories/coding/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
-  </nav>
+  
+  
 
 
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -559,6 +355,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">适配器模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">外观模式</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
