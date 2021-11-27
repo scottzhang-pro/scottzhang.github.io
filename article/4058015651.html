@@ -21,7 +21,7 @@
 
   <meta name="description" content="一次偶然的机会看到王树义老师的推荐YouTube上的这个pandas视频教程，于是花了点时间学习了一下，也就有了这篇笔记，因为课程是英文的，也没有提供 中文字幕，所以我的笔记也就懒得再用中文写了。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="利用Pandas分析美国交警开放的搜查数据">
+<meta property="og:title" content="利用 Pandas 分析美国交警开放的搜查数据">
 <meta property="og:url" content="https://scottzhang.pro/article/4058015651.html">
 <meta property="og:site_name" content="Scott&#39;s Blog">
 <meta property="og:description" content="一次偶然的机会看到王树义老师的推荐YouTube上的这个pandas视频教程，于是花了点时间学习了一下，也就有了这篇笔记，因为课程是英文的，也没有提供 中文字幕，所以我的笔记也就懒得再用中文写了。">
@@ -38,11 +38,9 @@
 <meta property="og:image" content="https://mcwywq.bn.files.1drv.com/y4mkRchu7eh5ClZ_5hMguC0V-k3KY7tnt0-KpbEoif1EgVMEXCdt5VIxstOsVv-urRgNOdK6ebfF1SfkOyqWmxjcfz1a6F9_uQQpW79nkbZmYiKGVvAr1M6vXbh9ly0DNOSCIkNgyrDwQkjpDXtfRMwtfsZkhyd7UqsZJeKMxSsGfClSDqucjlFGZ3A7xkFxLDzORpau6TMPGXIkjjDjMkXHw/drugs_related.png?psid=1">
 <meta property="og:image" content="https://bn1301files.storage.live.com/y4mfDJ5BskfJi6Bl_KlVmBzKUzosUMz4c6sJtnFknHh-mKevDycVq5ghobnTWVfINyG-pQDAIfZK6UNCZOSpUP2IxLJJtgkpS4TN9lmc0VN0OcINS3bjH7EoGLkpNl0gsmiIlcTiyxb7K_qZyjTjmGu3-rCJ52mGcepghI8NxsInK-WUiy51tw0vQJGV-vKmdX78YOBeACPpGGemOYrpTmCcg/stop_hour_details.png?psid=1&amp;width=1278&amp;height=852">
 <meta property="article:published_time" content="2019-01-12T06:23:30.000Z">
-<meta property="article:modified_time" content="2021-11-19T14:12:08.911Z">
+<meta property="article:modified_time" content="2021-11-27T08:43:05.460Z">
 <meta property="article:author" content="Scott">
-<meta property="article:tag" content="Data Science">
-<meta property="article:tag" content="Pandas">
-<meta property="article:tag" content="Big Data">
+<meta property="article:tag" content="pandas">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://mcx9ta.bn.files.1drv.com/y4mE65e58kzSnXPoiQuv06EIsD_5IgkuxLDZSIWIq3z0080umibcEGypBMNRyxrh-_t8ZpO1tinR38oIAqNEUEN2jl_IJOSCncuaaA6zXZnzvANNfEC9K2OEYVaIvvSF4JQyz1iQdZTfP4mQK8eQeO-2lRc3o0piHzbEaHXgDRDUWRtA6Tt4plvHj9nR-QjmSuni-o7LuM7g9XPA6ylYKSGfQ/driver_ages.png?psid=1">
 
@@ -59,7 +57,7 @@
   };
 </script>
 
-  <title>利用Pandas分析美国交警开放的搜查数据 | Scott's Blog</title>
+  <title>利用 Pandas 分析美国交警开放的搜查数据 | Scott's Blog</title>
   
 
 
@@ -195,7 +193,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          利用Pandas分析美国交警开放的搜查数据
+          利用 Pandas 分析美国交警开放的搜查数据
         </h1>
 
         <div class="post-meta">
@@ -212,7 +210,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-19 22:12:08" itemprop="dateModified" datetime="2021-11-19T22:12:08+08:00">2021-11-19</time>
+                <time title="修改时间：2021-11-27 16:43:05" itemprop="dateModified" datetime="2021-11-27T16:43:05+08:00">2021-11-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -220,12 +218,12 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/coding/" itemprop="url" rel="index"><span itemprop="name">coding</span></a>
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/" itemprop="url" rel="index"><span itemprop="name">数据分析</span></a>
                 </span>
             </span>
 
           
-            <span id="/article/4058015651.html" class="post-meta-item leancloud_visitors" data-flag-title="利用Pandas分析美国交警开放的搜查数据" title="阅读次数">
+            <span id="/article/4058015651.html" class="post-meta-item leancloud_visitors" data-flag-title="利用 Pandas 分析美国交警开放的搜查数据" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -671,9 +669,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Data-Science/" rel="tag"># Data Science</a>
-              <a href="/tags/Pandas/" rel="tag"># Pandas</a>
-              <a href="/tags/Big-Data/" rel="tag"># Big Data</a>
+              <a href="/tags/pandas/" rel="tag"># pandas</a>
           </div>
 
         
@@ -686,8 +682,8 @@
       <i class="fa fa-chevron-left"></i> Auto Assign Ticket With Jira Python Api
     </a></div>
       <div class="post-nav-item">
-    <a href="/article/1738406626.html" rel="next" title="Python如何连接WindowsSMB共享文件夹?">
-      Python如何连接WindowsSMB共享文件夹? <i class="fa fa-chevron-right"></i>
+    <a href="/article/1738406626.html" rel="next" title="Python 如何连接 Windows SMB 共享文件夹?">
+      Python 如何连接 Windows SMB 共享文件夹? <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -771,13 +767,13 @@
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">60</span>
+        <span class="site-state-item-count">50</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
