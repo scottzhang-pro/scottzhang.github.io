@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"scottzhang.pro","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="抽象工厂模式让你的代码一键部署为不同区域的和语言，组合模式则擅长处理树状结构的问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python 设计模式-抽象工厂与组合模式">
+<meta property="og:url" content="https://scottzhang.pro/article/72c6f483.html">
+<meta property="og:site_name" content="Scott&#39;s Blog">
+<meta property="og:description" content="抽象工厂模式让你的代码一键部署为不同区域的和语言，组合模式则擅长处理树状结构的问题。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-11-28T13:44:50.000Z">
+<meta property="article:modified_time" content="2021-11-28T13:49:40.709Z">
+<meta property="article:author" content="Scott">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="设计模式">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://scottzhang.pro/article/72c6f483.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Python 设计模式-抽象工厂与组合模式 | Scott's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Scott's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Scott's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学则不固, 知则不惑</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://scottzhang.pro/article/72c6f483.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/instagram_profile_image.png">
+      <meta itemprop="name" content="Scott">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Scott's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Python 设计模式-抽象工厂与组合模式
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-11-28 21:44:50 / 修改时间：21:49:40" itemprop="dateCreated datePublished" datetime="2021-11-28T21:44:50+08:00">2021-11-28</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/article/72c6f483.html" class="post-meta-item leancloud_visitors" data-flag-title="Python 设计模式-抽象工厂与组合模式" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/article/72c6f483.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/article/72c6f483.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>抽象工厂模式让你的代码一键部署为不同区域的和语言，组合模式则擅长处理树状结构的问题。</p>
+</blockquote>
+<span id="more"></span>
+<p>这是设计模式系列文章的一部分，<a href="https://scottzhang.pro/categories/设计模式/">点击</a>查看该系列的其他文章。</p>
+<h1 id="抽象工厂模式">抽象工厂模式</h1>
+<p>想让你的系统根据配置或平台的问题有多个可能的实现，就可以利用抽象工厂模式。</p>
+<p>你调用抽象工厂会返回一个对象，这个对象的实现会基于你的需求而变化。</p>
+<ul>
+<li>对于一个在线的商城，它对于不同的国家有不同的语言、货币以及税收的计算方式。</li>
+<li>对于一套 GUI 工具，在 Windows 上可能返回的是 WinForm，在 Mac 上返回的则是 Cocoa 组件。</li>
+<li>对于 Django，它会根据当前站点的配置而返回相关的对象以对不同数据库后端的支持。</li>
+</ul>
+<p>想象一个格式化日期与货币的需求，我们需要支持中英文两种情况下的货币和日期。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ChinaDateFormatter</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">format_date</span>(<span class="params">self, y, m, d</span>):</span></span><br><span class="line">        y, m, d = (<span class="built_in">str</span>(x) <span class="keyword">for</span> x <span class="keyword">in</span> (y, m, d))</span><br><span class="line">        y = <span class="string">&#x27;20&#x27;</span> + y <span class="keyword">if</span> <span class="built_in">len</span>(y) == <span class="number">2</span> <span class="keyword">else</span> y</span><br><span class="line">        m = <span class="string">&#x27;0&#x27;</span> + m <span class="keyword">if</span> <span class="built_in">len</span>(m) == <span class="number">1</span> <span class="keyword">else</span> m</span><br><span class="line">        d = <span class="string">&#x27;0&#x27;</span> + d <span class="keyword">if</span> <span class="built_in">len</span>(d) == <span class="number">1</span> <span class="keyword">else</span> d</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> (<span class="string">&quot; &#123;&#125; 年 &#123;&#125; 月 &#123;&#125; 日 &quot;</span>.<span class="built_in">format</span>(y, m, d))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">USADateFormatter</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">format_date</span>(<span class="params">self, y, m, d</span>):</span></span><br><span class="line">        y, m, d = (<span class="built_in">str</span>(x) <span class="keyword">for</span> x <span class="keyword">in</span> (y, m, d))</span><br><span class="line">        y = <span class="string">&#x27;20&#x27;</span> + y <span class="keyword">if</span> <span class="built_in">len</span>(y) == <span class="number">2</span> <span class="keyword">else</span> y</span><br><span class="line">        m = <span class="string">&#x27;0&#x27;</span> + m <span class="keyword">if</span> <span class="built_in">len</span>(m) == <span class="number">1</span> <span class="keyword">else</span> m</span><br><span class="line">        d = <span class="string">&#x27;0&#x27;</span> + d <span class="keyword">if</span> <span class="built_in">len</span>(d) == <span class="number">1</span> <span class="keyword">else</span> d</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> (<span class="string">&quot;&#123;&#125;-&#123;&#125;-&#123;&#125;&quot;</span>.<span class="built_in">format</span>(y, m, d))</span><br></pre></td></tr></table></figure>
+<p>使用方式如下所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ChinaDateFormatter().format_date(<span class="string">&#x27;21&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;1&#x27;</span>)  <span class="comment"># &#x27; 2021 年 01 月 01 日 &#x27;</span></span><br><span class="line">ChinaDateFormatter().format_date(<span class="string">&#x27;21&#x27;</span>, <span class="string">&#x27;11&#x27;</span>, <span class="string">&#x27;27&#x27;</span>)  <span class="comment"># &#x27; 2021 年 11 月 27 日 &#x27;</span></span><br><span class="line"></span><br><span class="line">USADateFormatter().format_date(<span class="string">&#x27;21&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;1&#x27;</span>)  <span class="comment"># &#x27;2021-01-01&#x27;</span></span><br><span class="line">USADateFormatter().format_date(<span class="string">&#x27;21&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;1&#x27;</span>) <span class="comment"># &#x27;2021-01-01&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>再来定义两个处理货币的:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ChinaCurrencyFormatter</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">format</span>(<span class="params">self, base, cents</span>):</span></span><br><span class="line">        base, cents = (<span class="built_in">str</span>(x) <span class="keyword">for</span> x <span class="keyword">in</span> (base, cents))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(cents) == <span class="number">0</span>:</span><br><span class="line">            cents = <span class="string">&#x27;00&#x27;</span></span><br><span class="line">        <span class="keyword">elif</span> <span class="built_in">len</span>(cents) == <span class="number">1</span>:</span><br><span class="line">            cents = <span class="string">&#x27;0&#x27;</span> + cents</span><br><span class="line"></span><br><span class="line">        digits = []</span><br><span class="line">        <span class="keyword">for</span> i, c <span class="keyword">in</span> <span class="built_in">enumerate</span>(<span class="built_in">reversed</span>(<span class="built_in">str</span>(base))):</span><br><span class="line">            <span class="comment"># i 计算位数，千位 == 3</span></span><br><span class="line">            <span class="keyword">if</span> i <span class="keyword">and</span> <span class="keyword">not</span> i % <span class="number">3</span>:</span><br><span class="line">                digits.append(<span class="string">&#x27;,&#x27;</span>)</span><br><span class="line">            digits.append(c)</span><br><span class="line">        base = <span class="string">&#x27;&#x27;</span>.join(<span class="built_in">reversed</span>(digits))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;¥ &#123;&#125;.&#123;&#125; 元&quot;</span>.<span class="built_in">format</span>(base, cents)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">USACurrencyFormatter</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">format</span>(<span class="params">self, base, cents</span>):</span></span><br><span class="line">        base, cents = (<span class="built_in">str</span>(x) <span class="keyword">for</span> x <span class="keyword">in</span> (base, cents))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(cents) == <span class="number">0</span>:</span><br><span class="line">            cents = <span class="string">&#x27;00&#x27;</span></span><br><span class="line">        <span class="keyword">elif</span> <span class="built_in">len</span>(cents) == <span class="number">1</span>:</span><br><span class="line">            cents = <span class="string">&#x27;0&#x27;</span> + cents</span><br><span class="line"></span><br><span class="line">        digits = []</span><br><span class="line">        <span class="keyword">for</span> i, c <span class="keyword">in</span> <span class="built_in">enumerate</span>(<span class="built_in">reversed</span>(<span class="built_in">str</span>(base))):</span><br><span class="line">            <span class="comment"># i 计算位数，千位 == 3</span></span><br><span class="line">            <span class="keyword">if</span> i <span class="keyword">and</span> <span class="keyword">not</span> i % <span class="number">3</span>:</span><br><span class="line">                digits.append(<span class="string">&#x27;,&#x27;</span>)</span><br><span class="line">            digits.append(c)</span><br><span class="line">        base = <span class="string">&#x27;&#x27;</span>.join(<span class="built_in">reversed</span>(digits))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;$ &#123;&#125;.&#123;&#125;&quot;</span>.<span class="built_in">format</span>(base, cents)</span><br></pre></td></tr></table></figure>
+<p>使用方式如下所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ChinaCurrencyFormatter().<span class="built_in">format</span>(<span class="number">1432</span>, <span class="number">5</span>)  <span class="comment"># &#x27;¥ 143,958,766,111,111.05 元&#x27;</span></span><br><span class="line">USACurrencyFormatter().<span class="built_in">format</span>(<span class="number">1432</span>, <span class="number">5</span>)  <span class="comment"># &#x27;$ 143,958,766,111,111.05&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>将上面的代码按照国家组织在一起：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">USAFormatterFactory</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">create_date_formatter</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">return</span> USADateFormatter()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">create_currency_formatter</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">return</span> USACurrencyFormatter()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ChinaFormatterFactory</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">create_date_formatter</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">return</span> ChinaDateFormatter()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">create_currency_formatter</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">return</span> ChinaCurrencyFormatter()</span><br></pre></td></tr></table></figure>
+<p>在使用的时候，可以直接使用字典去找对应的抽象工厂：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">factory_map = &#123;</span><br><span class="line">    <span class="string">&#x27;US&#x27;</span>: USAFormatterFactory,</span><br><span class="line">    <span class="string">&#x27;China&#x27;</span>: ChinaFormatterFactory</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>设置区域为中国：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">country_code = &#x27;China&#x27;</span><br><span class="line">formatter_factor = factory_map.get(country_code)()</span><br><span class="line">formatter_factor.create_date_formatter().format_date(&#x27;21&#x27;, &#x27;1&#x27;, &#x27;1&#x27;)</span><br><span class="line"></span><br><span class="line"># &#x27; 2021 年 01 月 01 日 &#x27;</span><br></pre></td></tr></table></figure>
+<p>设置区域为美国：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">country_code = <span class="string">&#x27;US&#x27;</span></span><br><span class="line">formatter_factor = factory_map.get(country_code)()</span><br><span class="line">formatter_factor.create_date_formatter().format_date(<span class="string">&#x27;21&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># &#x27;2021-01-01&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>在实际的项目架构中，我们会有一个后端的模块来支持对不同国家提供服务，它的结构可能是这样的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">localize/</span><br><span class="line">	__init__.py</span><br><span class="line">	backends/</span><br><span class="line">		__init__.py</span><br><span class="line">		USA.py</span><br><span class="line">		China.py</span><br></pre></td></tr></table></figure>
+<p>那么我们可以在 localize 下面的 <code>__init__.py</code> 文件中，动态的选择区域：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> .backends <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> country_code == <span class="string">&#x27;China&#x27;</span>:</span><br><span class="line">	current_backend = <span class="string">&#x27;China&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">elif</span>:</span><br><span class="line">	<span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+<h1 id="组合模式">组合模式</h1>
+<p>组合模式一般通过组建来构造复杂的树状结构，它在文件夹和文件夹树中的应用比较多。</p>
+<p>文件目录中通常有两种类型的对象，文件和文件夹。首先来定义这两个类：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Folder</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, name</span>):</span></span><br><span class="line">        self.name = name</span><br><span class="line">        self.children = []</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_child</span>(<span class="params">self, child</span>):</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">move</span>(<span class="params">self, new_path</span>):</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">copy</span>(<span class="params">self, new_path</span>):</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">delete</span>(<span class="params">sejlf</span>):</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">File</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, name, contents</span>):</span></span><br><span class="line">        self.name = name</span><br><span class="line">        self.contents = contents</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">move</span>(<span class="params">self, new_path</span>):</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">copy</span>(<span class="params">self, new_path</span>):</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">delete</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>把一些常用的方法抽象到基类中：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Compoment</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, name</span>):</span></span><br><span class="line">        self.name = name</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">move</span>(<span class="params">self, new_path</span>):</span></span><br><span class="line">	      <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">	      get_path 方法会在外部实现</span></span><br><span class="line"><span class="string">	      &quot;&quot;&quot;</span></span><br><span class="line">        new_folder = get_path(new_path)</span><br><span class="line">        <span class="keyword">del</span> self.parent.children[self.name]</span><br><span class="line">        new_folder.children[self.name] = self</span><br><span class="line">        self.parent = new_folder</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">delete</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">del</span> self.parent.children[self.name]</span><br></pre></td></tr></table></figure>
+<p>这样 File 和 Folder 类就可以少去一些代码了：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Folder</span>(<span class="params">Compoment</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, name</span>):</span></span><br><span class="line">        <span class="built_in">super</span>().__init__(name)</span><br><span class="line">        self.children = &#123;&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_child</span>(<span class="params">self, child</span>):</span></span><br><span class="line">        child.parent = self</span><br><span class="line">        self.children[child.name] = child</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">copy</span>(<span class="params">self, new_path</span>):</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">File</span>(<span class="params">Compoment</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, name, contents</span>):</span></span><br><span class="line">        <span class="built_in">super</span>().__init__(name)</span><br><span class="line">        self.contents = contents</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">copy</span>(<span class="params">self, new_path</span>):</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>通过这种方式，我们使用的时候，可以进行任意的组合：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">root = Folder(<span class="string">&#x27;.&#x27;</span>)</span><br><span class="line">folder1 = Folder(<span class="string">&#x27;F1&#x27;</span>)</span><br><span class="line">folder2 = Folder(<span class="string">&#x27;F2&#x27;</span>)</span><br><span class="line">hello_file = File(<span class="string">&#x27;hello&#x27;</span>, <span class="string">&#x27;hello scott&#x27;</span>)</span><br><span class="line"></span><br><span class="line">folder2.add_child(hello_file)</span><br><span class="line">folder1.add_child(folder2)</span><br><span class="line">root.add_child(folder1)</span><br><span class="line"></span><br><span class="line">root.children[<span class="string">&#x27;F1&#x27;</span>].children[<span class="string">&#x27;F2&#x27;</span>].children[<span class="string">&#x27;hello&#x27;</span>].contents</span><br></pre></td></tr></table></figure>
+<p>当你在编程的时候，遇到了树状结构的时候，可以想想是否可以应用组合模式。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/uploads/wechat-reward-image.png" alt="Scott 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag"># 设计模式</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/article/2b511f30.html" rel="prev" title="Python 设计模式-适配器与外观模式">
+      <i class="fa fa-chevron-left"></i> Python 设计模式-适配器与外观模式
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">抽象工厂模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">组合模式</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Scott"
+      src="/uploads/instagram_profile_image.png">
+  <p class="site-author-name" itemprop="name">Scott</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">48</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">50</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wittyfans" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/wittyfans" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/wittyfans0" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;wittyfans0" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Scott</span>
+</div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz","app_key":"qKXpoqGbK1sdFYMiik7Evuan","server_url":"https://7sscl0n1.lc-cn-n1-shared.com","security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz',
+      appKey     : 'qKXpoqGbK1sdFYMiik7Evuan',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
