@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"scottzhang.pro","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="P2 包括了指针、结构体、数组、切片、映射和闭包等内容。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go 语法概览 P2">
+<meta property="og:url" content="https://scottzhang.pro/article/3773e07f.html">
+<meta property="og:site_name" content="Scott&#39;s Blog">
+<meta property="og:description" content="P2 包括了指针、结构体、数组、切片、映射和闭包等内容。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-15T14:07:40.000Z">
+<meta property="article:modified_time" content="2021-12-20T09:11:58.330Z">
+<meta property="article:author" content="Scott">
+<meta property="article:tag" content="Go">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://scottzhang.pro/article/3773e07f.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Go 语法概览 P2 | Scott's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Scott's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Scott's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学则不固, 知则不惑</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://scottzhang.pro/article/3773e07f.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/instagram_profile_image.png">
+      <meta itemprop="name" content="Scott">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Scott's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Go 语法概览 P2
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-15 22:07:40" itemprop="dateCreated datePublished" datetime="2021-12-15T22:07:40+08:00">2021-12-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-20 17:11:58" itemprop="dateModified" datetime="2021-12-20T17:11:58+08:00">2021-12-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Go/" itemprop="url" rel="index"><span itemprop="name">Go</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/article/3773e07f.html" class="post-meta-item leancloud_visitors" data-flag-title="Go 语法概览 P2" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/article/3773e07f.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/article/3773e07f.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>P2 包括了指针、结构体、数组、切片、映射和闭包等内容。</p>
+</blockquote>
+<span id="more"></span>
+<h1 id="指针">指针</h1>
+<p>指针, 指针保存了值的地址:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 指针声明</span></span><br><span class="line"><span class="comment">// *int 是指向 int 类型的指针，其初始值（零值）为 nil</span></span><br><span class="line"><span class="keyword">var</span> p *<span class="keyword">int</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// &amp; 操作符会生成一个指向其操作数的指针</span></span><br><span class="line"><span class="comment">// 此处生成一个指向整数 42 的指针，赋值给 p</span></span><br><span class="line">i := <span class="number">42</span></span><br><span class="line">p = &amp;i</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 读取指针指向的值，操作也是 *</span></span><br><span class="line">fmt.Print(*p) <span class="comment">// 通过指针读取值</span></span><br><span class="line">*p = <span class="number">52</span>       <span class="comment">// 通过指针设置值</span></span><br></pre></td></tr></table></figure>
+<h1 id="结构体">结构体</h1>
+<p>结构体 struct，即一组字段 field:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义</span></span><br><span class="line"><span class="keyword">type</span> Vertex <span class="keyword">struct</span> &#123;</span><br><span class="line">    X <span class="keyword">int</span></span><br><span class="line">    Y <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用</span></span><br><span class="line">v = Vertex&#123;<span class="number">1</span>, <span class="number">2</span>&#125; <span class="comment">// 初始化赋值</span></span><br><span class="line">v.X = <span class="number">4</span>          <span class="comment">// 结构内元素赋值</span></span><br><span class="line">fmt.Print(v.X)   <span class="comment">// 取值</span></span><br><span class="line">fmt.Print(v.Y)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 结构体的特殊文法：</span></span><br><span class="line"><span class="keyword">var</span> (</span><br><span class="line">    v1 = Vertex&#123;<span class="number">1</span>, <span class="number">2</span>&#125;  <span class="comment">// 创建一个 Vertex 类型的结构体</span></span><br><span class="line">    v2 = Vertex&#123;X: <span class="number">1</span>&#125;  <span class="comment">// Y:0 被隐式地赋予</span></span><br><span class="line">    v3 = Vertex&#123;&#125;      <span class="comment">// X:0 Y:0</span></span><br><span class="line">    p  = &amp;Vertex&#123;<span class="number">1</span>, <span class="number">2</span>&#125; <span class="comment">// 创建一个 *Vertex 类型的结构体（指针）</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>这里我们第一次看到了 <code>type</code>，可以<a target="_blank" rel="noopener" href="https://thenewstack.io/understanding-golang-type-system/">点击</a>这篇文章了解更多。</p>
+<p>使用指针访问结构体：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 访问结构体，需要结构提指针</span></span><br><span class="line"><span class="comment">// 还是以上面定义的结构体 Vertex 为例</span></span><br><span class="line">v := Vertex&#123;<span class="number">1</span>, <span class="number">2</span>&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建结构体指针 p</span></span><br><span class="line"><span class="comment">// 赋值，本质是 (*p).X，为了避免繁琐，简化了操作（隐式间接调用）</span></span><br><span class="line">p := &amp;v</span><br><span class="line">p.X = <span class="number">1e9</span></span><br><span class="line">fmt.Println(v)</span><br></pre></td></tr></table></figure>
+<h1 id="数组">数组</h1>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 声明形式 [n]T</span></span><br><span class="line"><span class="comment">// 数组的长度是其类型的一部分，因此数组不能改变大小</span></span><br><span class="line"><span class="keyword">var</span> a [<span class="number">10</span>]<span class="keyword">int</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 访问内容的文法与其它语言一致</span></span><br><span class="line"><span class="keyword">var</span> a [<span class="number">2</span>]<span class="keyword">string</span></span><br><span class="line">a[<span class="number">0</span>] = <span class="string">&quot;Hello&quot;</span></span><br><span class="line">a[<span class="number">1</span>] = <span class="string">&quot;Scott&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 声明的同时设置初始值</span></span><br><span class="line">primes := [<span class="number">6</span>]<span class="keyword">int</span>&#123;<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">11</span>, <span class="number">13</span>&#125;</span><br><span class="line">fmt.Println(primes)</span><br></pre></td></tr></table></figure>
+<h1 id="切片">切片</h1>
+<p>切片为数组提供动态大小, 在实践中，切片比数组更常用:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 切片与 Python Pandas 中 iloc 的语法类似</span></span><br><span class="line"><span class="comment">// 语法为 []T, 包括第一个元素，排除最后一个元素</span></span><br><span class="line">a[low:high]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 选择下标1-3的元素</span></span><br><span class="line">a[<span class="number">1</span>:<span class="number">4</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 一个例子</span></span><br><span class="line">primes := [<span class="number">6</span>]<span class="keyword">int</span>&#123;<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">11</span>, <span class="number">13</span>&#125;</span><br><span class="line"><span class="keyword">var</span> s []<span class="keyword">int</span> = primes[<span class="number">1</span>:<span class="number">4</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 切片只是提供一个视角，所以它并不存储数据</span></span><br><span class="line"><span class="comment">// 但是对切片的修改，会修改底层数据</span></span><br><span class="line">names := [<span class="number">2</span>]<span class="keyword">string</span>&#123;</span><br><span class="line">    <span class="string">&quot;Scott&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Sam&quot;</span>,</span><br><span class="line">&#125;</span><br><span class="line">names[<span class="number">0</span>] = <span class="string">&quot;XXX&quot;</span></span><br><span class="line">fmt.Println(names)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 切片的文法与没有写数组长度的类似</span></span><br><span class="line">[<span class="number">3</span>]<span class="keyword">bool</span>&#123;<span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">false</span>&#125;  <span class="comment">// 数组文法</span></span><br><span class="line">[]<span class="keyword">bool</span>&#123;<span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">false</span>&#125;   <span class="comment">// 切片文法</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 与 numpy, pandas 类似，取同样的值有多种写法</span></span><br><span class="line"><span class="keyword">var</span> a [<span class="number">10</span>]<span class="keyword">int</span></span><br><span class="line"></span><br><span class="line">a[:]</span><br><span class="line">a[<span class="number">0</span>:]</span><br><span class="line">a[:<span class="number">10</span>]</span><br><span class="line">a[<span class="number">0</span>:<span class="number">10</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 切片本身有属性，如长度和容量</span></span><br><span class="line"><span class="comment">// 长度：包含的元素个数</span></span><br><span class="line"><span class="comment">// 容量: 从它的第一个元素开始数，到其底层数组元素末尾的个数（注意区别 numpy）</span></span><br><span class="line"><span class="comment">// 长度和容量可通过表达式 len(s) 和 cap(s) 来获取</span></span><br><span class="line">s := []<span class="keyword">int</span>&#123;<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">11</span>, <span class="number">13</span>&#125;</span><br><span class="line"><span class="comment">// 截取切片使其长度为 0</span></span><br><span class="line">s = s[:<span class="number">0</span>]</span><br><span class="line"><span class="comment">// 拓展其长度</span></span><br><span class="line">s = s[:<span class="number">4</span>]</span><br><span class="line"><span class="comment">// 舍弃前两个值</span></span><br><span class="line">s = s[<span class="number">2</span>:]</span><br><span class="line"></span><br><span class="line"><span class="comment">//nil 切片</span></span><br><span class="line"><span class="comment">// 切片的零值是 nil</span></span><br><span class="line"><span class="comment">// nil 切片的长度和容量为 0 且没有底层数组</span></span><br></pre></td></tr></table></figure>
+<p>使用 make 创建切片, make 函数会分配一个元素为零值的数组并返回一个引用了它的切片, 这也是在 Go 中使用动态数组的方式:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用 make</span></span><br><span class="line">a := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">5</span>)</span><br><span class="line">b := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">0</span>, <span class="number">5</span>)</span><br><span class="line">c := b[:<span class="number">2</span>]</span><br><span class="line">d := c[<span class="number">2</span>:<span class="number">5</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">分别打印 abcd</span></span><br><span class="line"><span class="comment">a len=5 cap=5 [0 0 0 0 0]</span></span><br><span class="line"><span class="comment">b len=0 cap=5 []</span></span><br><span class="line"><span class="comment">c len=2 cap=5 [0 0]</span></span><br><span class="line"><span class="comment">d len=3 cap=3 [0 0 0]</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+<p>切片的切片：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 类似操作 dataframe</span></span><br><span class="line">board := [][]<span class="keyword">string</span>&#123;</span><br><span class="line">    []<span class="keyword">string</span>&#123;<span class="string">&quot;_&quot;</span>, <span class="string">&quot;_&quot;</span>, <span class="string">&quot;_&quot;</span>&#125;,</span><br><span class="line">    []<span class="keyword">string</span>&#123;<span class="string">&quot;_&quot;</span>, <span class="string">&quot;_&quot;</span>, <span class="string">&quot;_&quot;</span>&#125;,</span><br><span class="line">    []<span class="keyword">string</span>&#123;<span class="string">&quot;_&quot;</span>, <span class="string">&quot;_&quot;</span>, <span class="string">&quot;_&quot;</span>&#125;,</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">_ _ _</span></span><br><span class="line"><span class="comment">_ _ _</span></span><br><span class="line"><span class="comment">_ _ _</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过两个下标设置值后得到改变后的图案</span></span><br><span class="line">board[<span class="number">0</span>][<span class="number">0</span>] = <span class="string">&quot;X&quot;</span></span><br><span class="line">board[<span class="number">2</span>][<span class="number">2</span>] = <span class="string">&quot;O&quot;</span></span><br><span class="line">board[<span class="number">1</span>][<span class="number">2</span>] = <span class="string">&quot;X&quot;</span></span><br><span class="line">board[<span class="number">1</span>][<span class="number">0</span>] = <span class="string">&quot;O&quot;</span></span><br><span class="line">board[<span class="number">0</span>][<span class="number">2</span>] = <span class="string">&quot;X&quot;</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">X _ X</span></span><br><span class="line"><span class="comment">O _ X</span></span><br><span class="line"><span class="comment">_ _ O</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+<p>向切片追加元素：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> s []<span class="keyword">int</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 添加一个空切片</span></span><br><span class="line">s = <span class="built_in">append</span>(s, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这个切片会按需增长</span></span><br><span class="line">s = <span class="built_in">append</span>(s, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 可以一次性添加多个元素</span></span><br><span class="line">s = <span class="built_in">append</span>(s, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</span><br></pre></td></tr></table></figure>
+<p>for 循环的 range 形式, 类似于 Python 中的 enumrate，但它是一个关键字而不是函数：</p>
+<h1 id="映射">映射</h1>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 每次迭代都会返回两个值</span></span><br><span class="line"><span class="comment">// 第一个值为当前元素的下标，第二个值为该下标所对应元素的一份副本。</span></span><br><span class="line"><span class="keyword">var</span> pow = []<span class="keyword">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">8</span>, <span class="number">16</span>, <span class="number">32</span>, <span class="number">64</span>, <span class="number">128</span>&#125;</span><br><span class="line"><span class="keyword">for</span> i, v := <span class="keyword">range</span> pow &#123;</span><br><span class="line">    fmt.Printf(i, v)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果你想忽略某个值，可以使用 _ </span></span><br><span class="line"><span class="keyword">for</span> i, _ := <span class="keyword">range</span> pow</span><br><span class="line"><span class="keyword">for</span> _, value := <span class="keyword">range</span> pow</span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果你只需要索引</span></span><br><span class="line"><span class="keyword">for</span> i := <span class="keyword">range</span> pow</span><br></pre></td></tr></table></figure>
+<p>映射，类似 Python 中的字典，但需要规定 Key 和 Value 的类型，假设值是 struct，则需提前定义：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 声明结构体，用来存值</span></span><br><span class="line"><span class="keyword">type</span> Vertex <span class="keyword">struct</span> &#123;</span><br><span class="line">    Lat, Long <span class="keyword">float64</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 声明映射，键是 string，值是 struct</span></span><br><span class="line"><span class="comment">// 映射的零值为 nil 。nil 映射既没有键，也不能添加键。</span></span><br><span class="line"><span class="keyword">var</span> m <span class="keyword">map</span>[<span class="keyword">string</span>]Vertex</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化结构体</span></span><br><span class="line"><span class="comment">// make 函数会返回给定类型的映射，并将其初始化备用</span></span><br><span class="line">m = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]Vertex)</span><br><span class="line">m[<span class="string">&quot;Bell Labs&quot;</span>] = Vertex&#123;</span><br><span class="line">    <span class="number">40.68433</span>, <span class="number">-74.39967</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 不使用 make 函数</span></span><br><span class="line"><span class="keyword">var</span> m = <span class="keyword">map</span>[<span class="keyword">string</span>]Vertex&#123;</span><br><span class="line">    <span class="string">&quot;Bell Labs&quot;</span>: Vertex&#123;</span><br><span class="line">        <span class="number">40.68433</span>, <span class="number">-74.39967</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">&quot;Google&quot;</span>: Vertex&#123;</span><br><span class="line">        <span class="number">37.42202</span>, <span class="number">-122.08408</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 结构体内部，Vertex 可以省略</span></span><br><span class="line"><span class="keyword">var</span> m = <span class="keyword">map</span>[<span class="keyword">string</span>]Vertex&#123;</span><br><span class="line">    <span class="string">&quot;Bell Labs&quot;</span>: &#123;<span class="number">40.68433</span>, <span class="number">-74.39967</span>&#125;,</span><br><span class="line">    <span class="string">&quot;Google&quot;</span>: &#123;<span class="number">37.42202</span>, <span class="number">-122.08408</span>&#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>获取、编辑映射内部的值:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">m := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">int</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取值</span></span><br><span class="line">m[<span class="string">&quot;Answer&quot;</span>] = <span class="number">42</span></span><br><span class="line">fmt.Println(<span class="string">&quot;The value:&quot;</span>, m[<span class="string">&quot;Answer&quot;</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置值</span></span><br><span class="line">m[<span class="string">&quot;Answer&quot;</span>] = <span class="number">48</span></span><br><span class="line">fmt.Println(<span class="string">&quot;The value:&quot;</span>, m[<span class="string">&quot;Answer&quot;</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment">// 删除值</span></span><br><span class="line"><span class="built_in">delete</span>(m, <span class="string">&quot;Answer&quot;</span>)</span><br><span class="line">fmt.Println(<span class="string">&quot;The value:&quot;</span>, m[<span class="string">&quot;Answer&quot;</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment">// 双赋值检测, elem, ok = m[key]</span></span><br><span class="line"><span class="comment">// 若 key 在 m 中，ok 为 true ；否则，ok 为 false。</span></span><br><span class="line"><span class="comment">// 若 key 不在映射中，那么 elem 是该映射元素类型的零值。</span></span><br><span class="line"><span class="comment">// 同样的，当从映射中读取某个不存在的键时，结果是映射的元素类型的零值。</span></span><br><span class="line"><span class="comment">// 若 elem 或 ok 还未声明，你可以使用短变量声明：elem, ok := m[key]</span></span><br><span class="line">v, ok := m[<span class="string">&quot;Answer&quot;</span>]</span><br><span class="line">fmt.Println(<span class="string">&quot;The value:&quot;</span>, v, <span class="string">&quot;Present?&quot;</span>, ok)</span><br></pre></td></tr></table></figure>
+<h1 id="闭包">闭包</h1>
+<p>函数值，Go 中函数也可以被传到另一个函数中:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// compute 函数接收另外一个函数</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">compute</span><span class="params">(fn <span class="keyword">func</span>(<span class="keyword">float64</span>, <span class="keyword">float64</span>)</span> <span class="title">float64</span>) <span class="title">float64</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> fn(<span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// compute 接收了 hypot 作为参数</span></span><br><span class="line">hypot := <span class="function"><span class="keyword">func</span><span class="params">(x, y <span class="keyword">float64</span>)</span> <span class="title">float64</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> math.Sqrt(x*x + y*y)</span><br><span class="line">&#125;</span><br><span class="line">fmt.Println(compute(hypot))</span><br></pre></td></tr></table></figure>
+<p>函数的闭包。闭包是一个函数值，它引用了其函数体之外的变量。该函数可以访问并赋予其引用的变量的值，换句话说，该函数被这些变量“绑定”在一起。</p>
+<p>来一步一步理解 Go 中的闭包： <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个普通的函数 send 并调用</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">send</span><span class="params">(message <span class="keyword">string</span>)</span></span>&#123;</span><br><span class="line">    fmt.Println(message)</span><br><span class="line">&#125;</span><br><span class="line">send(<span class="string">&quot;hi, scott&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义一个匿名版本的 send 函数并立即调用</span></span><br><span class="line"><span class="comment">// 注意这个函数并没有函数名字</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(message <span class="keyword">string</span>)</span></span>&#123;</span><br><span class="line">    fmt.Println(message)</span><br><span class="line">&#125;(<span class="string">&quot;hi, scott&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义一个函数，返回一个函数</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">func give_me_a_func() |func(string)| &lt;---- 这里规定了返回值</span></span><br><span class="line"><span class="comment">                                           即为一个接收 string 的函数</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">give_me_a_func</span><span class="params">()</span> <span class="title">func</span><span class="params">(<span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">(message <span class="keyword">string</span>)</span></span>&#123;</span><br><span class="line">        fmt.Println(message)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 可以把 give_me_a_func() 传给另外一个函数</span></span><br><span class="line">send_func := give_me_a_func()</span><br><span class="line">send_func(<span class="string">&quot;hi scott&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 理解了上面函数的工作方式后，我们来介绍闭包</span></span><br><span class="line"><span class="comment">// 先定义一个函数, 它返回一个函数(return int)</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">incrementor</span><span class="params">()</span> <span class="title">func</span><span class="params">()</span> <span class="title">int</span></span>&#123;</span><br><span class="line">    i := <span class="number">0</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="title">int</span></span> &#123;</span><br><span class="line">        i++</span><br><span class="line">        <span class="keyword">return</span> i</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 现在定义另外一个变量来存储 incrementor 返回的函数</span></span><br><span class="line">next := incrementor()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 打印每次调用 next() 返回的值</span></span><br><span class="line">fmt.Println(next())  <span class="comment">// 1</span></span><br><span class="line">fmt.Println(next())  <span class="comment">// 2</span></span><br><span class="line">fmt.Println(next())  <span class="comment">// 3</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 分析</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">incrementor</span><span class="params">()</span> <span class="title">func</span><span class="params">()</span> <span class="title">int</span></span>&#123;</span><br><span class="line">    i := <span class="number">0</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="title">int</span></span> &#123;</span><br><span class="line">        <span class="comment">// 这里 i 看起来应该无法工作的</span></span><br><span class="line">        <span class="comment">// 因为 i 是定义在 incrementor 中的</span></span><br><span class="line">        <span class="comment">// 但闭包拥有其被创建环境下的作用域</span></span><br><span class="line">        i++</span><br><span class="line">        <span class="keyword">return</span> i</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://thenewstack.io/understanding-golang-type-system/">Understanding Golang Type System</a></li>
+<li><a target="_blank" rel="noopener" href="https://medium.com/m/global-identity?redirectUrl=https%3A%2F%2Fbetterprogramming.pub%2Fclosures-made-simple-with-golang-69db3017cd7b">Closures Made Simple With Golang</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/uploads/wechat-reward-image.png" alt="Scott 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Go/" rel="tag"># Go</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/article/ae7ab1c5.html" rel="prev" title="Go 语法概览 P1">
+      <i class="fa fa-chevron-left"></i> Go 语法概览 P1
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/article/4074d0e9.html" rel="next" title="Go 语法概览 P3">
+      Go 语法概览 P3 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8C%87%E9%92%88"><span class="nav-number">1.</span> <span class="nav-text">指针</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93"><span class="nav-number">2.</span> <span class="nav-text">结构体</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E7%BB%84"><span class="nav-number">3.</span> <span class="nav-text">数组</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%87%E7%89%87"><span class="nav-number">4.</span> <span class="nav-text">切片</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%98%A0%E5%B0%84"><span class="nav-number">5.</span> <span class="nav-text">映射</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AD%E5%8C%85"><span class="nav-number">6.</span> <span class="nav-text">闭包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Scott"
+      src="/uploads/instagram_profile_image.png">
+  <p class="site-author-name" itemprop="name">Scott</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wittyfans" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/wittyfans" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/wittyfans0" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;wittyfans0" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Scott</span>
+</div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz","app_key":"qKXpoqGbK1sdFYMiik7Evuan","server_url":"https://7sscl0n1.lc-cn-n1-shared.com","security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz',
+      appKey     : 'qKXpoqGbK1sdFYMiik7Evuan',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
