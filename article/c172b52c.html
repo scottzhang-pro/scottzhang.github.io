@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"scottzhang.pro","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="优先队列 Priority Queue (PQ) 是一个抽象的数据结构，堆（heap）是一个具体的数据结构，可以说是优先队列的一个实现。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="优先队列与堆">
+<meta property="og:url" content="https://scottzhang.pro/article/c172b52c.html">
+<meta property="og:site_name" content="Scott&#39;s Blog">
+<meta property="og:description" content="优先队列 Priority Queue (PQ) 是一个抽象的数据结构，堆（heap）是一个具体的数据结构，可以说是优先队列的一个实现。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://files.realpython.com/media/heap-tree.4b4413ff133c.png">
+<meta property="og:image" content="https://s2.loli.net/2022/02/08/ftlG2QF6pxjYuhe.png">
+<meta property="article:published_time" content="2022-02-09T13:42:44.000Z">
+<meta property="article:modified_time" content="2022-02-15T09:50:15.679Z">
+<meta property="article:author" content="Scott">
+<meta property="article:tag" content="heapq">
+<meta property="article:tag" content="queue">
+<meta property="article:tag" content="PQ">
+<meta property="article:tag" content="heap">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://files.realpython.com/media/heap-tree.4b4413ff133c.png">
+
+<link rel="canonical" href="https://scottzhang.pro/article/c172b52c.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>优先队列与堆 | Scott's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Scott's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Scott's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学则不固, 知则不惑</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://scottzhang.pro/article/c172b52c.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/instagram_profile_image.png">
+      <meta itemprop="name" content="Scott">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Scott's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          优先队列与堆
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-09 21:42:44" itemprop="dateCreated datePublished" datetime="2022-02-09T21:42:44+08:00">2022-02-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-15 17:50:15" itemprop="dateModified" datetime="2022-02-15T17:50:15+08:00">2022-02-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">数据结构与算法</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/article/c172b52c.html" class="post-meta-item leancloud_visitors" data-flag-title="优先队列与堆" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/article/c172b52c.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/article/c172b52c.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>优先队列 Priority Queue (PQ) 是一个抽象的数据结构，堆（heap）是一个具体的数据结构，可以说是优先队列的一个实现。</p>
+</blockquote>
+<span id="more"></span>
+<h1 id="优先队列">优先队列</h1>
+<p>优先队列至少需要有以下这些操作：</p>
+<ul>
+<li>is_empty, 队列是否为空</li>
+<li>add_element, 增加元素</li>
+<li>pop_element, 弹出元素</li>
+</ul>
+<p>Python 有一个优先队列的实现，即堆（heapq），其中最小的元素拥有最高的优先级。它的每个父节点的值都只会小于或等于所有孩子节点（的值）; 最小的元素总是在根结点：heap[0]</p>
+<p>Python heapq 模块和一般的堆数据结构，在设计时不允许查找除最小元素之外的任何元素。对于按大小检索任何元素，更好的选择是二叉搜索树。</p>
+<p>堆使用了完全二叉树来实现优先队列，这意味着树的深度等于2为底，元素个数的对数。堆中每个父节点的值都小于或等于其任何子节点，这一点与二叉搜索树不一样（子节点中左节点小于右节点）</p>
+<p><img src="https://files.realpython.com/media/heap-tree.4b4413ff133c.png" /></p>
+<p>优先队列在编程中应用广泛，特别是那些需要在一些元素中查找极端值的情况，比如：</p>
+<ul>
+<li>根据点击量，查找博客中最受欢迎的5篇文章</li>
+<li>找出从 a 点到 b 点最快的路径</li>
+<li>你有发送邮件的一些任务，其中一些邮件需要每5分钟发一次，另外的一些需要每4分钟发一次</li>
+</ul>
+<h1 id="在-heapq-模块中作为列表的堆">在 heapq 模块中作为列表的堆</h1>
+<p>堆是一个完全二叉树，我们可以使用列表来表示（<a href="%5B最小堆排序_Python_哔哩哔哩_bilibili%5D(https://www.bilibili.com/video/BV1ph411r7A6?from=search&amp;seid=14588240802172044798)">下图</a>表示的为最大堆）：</p>
+<figure>
+<img src="https://s2.loli.net/2022/02/08/ftlG2QF6pxjYuhe.png" alt="数组表示堆" /><figcaption aria-hidden="true">数组表示堆</figcaption>
+</figure>
+<ul>
+<li>用 i 来表示索引值（也有用 k）</li>
+<li>作为父节点，它的第一个子节点的数组下标为 2*i + 1.</li>
+<li>作为父节点，它的第二个子节点数组下标为 2*i + 2.</li>
+<li>作为子节点，它的父节点为 (i - 1) // 2.</li>
+</ul>
+<p>Python 中最小堆的一个特性，即子节点都要大于父节点，可以表示为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">h[i] &lt;= h[2*i + 1] and h[i] &lt;= h[2*i + 2]</span><br></pre></td></tr></table></figure>
+<h1 id="操作堆">操作堆</h1>
+<p>Python 中堆的实现是依赖于 list 的，它没有使用自定义的类。</p>
+<p>可以从一个空堆开始初始化数据，但是如果你已经有一个list需要将其中的元素放到堆中，则可通过 heaptify() 来把一个 list 转成堆。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> heapq</span><br><span class="line">a = [<span class="number">3</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">7</span>]</span><br><span class="line"><span class="comment"># heapify() 修改列表，但不对它进行排序。</span></span><br><span class="line">heapq.heapify(a)</span><br><span class="line">a[<span class="number">2</span>]</span><br></pre></td></tr></table></figure>
+<p>可以通过堆来实现优先级任务：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">h = []</span><br><span class="line">heappush(h, (<span class="number">5</span>, <span class="string">&#x27;write code&#x27;</span>))</span><br><span class="line">heappush(h, (<span class="number">7</span>, <span class="string">&#x27;release product&#x27;</span>))</span><br><span class="line">heappush(h, (<span class="number">1</span>, <span class="string">&#x27;write spec&#x27;</span>))</span><br><span class="line">heappush(h, (<span class="number">3</span>, <span class="string">&#x27;create tests&#x27;</span>))</span><br><span class="line">heappop(h)</span><br></pre></td></tr></table></figure>
+<p>再来看一个前面提到的发送 email 的例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">import</span> heapq</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">email</span>(<span class="params">frequency, details</span>):</span></span><br><span class="line">    current = datetime.datetime.now()</span><br><span class="line">    <span class="comment"># 产生一个无限循环的生成器</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        current += frequency</span><br><span class="line">        <span class="keyword">yield</span> current.strftime(<span class="string">&quot;%Y/%m/%d %H:%M&quot;</span>) , details</span><br><span class="line"></span><br><span class="line">fast_email = email(datetime.timedelta(minutes=<span class="number">15</span>), <span class="string">&quot;fast email&quot;</span>)</span><br><span class="line">slow_email = email(datetime.timedelta(minutes=<span class="number">40</span>), <span class="string">&quot;slow email&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将两个生成器在 heapq 中 merge</span></span><br><span class="line">unified = heapq.merge(fast_email, slow_email)</span><br></pre></td></tr></table></figure>
+<p>我们调用结合后的生成器 10 次看看结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">next</span>(unified))</span><br></pre></td></tr></table></figure>
+<p>输出如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(&#x27;2022/02/08 17:40&#x27;, &#x27;fast email&#x27;)</span><br><span class="line">(&#x27;2022/02/08 17:55&#x27;, &#x27;fast email&#x27;)</span><br><span class="line">(&#x27;2022/02/08 18:05&#x27;, &#x27;slow email&#x27;)</span><br><span class="line">(&#x27;2022/02/08 18:10&#x27;, &#x27;fast email&#x27;)</span><br><span class="line">(&#x27;2022/02/08 18:25&#x27;, &#x27;fast email&#x27;)</span><br><span class="line">(&#x27;2022/02/08 18:40&#x27;, &#x27;fast email&#x27;)</span><br><span class="line">(&#x27;2022/02/08 18:45&#x27;, &#x27;slow email&#x27;)</span><br><span class="line">(&#x27;2022/02/08 18:55&#x27;, &#x27;fast email&#x27;)</span><br><span class="line">(&#x27;2022/02/08 19:10&#x27;, &#x27;fast email&#x27;)</span><br><span class="line">(&#x27;2022/02/08 19:25&#x27;, &#x27;fast email&#x27;)</span><br></pre></td></tr></table></figure>
+<p>可以看到 fast email 是间隔 15 分钟每次发送，而 slow email 则是40 分钟一次，它们完美的交错成一个任务列表。</p>
+<p>merge 并不会一次性将所有输入全部读取，所以即使我们传入的无限重复的生成器，它也非常快且不占用很多内存。</p>
+<h1 id="使用堆的其他场景">使用堆的其他场景</h1>
+<p>堆还擅长解决统计最大或者最小的问题，比如下面这个统计得奖次数得例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> heapq</span><br><span class="line">results=<span class="string">&quot;&quot;&quot;\</span></span><br><span class="line"><span class="string">Christania Williams      11.80</span></span><br><span class="line"><span class="string">Marie-Josee Ta Lou       10.86</span></span><br><span class="line"><span class="string">Elaine Thompson          10.71</span></span><br><span class="line"><span class="string">Tori Bowie               10.83</span></span><br><span class="line"><span class="string">Shelly-Ann Fraser-Pryce  10.86</span></span><br><span class="line"><span class="string">English Gardner          10.94</span></span><br><span class="line"><span class="string">Michelle-Lee Ahye        10.92</span></span><br><span class="line"><span class="string">Dafne Schippers          10.90</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line">top_3 = heapq.nsmallest(</span><br><span class="line">    <span class="number">3</span>,                                  <span class="comment"># 指示返回多少个元素</span></span><br><span class="line">    results.splitlines(),               <span class="comment"># 分割成数组，要比较的元素或数据集</span></span><br><span class="line">    key=<span class="keyword">lambda</span> x: <span class="built_in">float</span>(x.split()[-<span class="number">1</span>])  <span class="comment"># 确定如何比较元素的可调用函数</span></span><br><span class="line">)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;\n&quot;</span>.join(top_3))</span><br></pre></td></tr></table></figure>
+<p>输出如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Elaine Thompson          10.71</span><br><span class="line">Tori Bowie               10.83</span><br><span class="line">Marie-Josee Ta Lou       10.86</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/uploads/wechat-reward-image.png" alt="Scott 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/heapq/" rel="tag"># heapq</a>
+              <a href="/tags/queue/" rel="tag"># queue</a>
+              <a href="/tags/PQ/" rel="tag"># PQ</a>
+              <a href="/tags/heap/" rel="tag"># heap</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/article/eefff7f1.html" rel="prev" title="Python 什么是GIL锁">
+      <i class="fa fa-chevron-left"></i> Python 什么是GIL锁
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/article/35c1cbc9.html" rel="next" title="记录开源 BI 工具 Superset 的部署">
+      记录开源 BI 工具 Superset 的部署 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97"><span class="nav-number">1.</span> <span class="nav-text">优先队列</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8-heapq-%E6%A8%A1%E5%9D%97%E4%B8%AD%E4%BD%9C%E4%B8%BA%E5%88%97%E8%A1%A8%E7%9A%84%E5%A0%86"><span class="nav-number">2.</span> <span class="nav-text">在 heapq 模块中作为列表的堆</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E5%A0%86"><span class="nav-number">3.</span> <span class="nav-text">操作堆</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%A0%86%E7%9A%84%E5%85%B6%E4%BB%96%E5%9C%BA%E6%99%AF"><span class="nav-number">4.</span> <span class="nav-text">使用堆的其他场景</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Scott"
+      src="/uploads/instagram_profile_image.png">
+  <p class="site-author-name" itemprop="name">Scott</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">60</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">61</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wittyfans" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/wittyfans" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/wittyfans0" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;wittyfans0" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Scott</span>
+</div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz","app_key":"qKXpoqGbK1sdFYMiik7Evuan","server_url":"https://7sscl0n1.lc-cn-n1-shared.com","security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz',
+      appKey     : 'qKXpoqGbK1sdFYMiik7Evuan',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
