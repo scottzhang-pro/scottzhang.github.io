@@ -6,7 +6,7 @@
   <link href="https://scottzhang.pro/atom.xml" rel="self"/>
   
   <link href="https://scottzhang.pro/"/>
-  <updated>2022-03-21T13:21:11.961Z</updated>
+  <updated>2022-03-21T13:21:17.422Z</updated>
   <id>https://scottzhang.pro/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://scottzhang.pro/article/28c39ad6.html"/>
     <id>https://scottzhang.pro/article/28c39ad6.html</id>
     <published>2022-03-21T13:20:08.000Z</published>
-    <updated>2022-03-21T13:21:11.961Z</updated>
+    <updated>2022-03-21T13:21:17.422Z</updated>
     
     <content type="html"><![CDATA[<blockquote><p>Spark 概述、浅析、工具集与结构化API。</p></blockquote><span id="more"></span><h2 id="spark-指南">Spark 指南</h2><h2 id="大数据与-spark-概述">大数据与 Spark 概述</h2><p><img src="https://s2.loli.net/2022/03/21/FrOiSsICP6Lhz51.png" /></p><h2 id="spark-浅析">Spark 浅析</h2><figure><img src="https://s2.loli.net/2022/03/21/eO2kihfLurdR96C.png" alt="spark浅析1, 基本架构、多语言、API 以及 SparkSession" /><figcaption aria-hidden="true">spark浅析1, 基本架构、多语言、API 以及 SparkSession</figcaption></figure><figure><img src="https://s2.loli.net/2022/03/21/u2j5WVkyzgBhxdY.png" alt="spark 的主要架构" /><figcaption aria-hidden="true">spark 的主要架构</figcaption></figure><p>多语言支持中通过 spark 会话提交任务给执行器，具体如下图所示：</p><figure><img src="https://s2.loli.net/2022/03/21/AjqW67HLPRhaCTD.png" alt="多语言 API.png" /><figcaption aria-hidden="true">多语言 API.png</figcaption></figure><figure><img src="https://s2.loli.net/2022/03/21/QmZVLvBwWj9xGFe.png" alt="spark浅析2,数据分区、转换操作、惰性评估、动作操作与用户接口" /><figcaption aria-hidden="true">spark浅析2,数据分区、转换操作、惰性评估、动作操作与用户接口</figcaption></figure><h2 id="spark-工具集介绍">Spark 工具集介绍</h2><figure><img src="https://s2.loli.net/2022/03/21/8lsOzB4ejMPy1X7.png" alt="Spark 工具集.png" /><figcaption aria-hidden="true">Spark 工具集.png</figcaption></figure><figure><img src="https://s2.loli.net/2022/03/21/rojM52HmCB1wRge.png" alt="spark 工具集架构" /><figcaption aria-hidden="true">spark 工具集架构</figcaption></figure><h2 id="结构化-api">结构化 API</h2><figure><img src="https://s2.loli.net/2022/03/21/uvgWDohx7JceLrQ.png" alt="结构化 API" /><figcaption aria-hidden="true">结构化 API</figcaption></figure><p>结构化API指以下三种核心分布式集合类型的API： - Dataset类型。 - DataFrame类型。 - SQL表和视图。</p><p>结构化API是在编写大部分数据处理程序时会用到的基础抽象概念。</p><h3 id="结构化api的执行步骤">结构化API的执行步骤</h3><ul><li>编写DataFrame / Dataset / SQL代码。</li><li>如果代码能有效执行， Spark将其转换为一个逻辑执行计划（Logical Plan）。</li><li>Spark将此逻辑执行计划转化为一个物理执行计划（Physical Plan）， 检查可行的 优化策略，并在此过程中检查优化。</li><li>Spark在集群上执行该物理执行计划（RDD操作）。</li></ul><figure><img src="https://s2.loli.net/2022/03/21/GltsvRengH6C9QZ.png" alt="Catalyst优化器.png" /><figcaption aria-hidden="true">Catalyst优化器.png</figcaption></figure><blockquote><p>通过控制台提交给Spark，或者以一个Spark作业的形式提交。然后代码将交由Catalyst优化器决定如何执行， 并指定一个执行计划。 最后代码被运行， 得到的结果返回给用户。图4-1展示了整个过程。</p></blockquote><h3 id="逻辑计划">逻辑计划</h3><p><img src="https://s2.loli.net/2022/03/21/YEerSUfdGn7RLbx.png" /></p><blockquote><p>Spark使用catalog（所有表和DataFrame信息的存储库）在分析器中 解析列和表格。 如果目录中不存在所需的表或列名称， 分析器可能会拒绝该未解析的 逻辑计划。</p></blockquote><h3 id="物理计划">物理计划</h3><p><img src="https://s2.loli.net/2022/03/21/wlUpdFQYTNZ85oa.png" /></p><blockquote><p>在成功创建优化的逻辑计划后， Spark开始执行物理计划流程。物理规划产生一系列的RDD和转换操作。 这就是Spark被称为编译器的原因， 因为它 将对DataFrame、Dataset和SQL中的查询来作为你编译一系列RDD的转换操作。</p></blockquote><h3 id="执行">执行</h3><p>在选择一个物理计划时， Spark将所有代码运行在Spark的底层编程接口RDD上（第Ⅲ 部分将会介绍）。 Spark在运行时执行进一步优化， 生成可以在执行期间优化任务或 阶段的本地Java字节码，最终将结果返回给用户。</p>]]></content>
     
