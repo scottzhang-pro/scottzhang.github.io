@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"scottzhang.pro","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一些常用数据导入的代码示例与技巧。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pandas 数据导入">
+<meta property="og:url" content="https://scottzhang.pro/article/973c6fd9.html">
+<meta property="og:site_name" content="Scott&#39;s Blog">
+<meta property="og:description" content="一些常用数据导入的代码示例与技巧。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-05-17T01:56:08.000Z">
+<meta property="article:modified_time" content="2022-05-17T01:58:46.247Z">
+<meta property="article:author" content="Scott">
+<meta property="article:tag" content="Pandas">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://scottzhang.pro/article/973c6fd9.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Pandas 数据导入 | Scott's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Scott's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Scott's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学则不固, 知则不惑</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://scottzhang.pro/article/973c6fd9.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/instagram_profile_image.png">
+      <meta itemprop="name" content="Scott">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Scott's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Pandas 数据导入
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-17 09:56:08 / 修改时间：09:58:46" itemprop="dateCreated datePublished" datetime="2022-05-17T09:56:08+08:00">2022-05-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Pandas-%E7%B3%BB%E5%88%97/" itemprop="url" rel="index"><span itemprop="name">Pandas 系列</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/article/973c6fd9.html" class="post-meta-item leancloud_visitors" data-flag-title="Pandas 数据导入" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/article/973c6fd9.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/article/973c6fd9.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>一些常用数据导入的代码示例与技巧。</p>
+</blockquote>
+<span id="more"></span>
+<h3 id="从网络">从网络</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Import package</span></span><br><span class="line"><span class="keyword">from</span> urllib.request <span class="keyword">import</span> urlretrieve</span><br><span class="line"></span><br><span class="line"><span class="comment"># Import pandas</span></span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line"><span class="comment"># Assign url of file: url</span></span><br><span class="line">url = <span class="string">&#x27;https://you_url/you_file.csv&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Save file locally</span></span><br><span class="line">urlretrieve(url,<span class="string">&#x27;you_file.csv&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Read file into a DataFrame and print its head</span></span><br><span class="line">df = pd.read_csv(<span class="string">&#x27;you_file.csv&#x27;</span>, sep=<span class="string">&#x27;;&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(df.head())</span><br></pre></td></tr></table></figure>
+<h3 id="直接用pd读取">直接用PD读取</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Import packages</span></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line"><span class="comment"># Assign url of file: url</span></span><br><span class="line">url = <span class="string">&#x27;https://s3.amazonaws.com/assets.datacamp.com/production/course_1606/datasets/winequality-red.csv&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Read file into a DataFrame: df</span></span><br><span class="line">df = pd.read_csv(url,sep=<span class="string">&#x27;;&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Print the head of the DataFrame</span></span><br><span class="line"><span class="built_in">print</span>(df.head())</span><br><span class="line"></span><br><span class="line"><span class="comment"># Plot first column of df</span></span><br><span class="line">pd.DataFrame.hist(df.ix[:, <span class="number">0</span>:<span class="number">1</span>])</span><br><span class="line">plt.xlabel(<span class="string">&#x27;fixed acidity (g(tartaric acid)/dm$^3$)&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;count&#x27;</span>)</span><br><span class="line">plt.show()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="网络读取excel文件">网络读取excel文件</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Import package</span></span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line"><span class="comment"># Assign url of file: url</span></span><br><span class="line">url = <span class="string">&#x27;http://s3.amazonaws.com/assets.datacamp.com/course/importing_data_into_r/latitude.xls&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Read in all sheets of Excel file: xl</span></span><br><span class="line">xl = pd.read_excel(url,sheetname = <span class="literal">None</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Print the sheetnames to the shell</span></span><br><span class="line"><span class="built_in">print</span>(xl.keys())</span><br><span class="line"></span><br><span class="line"><span class="comment"># Print the head of the first sheet (using its name, NOT its index)</span></span><br><span class="line"><span class="built_in">print</span>(xl[<span class="string">&#x27;1700&#x27;</span>].head())</span><br></pre></td></tr></table></figure>
+<h3 id="从-json文件">从 Json文件</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Load JSON: json_data</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;a_movie.json&quot;</span>) <span class="keyword">as</span> json_file:</span><br><span class="line">    json_data = json.load(json_file)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Print each key-value pair in json_data</span></span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> json_data.keys():</span><br><span class="line">    <span class="built_in">print</span>(k + <span class="string">&#x27;: &#x27;</span>, json_data[k])</span><br></pre></td></tr></table></figure>
+<h3 id="从-api-请求-json">从 api 请求 json</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Import package</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># Assign URL to variable: url</span></span><br><span class="line">url = <span class="string">&#x27;http://www.omdbapi.com/?apikey=72bc447a&amp;t=social+network&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Package the request, send the request and catch the response: r</span></span><br><span class="line">r = requests.get(url)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Decode the JSON data into a dictionary: json_data</span></span><br><span class="line">json_data = r.json()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Print each key-value pair in json_data</span></span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> json_data.keys():</span><br><span class="line">    <span class="built_in">print</span>(k + <span class="string">&#x27;: &#x27;</span>, json_data[k])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="从-api-如维基百科">从 API 如:维基百科</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Import package</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># Assign URL to variable: url</span></span><br><span class="line">url = <span class="string">&#x27;https://en.wikipedia.org/w/api.php?action=query&amp;prop=extracts&amp;format=json&amp;exintro=&amp;titles=pizza&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Package the request, send the request and catch the response: r</span></span><br><span class="line">r = requests.get(url)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Decode the JSON data into a dictionary: json_data</span></span><br><span class="line">json_data = r.json()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Print the Wikipedia page extract</span></span><br><span class="line">pizza_extract = json_data[<span class="string">&#x27;query&#x27;</span>][<span class="string">&#x27;pages&#x27;</span>][<span class="string">&#x27;24768&#x27;</span>][<span class="string">&#x27;extract&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(pizza_extract)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="从-api-如-推特">从 API 如: 推特</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Import package</span></span><br><span class="line"><span class="keyword">import</span> tweepy</span><br><span class="line"></span><br><span class="line"><span class="comment"># Store OAuth authentication credentials in relevant variables</span></span><br><span class="line">access_token = <span class="string">&quot;&quot;</span></span><br><span class="line">access_token_secret = <span class="string">&quot;&quot;</span></span><br><span class="line">consumer_key = <span class="string">&quot;&quot;</span></span><br><span class="line">consumer_secret = <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Pass OAuth details to tweepy&#x27;s OAuth handler</span></span><br><span class="line">auth = tweepy.OAuthHandler(consumer_key, consumer_secret)</span><br><span class="line">auth.set_access_token(access_token,access_token_secret)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="条件导入">条件导入</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 跳过第一行，至需要第一和第三列</span></span><br><span class="line">data = np.loadtxt(file, delimiter=<span class="string">&#x27;\t&#x27;</span>, skiprows=<span class="number">1</span>, usecols=[<span class="number">0</span>,<span class="number">2</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># delimiter分隔符</span></span><br><span class="line">data = np.genfromtxt(<span class="string">&#x27;titanic.csv&#x27;</span>, delimiter=<span class="string">&#x27;,&#x27;</span>, names=<span class="literal">True</span>, dtype=<span class="literal">None</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># nrows，只需要前面5行，header只可以等于None，而不是Bool</span></span><br><span class="line">pd.read_csv(file,nrows=<span class="number">5</span>, header=<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="获取文件列表">获取文件列表</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line">wd = os.getcwd()</span><br><span class="line">os.listdir(wd)</span><br></pre></td></tr></table></figure>
+<h3 id="从-excel">从 excel</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Import pandas</span></span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line"><span class="comment"># Assign spreadsheet filename: file</span></span><br><span class="line">file = <span class="string">&#x27;battledeath.xlsx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Load spreadsheet: xl</span></span><br><span class="line">xl = pd.ExcelFile(file)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Print sheet names</span></span><br><span class="line"><span class="built_in">print</span>(xl.sheet_names)</span><br></pre></td></tr></table></figure>
+<h3 id="从-sas-文件">从 SAS 文件</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">From sas7bdat <span class="keyword">import</span> SAS7BDAT</span><br><span class="line"></span><br><span class="line">Data = pd.read_stata(<span class="string">&#x27;urbanpop.dta&#x27;</span>)</span><br><span class="line"><span class="comment"># sas文件变成dataframe</span></span><br><span class="line"><span class="keyword">with</span> SAS7BDAT(<span class="string">&#x27;sales.sas7bdat&#x27;</span>) <span class="keyword">as</span> file:</span><br><span class="line">    df_sas = file.to_data_frame()</span><br></pre></td></tr></table></figure>
+<h3 id="从-mat文件">从 mat文件</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Import package</span></span><br><span class="line"><span class="keyword">import</span> scipy.io</span><br><span class="line"></span><br><span class="line"><span class="comment"># Load MATLAB file: mat</span></span><br><span class="line">mat = scipy.io.loadmat(<span class="string">&#x27;albeck_gene_expression.mat&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Print the datatype type of mat</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(mat))</span><br></pre></td></tr></table></figure>
+<h3 id="从数据库">从数据库</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Import packages</span></span><br><span class="line"><span class="keyword">from</span> sqlalchemy <span class="keyword">import</span> create_engine</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create engine: engine</span></span><br><span class="line">engine = create_engine(<span class="string">&#x27;sqlite:///Chinook.sqlite&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Open engine connection: con</span></span><br><span class="line">con = engine.connect()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Perform query: rs</span></span><br><span class="line">rs = con.execute(<span class="string">&#x27;select * from Album&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Save results of the query to DataFrame: df</span></span><br><span class="line">df = pd.DataFrame(rs.fetchall())</span><br><span class="line"></span><br><span class="line"><span class="comment"># Close connection</span></span><br><span class="line">con.close()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Print head of DataFrame df</span></span><br><span class="line"><span class="built_in">print</span>(df.head())</span><br><span class="line">从DB导入指定条数据，重命名列名:</span><br><span class="line"><span class="keyword">with</span> engine.connect() <span class="keyword">as</span> con:</span><br><span class="line">    rs = con.execute(<span class="string">&#x27;SELECT LastName, Title FROM Employee&#x27;</span>)</span><br><span class="line">    df = pd.DataFrame(rs.fetchmany(size=<span class="number">3</span>))</span><br><span class="line">    df.columns = rs.keys()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Print the length of the DataFrame df</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(df))</span><br><span class="line"></span><br><span class="line"><span class="comment"># Print the head of the DataFrame df</span></span><br><span class="line"><span class="built_in">print</span>(df.head())</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="提高数据导入速度">提高数据导入速度</h3>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.kaggle.com/c/home-credit-default-risk/discussion/59575">Faster data loading with Pandas</a></li>
+<li><a target="_blank" rel="noopener" href="https://medium.com/@bobhaffner/gist-to-medium-test-db3d51b8ba7b">DataFrame IO Performance with Pandas, dask, fastparquet and HDF5</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/uploads/wechat-reward-image.png" alt="Scott 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Pandas/" rel="tag"># Pandas</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/article/6f1b3942.html" rel="prev" title="Pandas 安装">
+      <i class="fa fa-chevron-left"></i> Pandas 安装
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/article/706b7b04.html" rel="next" title="Pandas 基础操作">
+      Pandas 基础操作 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E7%BD%91%E7%BB%9C"><span class="nav-number">1.</span> <span class="nav-text">从网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E7%94%A8pd%E8%AF%BB%E5%8F%96"><span class="nav-number">2.</span> <span class="nav-text">直接用PD读取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E8%AF%BB%E5%8F%96excel%E6%96%87%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">网络读取excel文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E-json%E6%96%87%E4%BB%B6"><span class="nav-number">4.</span> <span class="nav-text">从 Json文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E-api-%E8%AF%B7%E6%B1%82-json"><span class="nav-number">5.</span> <span class="nav-text">从 api 请求 json</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E-api-%E5%A6%82%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91"><span class="nav-number">6.</span> <span class="nav-text">从 API 如:维基百科</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E-api-%E5%A6%82-%E6%8E%A8%E7%89%B9"><span class="nav-number">7.</span> <span class="nav-text">从 API 如: 推特</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E5%AF%BC%E5%85%A5"><span class="nav-number">8.</span> <span class="nav-text">条件导入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E6%96%87%E4%BB%B6%E5%88%97%E8%A1%A8"><span class="nav-number">9.</span> <span class="nav-text">获取文件列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E-excel"><span class="nav-number">10.</span> <span class="nav-text">从 excel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E-sas-%E6%96%87%E4%BB%B6"><span class="nav-number">11.</span> <span class="nav-text">从 SAS 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E-mat%E6%96%87%E4%BB%B6"><span class="nav-number">12.</span> <span class="nav-text">从 mat文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">13.</span> <span class="nav-text">从数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E9%AB%98%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5%E9%80%9F%E5%BA%A6"><span class="nav-number">14.</span> <span class="nav-text">提高数据导入速度</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Scott"
+      src="/uploads/instagram_profile_image.png">
+  <p class="site-author-name" itemprop="name">Scott</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">88</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">90</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wittyfans" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/wittyfans" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/wittyfans0" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;wittyfans0" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Scott</span>
+</div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz","app_key":"qKXpoqGbK1sdFYMiik7Evuan","server_url":"https://7sscl0n1.lc-cn-n1-shared.com","security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz',
+      appKey     : 'qKXpoqGbK1sdFYMiik7Evuan',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

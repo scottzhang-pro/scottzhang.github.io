@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"scottzhang.pro","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="这篇文章将带你安装 Python 环境以使用 Pandas。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pandas 安装">
+<meta property="og:url" content="https://scottzhang.pro/article/6f1b3942.html">
+<meta property="og:site_name" content="Scott&#39;s Blog">
+<meta property="og:description" content="这篇文章将带你安装 Python 环境以使用 Pandas。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://docs.anaconda.com/_images/win-install-destination.png">
+<meta property="og:image" content="https://docs.anaconda.com/_images/win-install-options.png">
+<meta property="article:published_time" content="2022-05-17T00:07:25.000Z">
+<meta property="article:modified_time" content="2022-05-17T03:45:13.580Z">
+<meta property="article:author" content="Scott">
+<meta property="article:tag" content="Pandas">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://docs.anaconda.com/_images/win-install-destination.png">
+
+<link rel="canonical" href="https://scottzhang.pro/article/6f1b3942.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Pandas 安装 | Scott's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Scott's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Scott's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学则不固, 知则不惑</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://scottzhang.pro/article/6f1b3942.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/instagram_profile_image.png">
+      <meta itemprop="name" content="Scott">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Scott's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Pandas 安装
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-17 08:07:25 / 修改时间：11:45:13" itemprop="dateCreated datePublished" datetime="2022-05-17T08:07:25+08:00">2022-05-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Pandas-%E7%B3%BB%E5%88%97/" itemprop="url" rel="index"><span itemprop="name">Pandas 系列</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/article/6f1b3942.html" class="post-meta-item leancloud_visitors" data-flag-title="Pandas 安装" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/article/6f1b3942.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/article/6f1b3942.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>这篇文章将带你安装 Python 环境以使用 Pandas。</p>
+</blockquote>
+<span id="more"></span>
+<h1 id="环境配置">环境配置</h1>
+<h2 id="检查是否已安装-python">检查是否已安装 Python</h2>
+<p>检查你的 Python 版本:</p>
+<ul>
+<li><code>python --version</code></li>
+<li><code>python -V</code></li>
+</ul>
+<p>检查你的 Python 安装路径(用户):</p>
+<ul>
+<li><code>where.exe python</code></li>
+</ul>
+<p>小技巧: 打开你的 PowerShell:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 敲击电脑上的 Win 键.</span><br><span class="line">2. 键入 PowerShell.</span><br><span class="line">3. 敲击回车 (Enter)键.</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>你也可以使用 cmd.exe 或者是 <a target="_blank" rel="noopener" href="https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk701?activetab=pivot:overviewtab">Windows Terminal</a>.</p>
+</blockquote>
+<h2 id="windows-安装-python-的几种方式">Windows 安装 Python 的几种方式</h2>
+<ul>
+<li>微软官方商店, 微软公司提供的,主要面向学生与 python 初学者, 公司环境下无法从微软商店下载软件.</li>
+<li>Windows Subsystem for Linux (WSL), 让你在 Windows 上可以直接运行 Linux, 公司环境下无法配置</li>
+<li>Python 完整安装包, 推荐.(<a target="_blank" rel="noopener" href="https://www.python.org/downloads/windows/">下载地址</a>)</li>
+<li>Anaconda, 一个开源的Python发行版本，其包含了conda、Python等180多个科学包及其依赖项, 推荐.</li>
+</ul>
+<p>推荐使用 Anaconda.</p>
+<h2 id="如何安装-anaconda">如何安装 Anaconda</h2>
+<ol type="1">
+<li>打开安装包</li>
+</ol>
+<p><img src="https://docs.anaconda.com/_images/win-install-destination.png" /></p>
+<ol start="2" type="1">
+<li>添加到环境变量</li>
+</ol>
+<p><img src="https://docs.anaconda.com/_images/win-install-options.png" /></p>
+<p>关于安装选项:</p>
+<ul>
+<li>add Anaconda3 to my PATH environment variable, 会影响其他依赖 python 的软件,根据自己的需要选择</li>
+<li>Register Anaconda3 as my default Python x, 根据自己的需要选择</li>
+</ul>
+<p>关于安装版本, 32 还是 64? 这取决于你机器的处理器的配置, 记住64位机器可以处理32位程序,反之则不行.</p>
+<p>Anaconda <a target="_blank" rel="noopener" href="https://docs.anaconda.com/anaconda/install/windows/">Windows 官方安装指南</a></p>
+<h2 id="如何管理-python-运行环境">如何管理 Python 运行环境</h2>
+<h3 id="为什么要管理环境">为什么要管理环境</h3>
+<ul>
+<li>场景 1: 你的同事给你一份代码, Ta 基于 Python 3.6 写的, Pandas 1.0.1 版本, 你的版本过低或者过高导致无法运行</li>
+<li>场景2: 你看到一个不错的 Python 包, 但是安装它会讲你目前的 Pandas 降级, 但是降级又会影响你平时的工作环境</li>
+<li>场景3: 你需要部署你的工具,你想创建一个完全干净的环境来测试部署流程, 测试程序依赖的包是否可以工作</li>
+</ul>
+<h3 id="管理环境的工具">管理环境的工具</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Python Version</th>
+<th>Dependency Management</th>
+<th>Virtual Environment</th>
+<th>Environment Reproducibility</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>pyenv</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr class="even">
+<td>venv + pip</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr class="odd">
+<td>venv + pip-tools</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td>Poetry</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr class="odd">
+<td>Pipenv</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td>Docker</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr class="odd">
+<td>Conda</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+</tbody>
+</table>
+<h3 id="使用-conda">使用 Conda</h3>
+<p>对于开发者来说, 电脑上有时候需要有多个 python 环境, 可以使用 Conda 进行来管理 Python 的环境与包, Conda 可以帮你创建、复制、克隆、管理一个全新隔离的环境, 同时也可以用来安装包, 它既具有pip的包管理能力，同时也具有vitualenv的环境管理功能 ，因此在功能上Conda可以看作是pip 和 vitualenv 的组合。</p>
+<p>参考 <a target="_blank" rel="noopener" href="https://docs.conda.io/projects/conda/en/4.6.0/_downloads/52a95608c49671267e40c689e0bc00ca/conda-cheatsheet.pdf">Conda CheatSheet</a></p>
+<h2 id="如何安装-python-包">如何安装 Python 包</h2>
+<h3 id="python-装包的选择">Python 装包的选择</h3>
+<ul>
+<li>pip</li>
+<li>conda</li>
+<li>其他略过</li>
+</ul>
+<h3 id="区别是什么">区别是什么?</h3>
+<ul>
+<li>包仓库不同, pip 可以找到, conda 不一定有</li>
+<li>Pip安装Python包，而conda安装包可能包含用任何语言编写的软件的包</li>
+<li>conda 会帮你解决包之间的依赖冲突</li>
+<li>从使用角度来说, conda 比较慢 (可以考虑 <a target="_blank" rel="noopener" href="https://mamba.readthedocs.io/en/latest/">Mamba</a>, 一个旨在替代 Conda 的工具)</li>
+</ul>
+<h3 id="使用-conda-1">使用 Conda</h3>
+<ul>
+<li>搜索包: <code>conda search PACKAGENAME</code></li>
+<li>安装包: <code>conda install PACKAGENAME</code></li>
+<li>更新包: <code>conda update PACKAGENAME</code></li>
+<li>查看已安装的包: <code>conda list</code></li>
+<li>卸载包: <code>conda remove PACKAGENAME</code></li>
+</ul>
+<h3 id="使用-pip">使用 Pip</h3>
+<ul>
+<li>搜索包: <code>pip search</code>, currently disabled</li>
+<li>安装包: <code>pip install PACKAGENAME</code></li>
+<li>更新包: <code>pip install --upgrade PACKAGENAME</code></li>
+<li>查看已安装包: <code>pip list</code></li>
+<li>卸载包: <code>pip uninstall PACKAGENAME</code></li>
+</ul>
+<h3 id="在-nielseniq-装包">在 NielsenIQ 装包</h3>
+<ul>
+<li>因为众所周知的原因, 国内外网经常抽风,而 pip 和 conda 下载包默认都是从国外的服务器下载</li>
+<li>为了解决这个问题,国内有一些高等院校和知名企业免费托管了很多包资源,只需要将下载服务器更改为国内地址即可加速包的下载</li>
+<li>可以使用清华大学开源软件镜像站来加速, 你也可以使用其他的镜像站
+<ul>
+<li><a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/help/pypi/">pip</a></li>
+<li><a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/help/anaconda/">anaconda</a></li>
+</ul></li>
+</ul>
+<h2 id="在哪里编写代码">在哪里编写代码?</h2>
+<h3 id="ides-还是代码编辑器">IDEs 还是代码编辑器?</h3>
+<p>IDE (or Integrated Development Environment) 是一个专注于软件开发的程序, 它通常包含了许多软件开发的工具集, 例如:</p>
+<ul>
+<li>处理代码的编辑器(如高亮代码, 自动补全)</li>
+<li>编译、执行, debug 工具</li>
+<li>或有版本控制的工具</li>
+<li>大部分IDE支持多种语言, 或是拥有更多的功能(也有专门为某种语言开发的IDE, 如针对 Golang 的 Goland, Python 的 Pycharm)</li>
+</ul>
+<p>代码编辑器或者说文本编辑器, 大部分都有代码高亮、格式化的功能, 一些优秀的代码编辑器还可以通过插件实现版本控制、多种语言的支持.</p>
+<h3 id="常用-ides-和代码编辑器">常用 IDEs 和代码编辑器</h3>
+<p>IDEs: - Visual Studio, 微软开发的 IDEs, 特性丰富 - Eclipse + PyDev, 知名 java 编辑器 Eclipse 针对 Python 出的版本</p>
+<p>代码编辑器: - Sublime Text, Google 工程师开发的梦想中的编辑器 - Visual Studio Code - Atom, 全平台支持的代码编辑器 - GNU Emacs, Vi / Vim</p>
+<p>针对 Python 的 IDEs:</p>
+<ul>
+<li>PyCharm, 最优秀的 Python IDE 之一, 有付费版和社区免费版</li>
+<li>Spyder, 为 data science 工作流程优化的 IDE, Anaconda 附带.</li>
+<li>Thonny, 为初学者准备的 IDE</li>
+</ul>
+<h3 id="使用-vs-code">使用 VS Code</h3>
+<ul>
+<li>微软为 VS Code 提供了官方的 Python 工具包</li>
+<li>VS Code 也支持编辑 Jupyter-Notebook</li>
+<li>丰富的插件，让你可以许多可定制化的功能，如支持 Git 版本控制、远程编辑服务器上的文件、Debug Jupyter-Notebook 的代码等</li>
+</ul>
+<h3 id="使用-jupyter-notebook-lab">使用 Jupyter Notebook &amp; Lab</h3>
+<p>介绍：</p>
+<ul>
+<li>Jupyter Notebook 交互式笔记本，支持运行40 多种编程语言，代码基于 Cell 组织，按 Cell 运行，所见即所得，主要用户是数据科学家</li>
+<li>Jupiter lab 在 Notebook 的基础上，拥有更灵活的布局、可拖动的 Cell、跨 Notebook 之间的编辑，集成终端等丰富的功能</li>
+</ul>
+<p>启动：</p>
+<ul>
+<li>直接通过应用程序中的 jupyter notebook 打开，默认工作目录是 <code>用户主目录/</code></li>
+<li>若需指定工作目录，可以打开 Powershell，切换到你的目标工作目录，再输入 jupyter-notebook 并回车（jupyter-lab 同理）</li>
+<li>若提示 port error，需指定端口，如 <code>jupyter-notebook --port 8889</code></li>
+<li>Jupyter 的工作环境可以在你使用 Conda 创建的环境中切换</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/uploads/wechat-reward-image.png" alt="Scott 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Pandas/" rel="tag"># Pandas</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/article/347c867a.html" rel="prev" title="算法题: 两数之和与三数之和">
+      <i class="fa fa-chevron-left"></i> 算法题: 两数之和与三数之和
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/article/973c6fd9.html" rel="next" title="Pandas 数据导入">
+      Pandas 数据导入 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="nav-number">1.</span> <span class="nav-text">环境配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5%E6%98%AF%E5%90%A6%E5%B7%B2%E5%AE%89%E8%A3%85-python"><span class="nav-number">1.1.</span> <span class="nav-text">检查是否已安装 Python</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#windows-%E5%AE%89%E8%A3%85-python-%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="nav-number">1.2.</span> <span class="nav-text">Windows 安装 Python 的几种方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%AE%89%E8%A3%85-anaconda"><span class="nav-number">1.3.</span> <span class="nav-text">如何安装 Anaconda</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E7%AE%A1%E7%90%86-python-%E8%BF%90%E8%A1%8C%E7%8E%AF%E5%A2%83"><span class="nav-number">1.4.</span> <span class="nav-text">如何管理 Python 运行环境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%AE%A1%E7%90%86%E7%8E%AF%E5%A2%83"><span class="nav-number">1.4.1.</span> <span class="nav-text">为什么要管理环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E7%8E%AF%E5%A2%83%E7%9A%84%E5%B7%A5%E5%85%B7"><span class="nav-number">1.4.2.</span> <span class="nav-text">管理环境的工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-conda"><span class="nav-number">1.4.3.</span> <span class="nav-text">使用 Conda</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%AE%89%E8%A3%85-python-%E5%8C%85"><span class="nav-number">1.5.</span> <span class="nav-text">如何安装 Python 包</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#python-%E8%A3%85%E5%8C%85%E7%9A%84%E9%80%89%E6%8B%A9"><span class="nav-number">1.5.1.</span> <span class="nav-text">Python 装包的选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.5.2.</span> <span class="nav-text">区别是什么?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-conda-1"><span class="nav-number">1.5.3.</span> <span class="nav-text">使用 Conda</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-pip"><span class="nav-number">1.5.4.</span> <span class="nav-text">使用 Pip</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8-nielseniq-%E8%A3%85%E5%8C%85"><span class="nav-number">1.5.5.</span> <span class="nav-text">在 NielsenIQ 装包</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E5%93%AA%E9%87%8C%E7%BC%96%E5%86%99%E4%BB%A3%E7%A0%81"><span class="nav-number">1.6.</span> <span class="nav-text">在哪里编写代码?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ides-%E8%BF%98%E6%98%AF%E4%BB%A3%E7%A0%81%E7%BC%96%E8%BE%91%E5%99%A8"><span class="nav-number">1.6.1.</span> <span class="nav-text">IDEs 还是代码编辑器?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8-ides-%E5%92%8C%E4%BB%A3%E7%A0%81%E7%BC%96%E8%BE%91%E5%99%A8"><span class="nav-number">1.6.2.</span> <span class="nav-text">常用 IDEs 和代码编辑器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-vs-code"><span class="nav-number">1.6.3.</span> <span class="nav-text">使用 VS Code</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-jupyter-notebook-lab"><span class="nav-number">1.6.4.</span> <span class="nav-text">使用 Jupyter Notebook &amp; Lab</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Scott"
+      src="/uploads/instagram_profile_image.png">
+  <p class="site-author-name" itemprop="name">Scott</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">88</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">90</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wittyfans" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/wittyfans" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/wittyfans0" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;wittyfans0" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Scott</span>
+</div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz","app_key":"qKXpoqGbK1sdFYMiik7Evuan","server_url":"https://7sscl0n1.lc-cn-n1-shared.com","security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz',
+      appKey     : 'qKXpoqGbK1sdFYMiik7Evuan',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

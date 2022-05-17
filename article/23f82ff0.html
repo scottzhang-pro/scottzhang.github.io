@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"scottzhang.pro","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一些数据处理小技巧，不成体系。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pandas 数据处理技巧">
+<meta property="og:url" content="https://scottzhang.pro/article/23f82ff0.html">
+<meta property="og:site_name" content="Scott&#39;s Blog">
+<meta property="og:description" content="一些数据处理小技巧，不成体系。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2022/05/17/mxKPnu3bCTiINlq.png">
+<meta property="og:image" content="https://s2.loli.net/2022/05/17/6aNR4GMCXSbZiWg.png">
+<meta property="og:image" content="https://s2.loli.net/2022/05/17/LauhgMiFtOXPjrU.png">
+<meta property="og:image" content="https://s2.loli.net/2022/05/17/GTyqipAekfHo2wP.png">
+<meta property="og:image" content="https://s2.loli.net/2022/05/17/MPx9yEOuhASFN2C.png">
+<meta property="og:image" content="https://s2.loli.net/2022/05/17/u7imoNkQeMXAsaB.png">
+<meta property="og:image" content="https://s2.loli.net/2022/05/17/4Ej1WL9nxTOyXPC.png">
+<meta property="og:image" content="https://s2.loli.net/2022/05/17/uz2aefXxApK1VvO.png">
+<meta property="article:published_time" content="2022-05-17T03:31:37.000Z">
+<meta property="article:modified_time" content="2022-05-17T03:45:44.694Z">
+<meta property="article:author" content="Scott">
+<meta property="article:tag" content="Pandas">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/05/17/mxKPnu3bCTiINlq.png">
+
+<link rel="canonical" href="https://scottzhang.pro/article/23f82ff0.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Pandas 数据处理技巧 | Scott's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Scott's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Scott's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学则不固, 知则不惑</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://scottzhang.pro/article/23f82ff0.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/instagram_profile_image.png">
+      <meta itemprop="name" content="Scott">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Scott's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Pandas 数据处理技巧
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-17 11:31:37 / 修改时间：11:45:44" itemprop="dateCreated datePublished" datetime="2022-05-17T11:31:37+08:00">2022-05-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Pandas-%E7%B3%BB%E5%88%97/" itemprop="url" rel="index"><span itemprop="name">Pandas 系列</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/article/23f82ff0.html" class="post-meta-item leancloud_visitors" data-flag-title="Pandas 数据处理技巧" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/article/23f82ff0.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/article/23f82ff0.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>一些数据处理小技巧，不成体系。</p>
+</blockquote>
+<span id="more"></span>
+<h3 id="了解文件">了解文件</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 读取数据</span></span><br><span class="line"><span class="comment"># csv, excel, txt, etc...</span></span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line">sndata = pd.read_csv(<span class="string">&quot;path&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">## 查看数据结构和类型</span></span><br><span class="line">sndata.dtypes</span><br><span class="line"></span><br><span class="line"><span class="comment">## 查看index</span></span><br><span class="line">sndata.index</span><br><span class="line">&gt; index是可以定义的，默认是<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,也可以是a,b,c</span><br><span class="line"></span><br><span class="line"><span class="comment">## 查看列名</span></span><br><span class="line">sndata.columns</span><br><span class="line"></span><br><span class="line"><span class="comment">## 查看缺失的数据</span></span><br><span class="line">sndata.isnull()</span><br><span class="line"></span><br><span class="line"><span class="comment">## 转换成DataFrame</span></span><br><span class="line">pd.DataFrame(sndata)</span><br><span class="line">&gt; The resulting DataFrame will have its index assigned automatically <span class="keyword">as</span> <span class="keyword">with</span> Series, <span class="keyword">and</span></span><br><span class="line">the columns are placed <span class="keyword">in</span> <span class="built_in">sorted</span> order:</span><br><span class="line"></span><br><span class="line"><span class="comment">## 去重复</span></span><br><span class="line">sndata.duplicated([<span class="string">&#x27;MonitorFA&#x27;</span>])</span><br><span class="line">sndata[sndata.duplicated([<span class="string">&#x27;ComputerSN&#x27;</span>],keep = <span class="literal">False</span>)]</span><br><span class="line">Drop_duplicates当中的参数keep=<span class="literal">False</span>，意为重复项全部删除，它还有keep=<span class="string">&quot;first&quot;</span>与keep=<span class="string">&quot;last&quot;</span>，分别对应在有多项重复时，保留第一项（或最后一项）</span><br><span class="line"></span><br><span class="line"><span class="comment">## 找出两个表不一样的地方</span></span><br><span class="line">c=a.append(b)</span><br><span class="line">c.drop_duplicates(keep=<span class="literal">False</span>,inplace=<span class="literal">True</span>)</span><br><span class="line">c.reset_index()</span><br><span class="line"></span><br><span class="line"><span class="comment">## 删除 NA</span></span><br><span class="line">df.dropna(axis=‘columns’,how=‘<span class="built_in">all</span>’)</span><br></pre></td></tr></table></figure>
+<h3 id="检测文件是否有-header">检测文件是否有 Header</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> csv</span><br><span class="line">path = <span class="string">r&#x27;C:\Users\scott\Documents\Test_Data\distribution\myfile.csv&#x27;</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(path, newline=<span class="string">&#x27;&#x27;</span>) <span class="keyword">as</span> csvfile:</span><br><span class="line">    dialect = csv.Sniffer().has_header(csvfile.read(<span class="number">1024</span>))</span><br><span class="line"><span class="built_in">print</span>(dialect)</span><br></pre></td></tr></table></figure>
+<h3 id="大数据集处理">大数据集处理</h3>
+<ol type="1">
+<li>回收垃圾</li>
+<li>提前设置好 dtype</li>
+<li>选择有限的行，列</li>
+<li>使用 chunk 分批导入、处理</li>
+<li>Tips 查看内存消耗: <code>train.memory_usage(deep=True) * 1e-6</code></li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#import some file</span></span><br><span class="line">temp = pd.read_csv(<span class="string">&#x27;../input/train_sample.csv&#x27;</span>)</span><br><span class="line"><span class="comment">#do something to the file</span></span><br><span class="line">temp[<span class="string">&#x27;os&#x27;</span>] = temp[<span class="string">&#x27;os&#x27;</span>].astype(<span class="string">&#x27;str&#x27;</span>)</span><br><span class="line"><span class="comment">#delete when no longer needed</span></span><br><span class="line"><span class="keyword">del</span> temp</span><br><span class="line"><span class="comment">#collect residual garbage</span></span><br><span class="line">gc.collect()</span><br></pre></td></tr></table></figure>
+<p>参考：https://www.kaggle.com/rohanrao/tutorial-on-reading-large-datasets#Large-datasets</p>
+<h3 id="tidy-data-原则">Tidy Data 原则</h3>
+<ol type="1">
+<li>Columns represent separate variables</li>
+<li>Raws represent individual observations</li>
+<li>Observational units from tables</li>
+</ol>
+<h3 id="cut-方法">Cut 方法</h3>
+<p>用于检测数据的分类，比如19,20,35 对应人员年龄的分层。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line">pd.cut(a,b)</span><br><span class="line"></span><br><span class="line">a: data</span><br><span class="line">b:category info</span><br></pre></td></tr></table></figure>
+<h3 id="时间日期处理">时间日期处理</h3>
+<blockquote>
+<p>内容太多，只记录了个人的笔记。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 时间切片</span></span><br><span class="line">ts = pd.to_datetime(<span class="string">&#x27;///&#x27;</span>)</span><br><span class="line">ufo.loc([ufo.time &gt;= ts],:)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 星期、年、等计算</span></span><br><span class="line">ufo.time.dt.dayofyear.head()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 最新时间、计算</span></span><br><span class="line">ufo.time.<span class="built_in">max</span>() - ufo.time.<span class="built_in">min</span>() </span><br><span class="line"></span><br><span class="line"><span class="comment"># 日期转换时间段</span></span><br><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> timedelta</span><br><span class="line"><span class="keyword">from</span> calendar <span class="keyword">import</span> monthrange</span><br><span class="line"></span><br><span class="line">start = datetime.strptime(<span class="string">&#x27;20201402&#x27;</span>,<span class="string">&#x27;%Y14%m&#x27;</span>)</span><br><span class="line">_,days = monthrange(start.year, start.month)</span><br><span class="line">end_str = <span class="string">f&#x27;<span class="subst">&#123;start.year&#125;</span>-<span class="subst">&#123;start.month&#125;</span>-<span class="subst">&#123;days&#125;</span>&#x27;</span></span><br><span class="line">end = datetime.strptime(end_str,<span class="string">&#x27;%Y-%m-%d&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="category-datatype">Category Datatype</h3>
+<ul>
+<li>object 通常是 string，这个object指向本来的python 的list或者dict对象</li>
+<li>memory usage xxx+ KB, +的意思是最少需要这么多空间去存储这些引用</li>
+<li>drinks.info(memory_usage='deep') ： 查看真实的空间需求</li>
+<li>每一列需要的空间: drinks.memory_usage(deep=True)</li>
+</ul>
+<h3 id="append-和-concat">append 和 concat</h3>
+<p>对于Series：</p>
+<ul>
+<li>append会将index直接加上去，索引还是以前的，如果按照索引去选择，可能会返回多个数据, 最好在 append 后加上 resetindex</li>
+<li>concat默认会重设索引，也可以使用ignore_index保留索引</li>
+</ul>
+<p>对于DataFrame：</p>
+<ul>
+<li>append：如果列名字一样，直接在后面添加，如果不一样，增加相应的列，填充空值。</li>
+<li>concat：指定axis=0，则效果和append一样，axis=1，会合并值一样的行</li>
+</ul>
+<p>append和concat操作中 index的变化:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># concat直接将两份数据合并到一起</span></span><br><span class="line"><span class="comment"># 如果你的两份数据分别是13年和14年的，你想要添加索引将其分开，可以使用：</span></span><br><span class="line">rain1314 = pd.concat([rain2013, rain2014], keys=[<span class="number">2013</span>, <span class="number">2014</span>], axis=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这样是以row名来分类，当然也可以用column名来分类：</span></span><br><span class="line">rain1314 = pd.concat([rain2013, rain2014], keys=[<span class="number">2013</span>, <span class="number">2014</span>], axis=<span class="string">&#x27;columns&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 合并两个dataframe不仅可以从数组中构造，也可以从dict中</span></span><br><span class="line"><span class="comment"># 这样就不必后期指定key的值了：</span></span><br><span class="line">rain_dict = &#123;<span class="number">2013</span>: rain2013, <span class="number">2014</span>: rain2014&#125; </span><br><span class="line">rain1314 = pd.concat(rain_dict, axis=<span class="string">&#x27;columns&#x27;</span>) </span><br></pre></td></tr></table></figure>
+<p>对于 join:</p>
+<ul>
+<li>inner join, 把不同表中，索引名字一样的行的列合并，如果某些列没有的，则过滤掉这一行。</li>
+<li>outer join, 把两个表合并，所有索引都合并，如果某些列没有值的，填充值为nanaxis = 1或者0, 对列或者行操作</li>
+</ul>
+<h3 id="merge">Merge</h3>
+<p>merge默认指定的列来合并两个表的其他列，默认根据 index。</p>
+<p>如果类似多索引的两个表，索引部分的值无法一一对应，那么就需要指定根据哪一列来merge，如果只指定了一列，那么肯定会有两个表都对应同一列数据的情况出现，可以用suffixes参数，来对这些列进行区分（一般是根据表名），当然也可以直接指定多个列来merge。</p>
+<p>一般默认会使用index去merge，但更多的是使用lefton和righton参数来指定左右两个表中的列来merge。</p>
+<h3 id="从多标签中切分值">从多标签中切分值</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">idx = pd.IndexSlice</span><br><span class="line">slice_2_8 = february.loc[<span class="string">&#x27;2015-2-2&#x27;</span>:<span class="string">&#x27;2015-2-8&#x27;</span>, idx[:, <span class="string">&#x27;Company&#x27;</span>]]</span><br></pre></td></tr></table></figure>
+<h3 id="多列操作">多列操作</h3>
+<p>从多列创建日期</p>
+<p><img src="https://s2.loli.net/2022/05/17/mxKPnu3bCTiINlq.png" /></p>
+<p>批量转换列的数据类型</p>
+<p><img src="https://s2.loli.net/2022/05/17/6aNR4GMCXSbZiWg.png" /></p>
+<p>批量对列使用聚合函数</p>
+<p><img src="https://s2.loli.net/2022/05/17/LauhgMiFtOXPjrU.png" /></p>
+<p>批量重命名列</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">df.rename(columns = &#123;<span class="string">&#x27;oldname&#x27;</span>:<span class="string">&#x27;new_name&#x27;</span>&#125;,inplace=<span class="literal">True</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="避免赋值出现-warning">避免赋值出现 warning</h3>
+<p><img src="https://s2.loli.net/2022/05/17/GTyqipAekfHo2wP.png" /></p>
+<h3 id="关闭科学记数法">关闭科学记数法</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># https://stackoverflow.com/questions/21137150/format-suppress-scientific-notation-from-python-pandas-aggregation-results</span></span><br><span class="line">pd.set_option(<span class="string">&#x27;display.float_format&#x27;</span>, <span class="keyword">lambda</span> x: <span class="string">&#x27;%.3f&#x27;</span> % x)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置千分符</span></span><br><span class="line">pd.set_option(<span class="string">&#x27;display.float_format&#x27;</span>, <span class="keyword">lambda</span> x:<span class="string">&#x27;&#123;:,.0f&#125;&#x27;</span>.<span class="built_in">format</span>(x))</span><br></pre></td></tr></table></figure>
+<h3 id="by-行修改值">By 行修改值</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># https://stackoverflow.com/questions/23330654/update-a-dataframe-in-pandas-while-iterating-row-by-row</span></span><br><span class="line"><span class="keyword">for</span> row <span class="keyword">in</span> df.itertuples():</span><br><span class="line">    <span class="keyword">if</span> &lt;something&gt;:</span><br><span class="line">        df.at[row.Index, <span class="string">&#x27;ifor&#x27;</span>] = x</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        df.at[row.Index, <span class="string">&#x27;ifor&#x27;</span>] = x</span><br><span class="line">df.loc[row.Index, <span class="string">&#x27;ifor&#x27;</span>] = x</span><br></pre></td></tr></table></figure>
+<h3 id="pd.iterrows-的限制">pd.iterrows 的限制</h3>
+<blockquote>
+<p>pd.DataFrame.iterrows you are iterating through rows as Series. But these are not the Series that the data frame is storing and so they are new Series that are created for you while you iterate.</p>
+</blockquote>
+<p>Refer <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/23330654/update-a-dataframe-in-pandas-while-iterating-row-by-row">this</a></p>
+<h3 id="pd.xs-方法">pd.xs 方法</h3>
+<p>多个 index 取值，但不能用来设置值，默认它返回原数据中的一份 copy。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># by default, returns a new dataframe with a copy of the data</span></span><br><span class="line">df.xs(<span class="string">&#x27;C&#x27;</span>) </span><br></pre></td></tr></table></figure>
+<p>Refer <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/13842088/set-value-for-particular-cell-in-pandas-dataframe-using-index">this</a></p>
+<h3 id="理解-pandas-的-axis">理解 Pandas 的 Axis</h3>
+<p>对于 Dataframe</p>
+<ul>
+<li>“axis 0” represents rows direction and “axis 1” represents columns direction</li>
+<li>可以使用 “index” 与 “row” 代表 0； “column” 代表 1</li>
+<li>Sum 应用到 “axis 0”，意味着 sum 每列的结果</li>
+<li>Sum 应用到 “axis 1”，意味着 sum 每行的结果</li>
+</ul>
+<p><img src="https://s2.loli.net/2022/05/17/MPx9yEOuhASFN2C.png" /></p>
+<blockquote>
+<p>dropna 可以默认是丢弃有 na 值的行，如果你需要丢弃有 na 值的列，将 axis 设置为 1 即可。</p>
+</blockquote>
+<p>对于 Series</p>
+<blockquote>
+<p>Series and DataFrame share the same direction for “axis 0”</p>
+</blockquote>
+<p><img src="https://s2.loli.net/2022/05/17/u7imoNkQeMXAsaB.png" /></p>
+<h3 id="提高-dataframe-遍历速度">提高 Dataframe 遍历速度</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># For 循环，iloc 访问 df : 2.65 秒</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loop_with_for</span>(<span class="params">df</span>):</span></span><br><span class="line">    temp = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> index <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(df)):</span><br><span class="line">        temp += df[<span class="string">&#x27;A&#x27;</span>].iloc[index] + df[<span class="string">&#x27;B&#x27;</span>].iloc[index]</span><br><span class="line">    <span class="keyword">return</span> temp</span><br><span class="line"></span><br><span class="line"><span class="comment"># For 循环，df.iterrows 访问 df：12.4 秒, 会花费大量时间在</span></span><br><span class="line"><span class="comment"># 创建 series 对象（且不会保留 dtype，如果需要建议使用 itertuples）</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loop_with_iterrows</span>(<span class="params">df</span>):</span></span><br><span class="line">    temp = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> _, row <span class="keyword">in</span> df.iterrows():</span><br><span class="line">            temp += row.A + row.B</span><br><span class="line">    <span class="keyword">return</span> temp</span><br><span class="line"><span class="comment"># For 循环，df.itertuples 访问 df：136 毫秒，终于来到毫秒级别</span></span><br><span class="line"><span class="comment"># 但它还是会创建 namedtuple</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loop_with_itertuples</span>(<span class="params">df</span>):</span></span><br><span class="line">    temp = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> row_tuple <span class="keyword">in</span> df.itertuples():</span><br><span class="line">        temp += row_tuple.A + row_tuple.B</span><br><span class="line">    <span class="keyword">return</span> temp</span><br><span class="line"></span><br><span class="line"><span class="comment"># 实际上，我们可以自己实现，避免创建 nameduple,使用 zip 函数</span></span><br><span class="line"><span class="comment"># For 循环，zip 函数访问，30 毫秒，这里的改进来自于避免创建 namedtuple</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loop_with_zip</span>(<span class="params">df</span>):</span></span><br><span class="line">    temp = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> a, b <span class="keyword">in</span> <span class="built_in">zip</span>(df[<span class="string">&#x27;A&#x27;</span>], df[<span class="string">&#x27;B&#x27;</span>]):</span><br><span class="line">        temp += a + b</span><br><span class="line">    <span class="keyword">return</span> temp</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 pandas 自带的 apply 函数</span></span><br><span class="line"><span class="comment"># 3.28 秒，看起来和普通的 for 循环差不多</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">using_apply</span>(<span class="params">df</span>):</span></span><br><span class="line">    <span class="keyword">return</span> df.apply(<span class="keyword">lambda</span> x: x[<span class="string">&#x27;A&#x27;</span>] + x[<span class="string">&#x27;B&#x27;</span>], axis=<span class="number">1</span>).<span class="built_in">sum</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 pandas 自带的 add 函数</span></span><br><span class="line"><span class="comment"># 849 µs，pandas 自带的这种函数运行效率非常高</span></span><br><span class="line"><span class="comment"># 如果你的操作可以分解成这种就优先使用</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">using_add</span>(<span class="params">df</span>):</span></span><br><span class="line">    <span class="keyword">return</span> (df[<span class="string">&#x27;A&#x27;</span>]+df[<span class="string">&#x27;B&#x27;</span>]).<span class="built_in">sum</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果你还是很在乎性能，可以使用 numpy</span></span><br><span class="line"><span class="comment"># 将数据转化成 numpy 的 array</span></span><br><span class="line"><span class="comment"># 186 µs，提升八倍</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">using_numpy_builtin</span>(<span class="params">df</span>):</span></span><br><span class="line">    <span class="keyword">return</span> (df[<span class="string">&#x27;A&#x27;</span>].values + df[<span class="string">&#x27;B&#x27;</span>].values).<span class="built_in">sum</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不同大小的数据，对结果会有影响，如果是大数据集，结果差距会非常明显，附图：</span></span><br><span class="line"><span class="comment"># iterrows 是效率最差的,其次是 apply，和 普通的 for 循环，两者差不多</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果一定要用 apply 怎么办呢？</span></span><br><span class="line"><span class="comment"># 可以使用如下的第二种方式, * here is to unpack all values in list </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">using_apply</span>(<span class="params">df</span>):</span></span><br><span class="line">    <span class="keyword">return</span> df.apply(<span class="keyword">lambda</span> x: x[<span class="string">&#x27;A&#x27;</span>] + x[<span class="string">&#x27;B&#x27;</span>] + x[<span class="string">&#x27;C&#x27;</span>] + x[<span class="string">&#x27;D&#x27;</span>], axis=<span class="number">1</span>).<span class="built_in">sum</span>()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">using_apply_unpack</span>(<span class="params">df</span>):</span></span><br><span class="line">    <span class="keyword">return</span> df[[<span class="string">&#x27;A&#x27;</span>, <span class="string">&#x27;B&#x27;</span>, <span class="string">&#x27;C&#x27;</span>, <span class="string">&#x27;D&#x27;</span>]].apply(<span class="keyword">lambda</span> x: <span class="built_in">sum</span>([*x]), axis=<span class="number">1</span>).<span class="built_in">sum</span>()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>速度测试对比：</p>
+<p><img src="https://s2.loli.net/2022/05/17/4Ej1WL9nxTOyXPC.png" /></p>
+<h3 id="测试你代码的速度">测试你代码的速度</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># python 自带</span></span><br><span class="line">%timeit using_numpy_builtin(df)</span><br><span class="line"><span class="comment"># notebook 自带</span></span><br><span class="line">%prun -l <span class="number">4</span> loop_with_iterrows(df)</span><br></pre></td></tr></table></figure>
+<h3 id="使用-pd.wide_to_long">使用 pd.wide_to_long</h3>
+<p>wide_to_long allows us to set stub names that can group columns.</p>
+<p>Remember that wide_to_long() function takes the main arguments: i to set the unique row index, j to set the new variable name, and stubnames to extract the start of the wide columns.</p>
+<p>needed to specify the separating elements. When you didn't do that, pandas didn't recognize the column names and returned an empty DataFrame.</p>
+<p>Also, wide_to_long() always assumes that suffixes are numeric, so don't forget to specify if they are not!</p>
+<h3 id="使用-pd.apply">使用 pd.apply</h3>
+<p>创建列 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="string">&#x27;Discounted_Price&#x27;</span>] = df.apply(</span><br><span class="line">    <span class="keyword">lambda</span> row: row.Cost - (row.Cost * <span class="number">0.1</span>),</span><br><span class="line">    axis = <span class="number">1</span></span><br><span class="line">)</span><br><span class="line"><span class="comment"># Print the DataFrame after addition of new column</span></span><br><span class="line"><span class="built_in">print</span>(df)</span><br></pre></td></tr></table></figure></p>
+<p>对比 map</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">p=pd.Series([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])</span><br><span class="line"><span class="comment"># apply 返回 dataframe，增加两列</span></span><br><span class="line">a = p.apply(<span class="keyword">lambda</span> x: pd.Series([x,x+<span class="number">1</span>,x+<span class="number">2</span>]))</span><br><span class="line"><span class="comment"># map，返回3个 Series</span></span><br><span class="line">a,b,c = p.<span class="built_in">map</span>(<span class="keyword">lambda</span> x: pd.Series([x,x+<span class="number">1</span>,x+<span class="number">2</span>]))</span><br></pre></td></tr></table></figure>
+<h3 id="pivot-和-pivottable">Pivot 和 Pivottable</h3>
+<p>When the .pivot() method finds two rows with the same index and column, but different values for the values, it doesn't know how to handle it.</p>
+<h3 id="dataframe-增加总和grand-total">Dataframe 增加总和（Grand Total）</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># https://stackoverflow.com/questions/21752399/pandas-dataframe-total-row</span></span><br><span class="line">df.loc[<span class="string">&#x27;Column_Total&#x27;</span>]= df.<span class="built_in">sum</span>(numeric_only=<span class="literal">True</span>, axis=<span class="number">0</span>)</span><br><span class="line">df.loc[:,<span class="string">&#x27;Row_Total&#x27;</span>] = df.<span class="built_in">sum</span>(numeric_only=<span class="literal">True</span>, axis=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="pandas-求众数">Pandas 求众数</h3>
+<p>两种方法都可以，性能差异不大：</p>
+<p><img src="https://s2.loli.net/2022/05/17/uz2aefXxApK1VvO.png" /></p>
+<h3 id="根据条件对列赋值">根据条件对列赋值</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. Numpy Where 方法</span></span><br><span class="line">df[<span class="string">&#x27;hasimage&#x27;</span>] = np.where(df[<span class="string">&#x27;photos&#x27;</span>]!= <span class="string">&#x27;[]&#x27;</span>, <span class="literal">True</span>, <span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. Numpy Select 方法</span></span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="comment"># read data</span></span><br><span class="line">all_ = pd.read_excel(<span class="string">&#x27;./scott.xlsx&#x27;</span>,sheet_name=<span class="string">&#x27;ALL&#x27;</span>)</span><br><span class="line">enc_ = pd.read_excel(<span class="string">&#x27;./scott.xlsx&#x27;</span>,sheet_name=<span class="string">&#x27;ENC&#x27;</span>)</span><br><span class="line">result = pd.read_excel(<span class="string">&#x27;./scott.xlsx&#x27;</span>,sheet_name=<span class="string">&#x27;result&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># enc store list unique array</span></span><br><span class="line">enc_store_list = enc_.STORECODE.unique()</span><br><span class="line"></span><br><span class="line">conditions = [</span><br><span class="line">    all_.STORECODE.isin(enc_store_list),</span><br><span class="line">    ~all_.STORECODE.isin(enc_store_list)</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="comment"># PVAL_OLD values</span></span><br><span class="line">pval_new_values = [</span><br><span class="line">    <span class="number">0</span>,</span><br><span class="line">    all_[conditions[<span class="number">1</span>]].PVAL.values</span><br><span class="line">]</span><br><span class="line">pvol_new_values = [</span><br><span class="line">    <span class="number">0</span>,</span><br><span class="line">    all_[conditions[<span class="number">1</span>]].PVOL.values</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">all_[<span class="string">&#x27;PVOL_NEW&#x27;</span>] = np.select(conditions,pvol_new_values)</span><br><span class="line">all_[<span class="string">&#x27;PVAL_NEW&#x27;</span>] = np.select(conditions,pval_new_values)</span><br><span class="line"></span><br><span class="line">all_.rename(columns=&#123;<span class="string">&#x27;PVOL&#x27;</span>:<span class="string">&#x27;PVOL_OLD&#x27;</span>,<span class="string">&#x27;PVAL&#x27;</span>:<span class="string">&#x27;PVAL_OLD&#x27;</span>&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="使用多进程提高数据处理速度">使用多进程提高数据处理速度</h3>
+<p>我们知道 Python 因为 GIL 的关系，对于 CPU 密集操作无法有效利用多核处理器，我们可以使用多进程来打破这个限制。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 假设有以下代码</span></span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span>  Pool</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_features</span>(<span class="params">df</span>):</span></span><br><span class="line">    df[<span class="string">&#x27;question_text&#x27;</span>] = df[<span class="string">&#x27;question_text&#x27;</span>].apply(<span class="keyword">lambda</span> x:<span class="built_in">str</span>(x))</span><br><span class="line">    df[<span class="string">&quot;lower_question_text&quot;</span>] = df[<span class="string">&quot;question_text&quot;</span>].apply(<span class="keyword">lambda</span> x: x.lower())</span><br><span class="line">    df[<span class="string">&#x27;total_length&#x27;</span>] = df[<span class="string">&#x27;question_text&#x27;</span>].apply(<span class="built_in">len</span>)</span><br><span class="line">    df[<span class="string">&#x27;capitals&#x27;</span>] = df[<span class="string">&#x27;question_text&#x27;</span>].apply(<span class="keyword">lambda</span> comment: <span class="built_in">sum</span>(<span class="number">1</span> <span class="keyword">for</span> c <span class="keyword">in</span> comment <span class="keyword">if</span> c.isupper()))</span><br><span class="line">    df[<span class="string">&#x27;caps_vs_length&#x27;</span>] = df.apply(<span class="keyword">lambda</span> row: <span class="built_in">float</span>(row[<span class="string">&#x27;capitals&#x27;</span>])/<span class="built_in">float</span>(row[<span class="string">&#x27;total_length&#x27;</span>]),</span><br><span class="line">                                axis=<span class="number">1</span>)</span><br><span class="line">    df[<span class="string">&#x27;num_words&#x27;</span>] = df.question_text.<span class="built_in">str</span>.count(<span class="string">&#x27;\S+&#x27;</span>)</span><br><span class="line">    df[<span class="string">&#x27;num_unique_words&#x27;</span>] = df[<span class="string">&#x27;question_text&#x27;</span>].apply(<span class="keyword">lambda</span> comment: <span class="built_in">len</span>(<span class="built_in">set</span>(w <span class="keyword">for</span> w <span class="keyword">in</span> comment.split())))</span><br><span class="line">    df[<span class="string">&#x27;words_vs_unique&#x27;</span>] = df[<span class="string">&#x27;num_unique_words&#x27;</span>] / df[<span class="string">&#x27;num_words&#x27;</span>] </span><br><span class="line">    df[<span class="string">&#x27;num_exclamation_marks&#x27;</span>] = df[<span class="string">&#x27;question_text&#x27;</span>].apply(<span class="keyword">lambda</span> comment: comment.count(<span class="string">&#x27;!&#x27;</span>))</span><br><span class="line">    df[<span class="string">&#x27;num_question_marks&#x27;</span>] = df[<span class="string">&#x27;question_text&#x27;</span>].apply(<span class="keyword">lambda</span> comment: comment.count(<span class="string">&#x27;?&#x27;</span>))</span><br><span class="line">    df[<span class="string">&#x27;num_punctuation&#x27;</span>] = df[<span class="string">&#x27;question_text&#x27;</span>].apply(<span class="keyword">lambda</span> comment: <span class="built_in">sum</span>(comment.count(w) <span class="keyword">for</span> w <span class="keyword">in</span> <span class="string">&#x27;.,;:&#x27;</span>))</span><br><span class="line">    df[<span class="string">&#x27;num_symbols&#x27;</span>] = df[<span class="string">&#x27;question_text&#x27;</span>].apply(<span class="keyword">lambda</span> comment: <span class="built_in">sum</span>(comment.count(w) <span class="keyword">for</span> w <span class="keyword">in</span> <span class="string">&#x27;*&amp;$%&#x27;</span>))</span><br><span class="line">    df[<span class="string">&#x27;num_smilies&#x27;</span>] = df[<span class="string">&#x27;question_text&#x27;</span>].apply(<span class="keyword">lambda</span> comment: <span class="built_in">sum</span>(comment.count(w) <span class="keyword">for</span> w <span class="keyword">in</span> (<span class="string">&#x27;:-)&#x27;</span>, <span class="string">&#x27;:)&#x27;</span>, <span class="string">&#x27;;-)&#x27;</span>, <span class="string">&#x27;;)&#x27;</span>)))</span><br><span class="line">    df[<span class="string">&#x27;num_sad&#x27;</span>] = df[<span class="string">&#x27;question_text&#x27;</span>].apply(<span class="keyword">lambda</span> comment: <span class="built_in">sum</span>(comment.count(w) <span class="keyword">for</span> w <span class="keyword">in</span> (<span class="string">&#x27;:-&lt;&#x27;</span>, <span class="string">&#x27;:()&#x27;</span>, <span class="string">&#x27;;-()&#x27;</span>, <span class="string">&#x27;;(&#x27;</span>)))</span><br><span class="line">    df[<span class="string">&quot;mean_word_len&quot;</span>] = df[<span class="string">&quot;question_text&quot;</span>].apply(<span class="keyword">lambda</span> x: np.mean([<span class="built_in">len</span>(w) <span class="keyword">for</span> w <span class="keyword">in</span> <span class="built_in">str</span>(x).split()]))</span><br><span class="line">    <span class="keyword">return</span> df</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">parallelize_dataframe</span>(<span class="params">df, func, n_cores=<span class="number">4</span></span>):</span></span><br><span class="line">    df_split = np.array_split(df, n_cores)</span><br><span class="line">    pool = Pool(n_cores)</span><br><span class="line">    df = pd.concat(pool.<span class="built_in">map</span>(func, df_split))</span><br><span class="line">    <span class="comment"># 对Pool对象调用join()方法会等待所有子进程执行完毕，调用join()之前必须先调用close()，调用close()之后就不能继续添加新的Process了</span></span><br><span class="line">    pool.close()</span><br><span class="line">    pool.join()</span><br><span class="line">    <span class="keyword">return</span> df</span><br><span class="line"><span class="comment"># 使用</span></span><br><span class="line">train = parallelize_dataframe(train_df, add_features)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>关于多进程，可以<a href="https://scottzhang.pro/article/4300f84b.html">点击</a>了解更多。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/uploads/wechat-reward-image.png" alt="Scott 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Pandas/" rel="tag"># Pandas</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/article/706b7b04.html" rel="prev" title="Pandas 基础操作">
+      <i class="fa fa-chevron-left"></i> Pandas 基础操作
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/article/96143e16.html" rel="next" title="Oracle 基本信息速查">
+      Oracle 基本信息速查 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%86%E8%A7%A3%E6%96%87%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">了解文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E6%B5%8B%E6%96%87%E4%BB%B6%E6%98%AF%E5%90%A6%E6%9C%89-header"><span class="nav-number">2.</span> <span class="nav-text">检测文件是否有 Header</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%9B%86%E5%A4%84%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">大数据集处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tidy-data-%E5%8E%9F%E5%88%99"><span class="nav-number">4.</span> <span class="nav-text">Tidy Data 原则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cut-%E6%96%B9%E6%B3%95"><span class="nav-number">5.</span> <span class="nav-text">Cut 方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E6%97%A5%E6%9C%9F%E5%A4%84%E7%90%86"><span class="nav-number">6.</span> <span class="nav-text">时间日期处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#category-datatype"><span class="nav-number">7.</span> <span class="nav-text">Category Datatype</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#append-%E5%92%8C-concat"><span class="nav-number">8.</span> <span class="nav-text">append 和 concat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#merge"><span class="nav-number">9.</span> <span class="nav-text">Merge</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E5%A4%9A%E6%A0%87%E7%AD%BE%E4%B8%AD%E5%88%87%E5%88%86%E5%80%BC"><span class="nav-number">10.</span> <span class="nav-text">从多标签中切分值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E5%88%97%E6%93%8D%E4%BD%9C"><span class="nav-number">11.</span> <span class="nav-text">多列操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%BF%E5%85%8D%E8%B5%8B%E5%80%BC%E5%87%BA%E7%8E%B0-warning"><span class="nav-number">12.</span> <span class="nav-text">避免赋值出现 warning</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%97%AD%E7%A7%91%E5%AD%A6%E8%AE%B0%E6%95%B0%E6%B3%95"><span class="nav-number">13.</span> <span class="nav-text">关闭科学记数法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#by-%E8%A1%8C%E4%BF%AE%E6%94%B9%E5%80%BC"><span class="nav-number">14.</span> <span class="nav-text">By 行修改值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pd.iterrows-%E7%9A%84%E9%99%90%E5%88%B6"><span class="nav-number">15.</span> <span class="nav-text">pd.iterrows 的限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pd.xs-%E6%96%B9%E6%B3%95"><span class="nav-number">16.</span> <span class="nav-text">pd.xs 方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%90%86%E8%A7%A3-pandas-%E7%9A%84-axis"><span class="nav-number">17.</span> <span class="nav-text">理解 Pandas 的 Axis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E9%AB%98-dataframe-%E9%81%8D%E5%8E%86%E9%80%9F%E5%BA%A6"><span class="nav-number">18.</span> <span class="nav-text">提高 Dataframe 遍历速度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E4%BD%A0%E4%BB%A3%E7%A0%81%E7%9A%84%E9%80%9F%E5%BA%A6"><span class="nav-number">19.</span> <span class="nav-text">测试你代码的速度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-pd.wide_to_long"><span class="nav-number">20.</span> <span class="nav-text">使用 pd.wide_to_long</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-pd.apply"><span class="nav-number">21.</span> <span class="nav-text">使用 pd.apply</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pivot-%E5%92%8C-pivottable"><span class="nav-number">22.</span> <span class="nav-text">Pivot 和 Pivottable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dataframe-%E5%A2%9E%E5%8A%A0%E6%80%BB%E5%92%8Cgrand-total"><span class="nav-number">23.</span> <span class="nav-text">Dataframe 增加总和（Grand Total）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pandas-%E6%B1%82%E4%BC%97%E6%95%B0"><span class="nav-number">24.</span> <span class="nav-text">Pandas 求众数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AE%E6%9D%A1%E4%BB%B6%E5%AF%B9%E5%88%97%E8%B5%8B%E5%80%BC"><span class="nav-number">25.</span> <span class="nav-text">根据条件对列赋值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%A4%9A%E8%BF%9B%E7%A8%8B%E6%8F%90%E9%AB%98%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E9%80%9F%E5%BA%A6"><span class="nav-number">26.</span> <span class="nav-text">使用多进程提高数据处理速度</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Scott"
+      src="/uploads/instagram_profile_image.png">
+  <p class="site-author-name" itemprop="name">Scott</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">88</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">90</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wittyfans" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/wittyfans" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;wittyfans" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/wittyfans0" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;wittyfans0" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Scott</span>
+</div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz","app_key":"qKXpoqGbK1sdFYMiik7Evuan","server_url":"https://7sscl0n1.lc-cn-n1-shared.com","security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : '7sScl0n1AlEtVDaUHuXzxPqc-gzGzoHsz',
+      appKey     : 'qKXpoqGbK1sdFYMiik7Evuan',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
