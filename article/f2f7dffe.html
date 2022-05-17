@@ -19,15 +19,15 @@
     var CONFIG = {"hostname":"scottzhang.pro","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的字母异位词。">
+  <meta name="description" content="📌 给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的字母异位词。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="算法题: 有效的字母异位词">
 <meta property="og:url" content="https://scottzhang.pro/article/f2f7dffe.html">
 <meta property="og:site_name" content="Scott&#39;s Blog">
-<meta property="og:description" content="给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的字母异位词。">
+<meta property="og:description" content="📌 给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的字母异位词。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-05-16T14:50:24.000Z">
-<meta property="article:modified_time" content="2022-05-16T14:53:12.136Z">
+<meta property="article:modified_time" content="2022-05-17T01:36:39.810Z">
 <meta property="article:author" content="Scott">
 <meta property="article:tag" content="数组">
 <meta property="article:tag" content="collections">
@@ -191,10 +191,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-05-16 22:50:24 / 修改时间：22:53:12" itemprop="dateCreated datePublished" datetime="2022-05-16T22:50:24+08:00">2022-05-16</time>
+              <time title="创建时间：2022-05-16 22:50:24" itemprop="dateCreated datePublished" datetime="2022-05-16T22:50:24+08:00">2022-05-16</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-17 09:36:39" itemprop="dateModified" datetime="2022-05-17T09:36:39+08:00">2022-05-17</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -238,14 +244,17 @@
 
       
         <blockquote>
-<p>给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的字母异位词。</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/valid-anagram/">📌</a> 给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的字母异位词。</p>
 </blockquote>
 <span id="more"></span>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 排序</span></span><br><span class="line"><span class="comment"># 异位词的顺序不同出现的次数一样，所以使用 sort 方法排序后的值应该相等的</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">isAnagramSort</span>(<span class="params">s, t</span>):</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(s) != <span class="built_in">len</span>(t):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">    s_sorted = <span class="built_in">sorted</span>(s)</span><br><span class="line">    t_sorted = <span class="built_in">sorted</span>(t)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> s_sorted == t_sorted:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">isAnagramSort(a, b)</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 collection 中的 Counter</span></span><br><span class="line"><span class="comment"># Counter 支持比较运算符 ==, !=, &lt;, &lt;=, &gt;, &gt;=.</span></span><br><span class="line"><span class="comment"># 需要注意对于个数为 0的，不算入比较的范围，如 Counter(a=1) == Counter(a=1, b=0) 返回 true.</span></span><br><span class="line"><span class="keyword">import</span> collections</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">isAnagramCounter</span>(<span class="params">s: <span class="built_in">str</span>, t: <span class="built_in">str</span></span>) -&gt; <span class="built_in">bool</span>:</span></span><br><span class="line">    <span class="keyword">return</span> collections.Counter(s) == collections.Counter(t)</span><br></pre></td></tr></table></figure>
+<p>直接排序，异位词的顺序不同出现的次数一样，所以使用 sort 方法排序后的值应该相等的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">isAnagramSort</span>(<span class="params">s, t</span>):</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(s) != <span class="built_in">len</span>(t):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">    s_sorted = <span class="built_in">sorted</span>(s)</span><br><span class="line">    t_sorted = <span class="built_in">sorted</span>(t)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> s_sorted == t_sorted:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">isAnagramSort(a, b)</span><br></pre></td></tr></table></figure>
+<p>使用 collection 中的 Counter。</p>
+<p>Counter 支持比较运算符 ==, !=, &lt;, &lt;=, &gt;, &gt;=.</p>
+<p>需要注意对于个数为 0的，不算入比较的范围，如 Counter(a=1) == Counter(a=1, b=0) 返回 true.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> collections</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">isAnagramCounter</span>(<span class="params">s: <span class="built_in">str</span>, t: <span class="built_in">str</span></span>) -&gt; <span class="built_in">bool</span>:</span></span><br><span class="line">    <span class="keyword">return</span> collections.Counter(s) == collections.Counter(t)</span><br></pre></td></tr></table></figure>
 <p>链接：</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/valid-anagram/">中文站</a></li>
 <li><a target="_blank" rel="noopener" href="https://leetcode.com/problems/valid-anagram/">英文站</a></li>
 </ul>
 
