@@ -6,7 +6,7 @@
   <link href="https://scottzhang.pro/atom.xml" rel="self"/>
   
   <link href="https://scottzhang.pro/"/>
-  <updated>2022-05-19T14:24:06.619Z</updated>
+  <updated>2022-06-27T13:17:21.652Z</updated>
   <id>https://scottzhang.pro/</id>
   
   <author>
@@ -15,6 +15,80 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>算法题:N叉树的最近公共祖先</title>
+    <link href="https://scottzhang.pro/article/b217f3dd.html"/>
+    <id>https://scottzhang.pro/article/b217f3dd.html</id>
+    <published>2022-06-27T13:07:42.000Z</published>
+    <updated>2022-06-27T13:17:21.652Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>给定一个树（非二叉树）, 找到该树中两个指定节点的最近公共祖先。（树使用key为子级，value为父级的字典结构存储。</p></blockquote><span id="more"></span><p>百度百科中最近公共祖先的定义为：“对于有根树 T 的两个节点 p、q，最近公共祖先表示为一个节点 x，满足 x 是 p、q 的祖先且 x 的深度尽可能大（一个节点也可以是它自己的祖先）。”</p><p><img src="https://s2.loli.net/2022/06/27/wsz6JFT2ondHSNy.png" /></p><p>tree 定义：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">tree = &#123;<span class="number">1</span>:<span class="literal">None</span>, <span class="number">2</span>:<span class="number">1</span>, <span class="number">3</span>:<span class="number">1</span>,<span class="number">4</span>:<span class="number">2</span>,<span class="number">5</span>:<span class="number">2</span>,<span class="number">6</span>:<span class="number">2</span>,<span class="number">7</span>:<span class="number">3</span>,<span class="number">8</span>:<span class="number">3</span>,<span class="number">9</span>:<span class="number">4</span>,<span class="number">10</span>:<span class="number">4</span>,<span class="number">11</span>:<span class="number">7</span>&#125;</span><br><span class="line"><span class="comment"># 输入</span></span><br><span class="line">p = <span class="number">5</span></span><br><span class="line">q = <span class="number">1</span></span><br><span class="line"><span class="comment"># 输出：1</span></span><br><span class="line"><span class="comment"># 解释：节点 5 和节点 1 的最近公共祖先是节点 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 输入：</span></span><br><span class="line">p = <span class="number">9</span></span><br><span class="line">q = <span class="number">6</span></span><br><span class="line"><span class="comment"># 输出：2</span></span><br><span class="line"><span class="comment"># 解释：9 的祖先是4，不是6的祖先，往上走，2则是</span></span><br></pre></td></tr></table></figure><p>递归解法：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_common_ancestor</span>(<span class="params">tree, p, q</span>):</span></span><br><span class="line">    <span class="comment"># if it&#x27;s a empty tree, or givin nodes not in dict</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> tree <span class="keyword">or</span> p <span class="keyword">not</span> <span class="keyword">in</span> tree <span class="keyword">or</span> q <span class="keyword">not</span> <span class="keyword">in</span> tree: <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># root node</span></span><br><span class="line">    root = [k <span class="keyword">for</span> k,v <span class="keyword">in</span> tree.items() <span class="keyword">if</span> v <span class="keyword">is</span> <span class="literal">None</span>][<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># if any givin nodes is root node</span></span><br><span class="line">    <span class="keyword">if</span> tree.get(p) <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">or</span> tree.get(q) <span class="keyword">is</span> <span class="literal">None</span>: <span class="keyword">return</span> root</span><br><span class="line"></span><br><span class="line">    <span class="comment"># recursive helper function</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">recursive</span>(<span class="params">tree, rp, rq</span>):</span></span><br><span class="line">        <span class="keyword">if</span> rp == tree.get(rq): <span class="keyword">return</span> rp  <span class="comment"># p is children of q</span></span><br><span class="line">        <span class="keyword">if</span> rq == tree.get(rp): <span class="keyword">return</span> rq  <span class="comment"># q is children of p</span></span><br><span class="line">        <span class="keyword">if</span> rq == p: <span class="keyword">return</span> p              <span class="comment"># q move up, equal p then p</span></span><br><span class="line">        <span class="keyword">if</span> rp == q: <span class="keyword">return</span> q              <span class="comment"># p move up, equal q then q</span></span><br><span class="line">        <span class="keyword">if</span> tree.get(rp) == tree.get(rq):  <span class="comment"># p,q moved to root</span></span><br><span class="line">            <span class="keyword">return</span> tree.get(rp)</span><br><span class="line">        <span class="keyword">return</span> recursive(tree, tree.get(rp), tree.get(rq))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> recursive(tree, p, q)</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;给定一个树（非二叉树）, 找到该树中两个指定节点的最近公共祖先。（树使用key为子级，value为父级的字典结构存储。&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="算法题" scheme="https://scottzhang.pro/categories/%E7%AE%97%E6%B3%95%E9%A2%98/"/>
+    
+    
+    <category term="N叉数" scheme="https://scottzhang.pro/tags/N%E5%8F%89%E6%95%B0/"/>
+    
+    <category term="递归" scheme="https://scottzhang.pro/tags/%E9%80%92%E5%BD%92/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>算法题:二叉搜索树的最近公共祖先</title>
+    <link href="https://scottzhang.pro/article/5914e90d.html"/>
+    <id>https://scottzhang.pro/article/5914e90d.html</id>
+    <published>2022-06-18T07:35:47.000Z</published>
+    <updated>2022-06-18T10:01:12.569Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p><a href="https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-search-tree/">📌</a> 给定一个二叉搜索树, 找到该树中两个指定节点的最近公共祖先。</p></blockquote><span id="more"></span><p>二叉搜索树的定义：</p><ul><li>若它的左子树不空，则左子树上所有结点的值均小于它的根结点的值；</li><li>若它的右子树不空，则右子树上所有结点的值均大于它的根结点的值；</li><li>它的左、右子树也分别为二叉排序树。</li></ul><p>在此题目中，会提供 p, q 2个节点，我们需要确定这两个节点的公共祖先。</p><p>首先我们知道，根节点肯定是所有节点的祖先，其次根据二叉搜索树的特性，当我们将 p 和 q 分别与根节点做对比的时候，可以排除掉一半的值，因为左边的节点肯定小于右边的节点，当 p 大于根节点，那我们需要找的那个公共祖先肯定在右半部分子树。</p><p>还有一种特殊情况需要考虑，那就是 p 或者 q 于根节点是相等的，这时候公共祖先其实就是根节点了。</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">lowestCommonAncestor</span>(<span class="params">self, root: <span class="string">&#x27;TreeNode&#x27;</span>, p: <span class="string">&#x27;TreeNode&#x27;</span>, q: <span class="string">&#x27;TreeNode&#x27;</span></span>) -&gt; &#x27;TreeNode&#x27;:</span></span><br><span class="line">        cur = root</span><br><span class="line">        <span class="keyword">while</span> cur:</span><br><span class="line">            <span class="comment"># 如果两个节点都在左边，将当前指针往左边移动</span></span><br><span class="line">            <span class="keyword">if</span> p.val &lt; root.val <span class="keyword">and</span> q.val &lt; root.val:</span><br><span class="line">                cur = cur.left</span><br><span class="line">            <span class="comment"># 如果两个节点都在右边，将当前指针往右边移动</span></span><br><span class="line">            <span class="keyword">elif</span> p.val &gt; root.val <span class="keyword">and</span> q.val &gt; root.val:</span><br><span class="line">                cur = cur.right</span><br><span class="line">            <span class="comment"># 两种情况都不是，则说明两个节点分叉，当前节点即为结果</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> cur</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-search-tree/&quot;&gt;📌&lt;/a&gt; 给定一个二叉搜索树, 找到该树中两个指定节点的最近公共祖先。&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="算法题" scheme="https://scottzhang.pro/categories/%E7%AE%97%E6%B3%95%E9%A2%98/"/>
+    
+    
+    <category term="二叉树" scheme="https://scottzhang.pro/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"/>
+    
+    <category term="二叉搜索树" scheme="https://scottzhang.pro/tags/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>算法题:二叉树的最近公共祖先</title>
+    <link href="https://scottzhang.pro/article/465ce338.html"/>
+    <id>https://scottzhang.pro/article/465ce338.html</id>
+    <published>2022-06-18T07:19:52.000Z</published>
+    <updated>2022-06-27T06:21:07.088Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p><a href="https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-tree/">📌</a></p></blockquote><p>给定一个二叉树, 找到该树中两个指定节点的最近公共祖先。</p><span id="more"></span><p>对于树的遍历：</p><ul><li>使用递归是一种高效、简便的方式，不要怕使用递归。</li><li>对于二叉树的递归又分为三种不同的形式，分别是前序、中序、后序。</li><li>如果面试要求不使用递归，则可以使用循环解法。</li></ul><p>各种顺序的节点遍历顺序：</p><ul><li>前序：根左右</li><li>中序：左根右</li><li>后序：左右根</li></ul><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">lowestCommonAncestor</span>(<span class="params">self, root: TreeNode, p: TreeNode, q: TreeNode</span>) -&gt; TreeNode:</span></span><br><span class="line">        <span class="comment"># 如果 root 为空或者</span></span><br><span class="line">        <span class="comment"># 如果 p 和 q 中某一个等于 root（其本身为最近公共祖先）</span></span><br><span class="line">        <span class="comment"># 直接返回 root 为结果</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root <span class="keyword">or</span> root == p <span class="keyword">or</span> root == q:</span><br><span class="line">            <span class="keyword">return</span> root</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 进行先序遍历，根左右</span></span><br><span class="line">        left = self.lowestCommonAncestor(root.left, p, q)</span><br><span class="line">        right = self.lowestCommonAncestor(root.right, p, q)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> left:</span><br><span class="line">            <span class="keyword">return</span> right</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> right:</span><br><span class="line">            <span class="keyword">return</span> left</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> root</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-tree/&quot;&gt;📌&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;给定一个二叉树, 找到该树中两个指定节点的最近公共祖先。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="算法题" scheme="https://scottzhang.pro/categories/%E7%AE%97%E6%B3%95%E9%A2%98/"/>
+    
+    
+    <category term="二叉树" scheme="https://scottzhang.pro/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"/>
+    
+  </entry>
   
   <entry>
     <title>Python Asyncio 并发编程</title>
@@ -410,75 +484,6 @@
     
     
     <category term="链表" scheme="https://scottzhang.pro/tags/%E9%93%BE%E8%A1%A8/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>算法题: 无重复字符串的最长子串</title>
-    <link href="https://scottzhang.pro/article/aaafc94b.html"/>
-    <id>https://scottzhang.pro/article/aaafc94b.html</id>
-    <published>2022-05-16T14:24:34.000Z</published>
-    <updated>2022-05-17T01:36:33.533Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote><p><a href="https://leetcode.cn/problems/longest-substring-without-repeating-characters/">📌</a> 给定一个字符串 s ，请你找出其中不含有重复字符的 最长子串的长度。</p></blockquote><span id="more"></span><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">lengthOfLongestSubstring</span>(<span class="params">s: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span></span><br><span class="line">    seen = &#123;&#125;</span><br><span class="line">    l = <span class="number">0</span></span><br><span class="line">    output = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> r <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(s)):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        If s[r] not in seen, we can keep increasing the window size by moving right pointer</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> s[r] <span class="keyword">not</span> <span class="keyword">in</span> seen:</span><br><span class="line">            output = <span class="built_in">max</span>(output, r-l+<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># There are two cases if s[r] in seen:</span></span><br><span class="line">        <span class="comment"># case1: s[r] is inside the current window, we need to change the window by moving left pointer to seen[s[r]] + 1.</span></span><br><span class="line">        <span class="comment"># case2: s[r] is not inside the current window, we can keep increase the window</span></span><br><span class="line">            <span class="keyword">if</span> seen[s[r]] &lt; l:</span><br><span class="line">                output = <span class="built_in">max</span>(output,r-l+<span class="number">1</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                l = seen[s[r]] + <span class="number">1</span></span><br><span class="line">        seen[s[r]] = r</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> output</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">lengthOfLongestSubstring(<span class="string">&quot;pwwkew&quot;</span>)</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-    <summary type="html">&lt;blockquote&gt;
-&lt;p&gt;&lt;a href=&quot;https://leetcode.cn/problems/longest-substring-without-repeating-characters/&quot;&gt;📌&lt;/a&gt; 给定一个字符串 s ，请你找出其中不含有重复字符的 最长子串的长度。&lt;/p&gt;
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="算法题" scheme="https://scottzhang.pro/categories/%E7%AE%97%E6%B3%95%E9%A2%98/"/>
-    
-    
-    <category term="数组" scheme="https://scottzhang.pro/tags/%E6%95%B0%E7%BB%84/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>算法题: 盛水最多的容器</title>
-    <link href="https://scottzhang.pro/article/45859c42.html"/>
-    <id>https://scottzhang.pro/article/45859c42.html</id>
-    <published>2022-05-16T14:20:11.000Z</published>
-    <updated>2022-05-17T01:37:08.992Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote><p><a href="https://leetcode-cn.com/problems/container-with-most-water/">📌</a> 给定一个长度为 n 的整数数组 height 。有 n 条垂线，第 i 条线的两个端点是 (i, 0) 和 (i, height[i]) 找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。返回容器可以储存的最大水量。</p></blockquote><span id="more"></span><p>说明：你不能倾斜容器。</p><p>双指针往中间靠拢</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">max_area_towards_center</span>(<span class="params">arr</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    数组：一开始就将 left bar 和 right bar 设置到最左和最右</span></span><br><span class="line"><span class="string">    慢慢收敛，因为宽度已是最大，只需要控制高度即可</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    l, r = <span class="number">0</span>, <span class="built_in">len</span>(arr) - <span class="number">1</span></span><br><span class="line">    ans = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> l &lt; r:</span><br><span class="line">        area = <span class="built_in">min</span>(arr[l], arr[r]) * (r - l)</span><br><span class="line">        ans = <span class="built_in">max</span>(ans, area)</span><br><span class="line">        <span class="keyword">if</span> arr[l] &lt;= arr[r]:</span><br><span class="line">            l += <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            r -= <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> ans</span><br><span class="line"></span><br><span class="line">max_area_towards_center([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>])</span><br></pre></td></tr></table></figure><p>使用 for 循环</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">max_area_2_loop</span>(<span class="params">arr</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    数组：枚举所有元素，双重 for 循环，找出 area 最大的</span></span><br><span class="line"><span class="string">    缺点，时间复杂度比较高</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    area_max = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(arr)):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="built_in">len</span>(arr)):</span><br><span class="line">            area = (j-i) * <span class="built_in">min</span>(arr[i], arr[j])</span><br><span class="line">            area_max = <span class="built_in">max</span>(area_max, area)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> area_max</span><br><span class="line"></span><br><span class="line">max_area_2_loop([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>])</span><br></pre></td></tr></table></figure><h3 id="参考">参考</h3><ul><li>🇺🇸 <a href="https://leetcode.com/problems/container-with-most-water/">英文站</a></li></ul>]]></content>
-    
-    
-    <summary type="html">&lt;blockquote&gt;
-&lt;p&gt;&lt;a href=&quot;https://leetcode-cn.com/problems/container-with-most-water/&quot;&gt;📌&lt;/a&gt; 给定一个长度为 n 的整数数组 height 。有 n 条垂线，第 i 条线的两个端点是 (i, 0) 和 (i, height[i]) 找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。返回容器可以储存的最大水量。&lt;/p&gt;
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="算法题" scheme="https://scottzhang.pro/categories/%E7%AE%97%E6%B3%95%E9%A2%98/"/>
-    
-    
-    <category term="数组" scheme="https://scottzhang.pro/tags/%E6%95%B0%E7%BB%84/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>算法题：移动0</title>
-    <link href="https://scottzhang.pro/article/22174669.html"/>
-    <id>https://scottzhang.pro/article/22174669.html</id>
-    <published>2022-05-16T14:17:58.000Z</published>
-    <updated>2022-05-17T01:37:15.617Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote><p><a href="https://leetcode.cn/problems/move-zeroes/">📌</a> 给定一个数组，将所有其中的 0，移动到末尾。Leetcode</p></blockquote><span id="more"></span><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">my_arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">12</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">2</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_zero</span>(<span class="params">arr</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;数组：利用快慢指针交换值.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    zero_idx = <span class="number">0</span>  <span class="comment"># 慢指针，其数值表示0所在的位置</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(arr)):</span><br><span class="line">        <span class="comment"># 要做的操作与慢指针移动的条件</span></span><br><span class="line">        <span class="comment"># 若不满足慢指针移动条件，慢指针停留不动，快指针继续移动</span></span><br><span class="line">        <span class="keyword">if</span> arr[i] != <span class="number">0</span>:</span><br><span class="line">            arr[i], arr[zero_idx] = arr[zero_idx], arr[i]</span><br><span class="line">            zero_idx += <span class="number">1</span></span><br><span class="line">            <span class="comment"># print(f&quot;&#123;arr&#125;, i:&#123;i&#125;, zero_idx:&#123;zero_idx&#125;&quot;)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> arr</span><br><span class="line"></span><br><span class="line">move_zero(my_arr)</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-    <summary type="html">&lt;blockquote&gt;
-&lt;p&gt;&lt;a href=&quot;https://leetcode.cn/problems/move-zeroes/&quot;&gt;📌&lt;/a&gt; 给定一个数组，将所有其中的 0，移动到末尾。Leetcode&lt;/p&gt;
-&lt;/blockquote&gt;</summary>
-    
-    
-    
-    <category term="算法题" scheme="https://scottzhang.pro/categories/%E7%AE%97%E6%B3%95%E9%A2%98/"/>
-    
-    
-    <category term="数组" scheme="https://scottzhang.pro/tags/%E6%95%B0%E7%BB%84/"/>
     
   </entry>
   
